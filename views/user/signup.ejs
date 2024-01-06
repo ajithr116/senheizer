@@ -1,0 +1,88 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Senheizer</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+    <link rel="stylesheet" href="cssu/signup.css">
+    
+</head>
+<body>
+    <div class="background">
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+    <form action="/submitForm" method="POST" id="signupForm">
+        <h3>Register</h3>
+
+        <label for="firstName">First Name</label>
+        <input type="text" name="uFirstName" placeholder="First name" id="firstName"required>
+
+        <label for="lastName">Last Name</label>
+        <input type="text" name="uLastName" placeholder="Last name" id="lastName" required>
+
+        <label for="email">Email</label>
+        <input type="email" name="uEmail" placeholder="Email" id="email"required>
+
+        <label for="password">Password</label>
+        <input type="text"name="uPassword" placeholder="Password" id="password" required>
+        
+
+        <label for="confirmPassword">Confirm Password</label>
+        <input type="text" name="uConfirmPassword" placeholder="Confirm Password" id="confirmPassword">
+
+        <button type="submit" onclick="logInput()">Register</button>
+    </form>
+
+    <% if (typeof error !== 'undefined') { %>   
+        <%if(error===1){%>
+            <!-- <p>error 1</p> -->
+            <script>
+                const name = document.getElementById('firstName');
+                const lastname = document.getElementById('lastName');
+                name.style.background="red";
+                name.placeholder="Name should be alphabet";
+                lastname.style.background="red";
+                lastname.placeholder="Name should be alphabet";
+            </script>
+        <%}else if(error===2){%>
+            <!-- <p>error 2</p> -->
+            <script>
+                const email = document.getElementById('email');
+                email.style.background="red";
+                email.placeholder="Wrong format example : john123@gmail.com";
+            </script>
+        <%}else if(error===3){%>
+            <script>
+                const email2 = document.getElementById('email');
+                email2.style.background = "red";
+                email2.placeholder="Email already exists ";
+            </script>
+        <%}else if(error===4){%>
+            <script>
+                const password = document.getElementById('password');
+                password.style.background = "rgba(255, 0, 0, 0.5)";
+                password.placeholder="Password should contain at least one uppercase letter,one special character, at least 8 characters long.";
+            </script>
+        <%}else if(error===5){%>
+            <script>
+                const password2 = document.getElementById('password');
+                const confirmPassword = document.getElementById('confirmPassword');
+                password.style.background = "rgba(255, 0, 0, 0.5)";
+                password.placeholder="Passwords not match";
+                confirmPassword.style.background = "rgba(255, 0, 0, 0.5)";
+                confirmPassword.placeholder="password not match";
+            </script>
+        <%}%>
+    <% } %>
+
+
+    <!-- <script>
+        function logInput() {
+            const firstName = document.getElementById("firstName").value;
+            const lastName = document.getElementById("lastName").value;
+        }
+    </script> -->
+</body>
+</html>

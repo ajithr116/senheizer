@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enter 4-Digit Number</title>
+    <style>
+        body {
+            background-color: #000;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        form {
+            text-align: center;
+        }
+
+        input {
+            padding: 10px;
+            font-size: 16px;
+            margin-top: 10px;
+            width: 200px;
+            text-align: center;
+            background-color: #333;
+            color: #fff;
+            border: 1px solid #fff;
+            border-radius: 5px;
+            outline: none;
+        }
+
+        input::placeholder {
+            color: #999;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-top: 10px;
+            background-color: #f00;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #900;
+        }
+    </style>
+</head>
+<body>
+    <form action="/otpverify" method="POST">
+        <h2>Enter a 4-Digit Number sended to your </h2>
+        <h4 style="font-family: 'Courier New', Courier, monospace;"><%= email %></h4>
+        <input type="number" name="oottpp" placeholder="e.g., 1234" pattern="\d{4}" required oninput="this.value = this.value.slice(0, 4)">
+        <br>
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>

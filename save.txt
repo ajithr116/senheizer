@@ -1,0 +1,88 @@
+const e = require("express");
+
+const adminLogin = async (req, res) => {
+    if(req.session.aid){
+        res.redirect('/admin/index');
+    }
+    else{
+
+        const error = req.session.error;
+        req.session.error = null;
+
+        res.render('admin/login',{ error: error });
+    }
+};
+
+
+const adminIndex = async (req, res) => {
+    if(req.session.aid){
+        res.render('admin/index');  // Render the admin dashboard
+    }
+    else{
+        res.render('admin/login', (err, html) => {
+            if (err) {
+                console.error(err);
+                res.status(500).send('Internal Server Error');
+            } else {
+                res.send(html);
+            }
+        });
+    }
+};
+
+// const adminIndex = async (req, res) => {
+//     if (req.session.aid) {
+//         res.render('admin/index');  // Render the admin dashboard
+//     } else {
+//         res.redirect('/admin/login');
+//     }
+// };
+
+const adminSubmit = async (req, res) => {
+    const email = req.body.aEmail;
+    const password = req.body.aPassword;
+
+    const reEmail = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+    var rePassword = /^(?=.*[A-Z])(?=.*\W).{8,}$/;
+
+    if(req.session.aid){
+        res.redirect('/admin/index');
+    }
+    else{
+        try{
+            if(reEmail.test(email)){
+
+                req.session.aid="123";
+                
+                console.log("email match");
+                res.redirect('/admin/index');
+
+            }
+            else{
+                req.session.error=1;
+
+                console.log("email not match");
+                res.render('admin/login',(err, html) => {
+                    if (err) {
+                        console.error(err);
+                        res.status(500).send('Internal Server Error');
+                    } else {
+                        res.send(html);
+                    }
+                });
+            }
+        }
+        catch(err){
+
+        }
+    }
+    // res.redirect('/admin/index');
+
+
+};
+
+module.exports = {
+    adminLogin,
+    adminSubmit,
+    adminIndex,
+};

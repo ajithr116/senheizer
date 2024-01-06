@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Senheizer</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+    <link rel="stylesheet" href="cssu/login.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <style>
+        .password-container {
+  display: flex;
+  align-items: center; /* Vertically center the elements */
+}
+
+    </style>
+</head>
+  <body>
+    <div class="background">
+      <div class="shape"></div>
+      <div class="shape"></div>
+    </div>
+    <form action="submit" method="POST">
+      <h3>Login Here</h3>
+
+      <label for="username">Email</label>
+      <input type="text" name="uName" placeholder="Email" id="email" required>
+
+      <label for="password">Password</label>
+      <div class="password-container">
+        <input type="password" placeholder="Password" id="upassword" name="uPassword" required>
+        <i class="bi bi-eye-slash" id="togglePassword"></i>
+      </div>
+    
+
+      <button type="submit" >Log In</button>
+
+      <div style="margin-top: 10%; display: flex; align-items: center; justify-content: space-between;">
+        <h5>New to this?</h5>
+        <h5><a href="/signup" style="color: rgb(137, 137, 241);">Sign Up now</a></h5>
+      </div>
+    </form>
+
+    <script>
+      const passwordField = document.getElementById("upassword");
+      const toggleButton = document.getElementById("togglePassword");
+
+      toggleButton.addEventListener("click", function() {
+        if (passwordField.type === "password") {
+          passwordField.type = "text";
+          toggleButton.classList.replace("bi-eye-slash", "bi-eye");
+        } else {
+          passwordField.type = "password";
+          toggleButton.classList.replace("bi-eye", "bi-eye-slash");
+        }
+      });
+    </script>
+
+<% if (typeof error !== 'undefined') { %>   
+  <%if(error===1){%>
+      <!-- <p>error 1</p> -->
+      <script>
+          const email = document.getElementById('email');
+          email.style.background="#E30B5C";
+          email.placeholder="Email format not match";
+      </script>
+  <%}else if(error===2){%>
+      <!-- <p>error 2</p> -->
+      <script>
+          email.style.background="#E30B5C";
+          email.placeholder="Email does not exists";       
+      </script>
+  <%}else if(error===3){%>
+  <script>
+      const password = document.getElementById('upassword');
+      password.style.background="#E30B5C";
+      password.placeholder="Password not match the format";       
+  </script>
+  <%}else if(error===4){%>
+  <script>
+      const password = document.getElementById('upassword');
+      const email = document.getElementById('email');
+      password.style.background="#E30B5C";
+      email.style.background="#E30B5C";
+      password.placeholder="Not exists";       
+      email.placeholder="Not exists";       
+  </script>
+  <%}%>
+<% } %>
+
+
+</body>
+  
+</html>

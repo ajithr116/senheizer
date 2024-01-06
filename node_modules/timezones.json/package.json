@@ -1,0 +1,22 @@
+{
+  "name": "timezones.json",
+  "version": "1.7.1",
+  "description": "Full list of UTC timezones",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/dmfilipenko/timezones.json.git"
+  },
+  "keywords": [
+    "timezone",
+    "date",
+    "time",
+    "UTC"
+  ],
+  "author": "Dmytro Filipenko",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dmfilipenko/timezones.json/issues"
+  },
+  "homepage": "https://github.com/dmfilipenko/timezones.json"
+}
