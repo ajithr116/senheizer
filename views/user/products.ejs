@@ -546,11 +546,11 @@
             <figure class="card card-product-grid">
               <div class="img-wrap">
                 <!-- <span class="badge badge-danger"> NEW </span> -->
-                <img src="/uploads/<%= product.images.split(';')[0] %>" class="img-fluid" style="border-radius: 10px; width: 200px; height: 200px;">                
+                <img src="/uploads/<%= product.images[0] %>" class="img-fluid" style="border-radius: 10px; width: 200px; height: 200px;">                
                 <a class="btn-overlay" href="/productPage?productId=<%= product._id %>"><i class="fa fa-search-plus"></i> Quick view</a>
               </div> <figcaption class="info-wrap">
                 <div class="fix-height">
-                  <a href="/productPage?productId=<%= product._id %>" class="title"><%= product.name %></a>
+                  <a href="/productPage?productId=<%= product._id %>" class="title"><%= product.name.substring(0, 50) + (product.name.length > 20 ? '...' : '') %></a>
                   <div class="rating-price-wishlist">
                     <div class="rating">
                       <i class="fa fa-star"></i>

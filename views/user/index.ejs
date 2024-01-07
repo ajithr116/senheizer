@@ -218,9 +218,9 @@
                     <a href="/productPage?productId=<%= product._id %>" style="text-decoration: none;">
                     <div class="card">
                         
-                        <img src="/uploads/<%= product.images.split(';')[0] %>" class="card-img-top" alt="Product Image">
+                        <img src="/uploads/<%= product.images[0] %>" class="card-img-top" alt="Product Image">
                         <div class="card-body" href="https://www.google.com">
-                            <h5 class="card-title" style="color:white;"><%= product.name %></h5>
+                            <h5 class="card-title" style="color:white;"><%= product.name.substring(0, 50) + (product.name.length > 20 ? '...' : '') %></h5>
                             <div class="ratings">
                             </div>
                             <br>
@@ -271,6 +271,11 @@
           <p>&copy; 2023 Your Website. All rights reserved.</p>
         </div>
       </footer>
+      <script>
+        // if ( window.history.replaceState ) {
+        //     window.history.replaceState( null, null, window.location.href='/login' );
+        // }
+    </script>
     <!-- Footer End -->
 </body>
 

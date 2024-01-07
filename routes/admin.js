@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const adminController = require('../controller/admin');
+const adminCategoryController = require('../controller/category');
 const multer  = require('multer')
 const upload = multer({ dest: 'uploads/' })
 
@@ -57,15 +58,17 @@ router.get('/viewProduct',adminController.adminViewProducts);
 router.get('/addProduct',adminController.adminAddProduct);
 router.post('/productSubmit', adminController.adminSubmitProduct);
 router.get('/deleteproduct',adminController.adminDeleteProduct);
-router.get('/categoryManage',adminController.adminCategoryManage);
+router.get('/categoryManage',adminCategoryController.adminCategoryManage);
 router.get('/detailProduct',adminController.adminDetailProduct);
 router.get('/getProductDetails',adminController.adminDetailProduct);
 router.post('/updateproduct', adminController.adminUpdateProduct);
 router.get('/userManagement',adminController.adminUsermanage);
 router.get('/unblockuser',adminController.adminBlockUser);
 router.get('/blockuser',adminController.adminUnblockUser);
-router.get('/addCategory',adminController.adminCategory);
-router.post('/submitcategory',adminController.adminSubmitCategory);
+router.get('/addCategory',adminCategoryController.adminCategory);
+router.post('/submitcategory',adminCategoryController.adminSubmitCategory);
+router.get('/blockcategory',adminCategoryController.adminBlockCategory);
+router.get('/unblockcategory',adminCategoryController.adminUnBlockCategory);
 router.get('/',adminController.adminDefault);
 
 

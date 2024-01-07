@@ -132,6 +132,19 @@
                 document.getElementById("emails").innerText = "Authentication failed";     
                 // email.placeholder="Authentcation failed";   
                 </script>
+            <%}else if(error===5){%>
+                <script>
+                    const password = document.getElementById('aPassword');
+                    const email = document.getElementById('aEmail');
+                    password.style.background="red";
+                    email.style.background="red";
+                    email.value = "";
+                    password.value = "";
+                    // password.placeholder="Authentication failed";  
+                    document.getElementById("pass").innerText = "invalid Credentials";
+                    document.getElementById("emails").innerText = "invalid Credentials";     
+                    // email.placeholder="Authentcation failed";   
+                </script>
             <%}%>
         <% } %>
         <!-- Sign In End -->

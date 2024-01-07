@@ -6,7 +6,7 @@
     <title>Enter 4-Digit Number</title>
     <style>
         body {
-            background-color: #000;
+            background-color: rgb(22, 22, 22);
             color: #fff;
             display: flex;
             align-items: center;
@@ -54,11 +54,78 @@
 </head>
 <body>
     <form action="/otpverify" method="POST">
-        <h2>Enter a 4-Digit Number sended to your </h2>
-        <h4 style="font-family: 'Courier New', Courier, monospace;"><%= email %></h4>
-        <input type="number" name="oottpp" placeholder="e.g., 1234" pattern="\d{4}" required oninput="this.value = this.value.slice(0, 4)">
+        <h2>Enter a 4-Digit Number sent to your </h2>
+        <h4 style="font-family: 'Courier New', Courier, monospace;">
+            <% if (typeof otpWrong !== 'undefined') { %>
+                <%= email %>
+            <%}%>
+        </h4>
+        <input id="box" type="number" name="oottpp" placeholder="e.g., 1234" pattern="\d{4}" required oninput="this.value = this.value.slice(0, 4)">
         <br>
+
+        <!-- Display the timer -->
+        <div id="timer">1:00</div>
+
+        <!-- Resend OTP button -->
+        <button type="button" id="resendBtn"  onclick="resendOtp()">Resend OTP</button>
+
+        <!-- Display OTP wrong message -->
+        <% if (typeof otpWrong !== 'undefined') { %>   
+            <% if (otpWrong==false) { %>
+                <!-- <p style="color: red;">Wrong OTP. Please try again.</p> -->
+                <script>
+                    const box = document.getElementById('box');
+                    box.style.borderColor="red";
+                    alert("wrong otp");
+                        setTimeout(() => {
+                            box.style.borderColor="black";
+                        }, 3000);
+                </script>
+            <% } else if(otpWrong==true){%>
+                <script>
+                    const box = document.getElementById('box');
+                    box.style.borderColor="green";
+                    box.placeholer = "otp success ";
+                        setTimeout(() => {
+                            box.style.borderColor="black";
+                            window.location.href = '/login'; // Redirect when the timer reaches 0
+                        }, 1000);
+                </script>
+            <%}%>
+        <%}%>
         <button type="submit">Submit</button>
     </form>
+
+    <script>
+        var timer = 60;
+        var timerInterval;
+
+        function updateTimer() {
+            var minutes = Math.floor(timer / 60);
+            var seconds = timer % 60;
+
+            document.getElementById('timer').innerText = minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+
+            if (timer <= 0) {
+                clearInterval(timerInterval);
+                alert("Time's up");
+                window.location.href = '/signup'; // Redirect when the timer reaches 0
+            } else {
+                timer--;
+            }
+        }
+
+        function resendOtp() {
+            timer = 60;
+            window.location.href = '/submitForm'; 
+            alert('OTP Resent!');
+        }
+
+        // Start the timer when the page loads
+        timerInterval = setInterval(updateTimer, 1000);
+    </script>
+    <script>
+
+    </script>
 </body>
 </html>

@@ -73,7 +73,7 @@
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-laptop me-2"></i>Product Details</a>
                         <div class="dropdown-menu bg-transparent border-0">
                             <a href="./viewProduct" class="dropdown-item">View products</a>
-                            <a href="./addProduct" class="dropdown-item active">Add product</a>
+                            <a href="./addProduct" class="dropdown-item ">Add product</a>
                         </div>
                     </div>
                     <a href="./userManagement" class="nav-item nav-link"><i class="fa fa-th me-2"></i>User manage</a>
@@ -108,12 +108,15 @@
                     <div class="col-12">
                         <div class="bg-light rounded h-100 p-4">
                             <h6 class="mb-4">Responsive Table</h6>
+                            <a class="btn btn-primary" href="./addCategory" >Add new </a><br><br>
+
                             <div class="table-responsive">
                                 <table class="table">
                                     <thead>
                                         <tr>
                                             <th scope="col">ID</th>
                                             <th scope="col">Category</th>
+                                            <th scope="col">status</th>
                                             <th scope="col">Action</th>
 
                                         </tr>
@@ -122,8 +125,26 @@
                                         <% categories.forEach((category, index) => { %>
                                             <tr>
                                               <th scope="row"><%= index + 1 %></th>
-                                              <td><%= category %></td>
-                                              <td><a class="btn btn-danger">Delete</a></td>
+                                              <td><%= category.name %></td>
+                                              <td>
+                                                <% if (category.isDeleted) { %> <span class="bg-danger px-3" style="color:white">-deleted-</span>
+                                                <% } else { %>
+                                                    <span class="bg-success px-3" style="color:white">-not-deleted-</span>
+                                                <% } %>
+                                            </td>
+                                              <!-- <td>
+                                                <% if (category.isDeleted) { %> <button type="button" class="btn btn-warning" disabled href="#">Deleted</button>
+                                                <% } else { %>
+                                                  <a class="btn btn-danger" onclick="return confirm('Are you sure?')" href="./blockcategory?categoryId=<%= category._id %>">Delete</a>
+                                                <% } %>
+                                                </td> -->
+                                                <td>
+                                                    <% if (category.isDeleted) { %> 
+                                                       <a class="btn btn-success" onclick="return confirm('Are you sure?')" href="./blockcategory?categoryId=<%= category._id %>" >unblock</a>
+                                                    <% } else { %>
+                                                      <a class="btn btn-danger" onclick="return confirm('Are you sure?')" href="./unblockcategory?categoryId=<%= category._id%>">block</a>
+                                                    <% } %>
+                                                </td>
                                             </tr>
                                           <% }) %>
                                     </tbody>
@@ -131,7 +152,6 @@
                                     
                                 </table>
                             </div>
-                            <a class="btn btn-primary" href="./addCategory" >Add new </a>
 
                         </div>
                     </div>

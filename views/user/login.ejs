@@ -26,6 +26,7 @@
 
       <label for="username">Email</label>
       <input type="text" name="uName" placeholder="Email" id="email" required>
+      <span id="block" style="display: none;">Is deleled</span>
 
       <label for="password">Password</label>
       <div class="password-container">
@@ -86,7 +87,13 @@
       password.placeholder="Not exists";       
       email.placeholder="Not exists";       
   </script>
-  <%}%>
+  <%}else if(error===5){%>
+      <script>
+          const email = document.getElementById('email');
+          email.style.background="#E30B5C";
+          email.placeholder="is Blocked due to -----";  
+      </script>
+    <%}%>
 <% } %>
 
 

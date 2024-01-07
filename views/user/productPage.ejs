@@ -82,23 +82,30 @@
             
         </nav>
     </div>
-        <br><br><br><br>
+        <br><br><br>
     <!-- PRODUCTS -->
-    <div class="container">
+      <div class="container">
         <div class="row">
           <div class="col-md-6">
             <div class="product-images">
-                <div class="main-image">
-                  <% const imageFilenames2 = product.images.split(';'); %>
-                  <img src="/uploads/<%= imageFilenames2[0] %>" alt="Product Image 1" class="zoom-in-out" style="border-radius: 10px;">
-                </div>
+              <div class="main-image">
+                <% if (product.images && product.images.length > 0) { %>
+                  <img src="/uploads/<%= product.images[0] %>" alt="Product Image 1" class="zoom-in-out" style="border-radius: 10px;">
+                <% } else { %>
+                  <img src="/images/default-product.jpg" alt="Default Product Image">
+                <% } %>
+              </div>
+              
               <div class="thumbnails">
-                <% const imageFilenames = product.images.split(';'); %>
-                <% imageFilenames.forEach(filename => { %>
-                  <!-- <img src="/uploads/<%= filename %>" alt="Product Image"> -->
-                  <img src="/uploads/<%= filename %>" alt="Product Image 3" class="thumbnail">
-
-                <% }) %>  
+                <% if (product.images && product.images.length > 0) { %>
+                  <% product.images.forEach(filename => { %>
+                    <img src="/uploads/<%= filename %>" alt="Product Image" class="thumbnail">
+                  <% }) %>
+                <% } else { %>
+                  <p>No images available for this product.</p>
+                <% } %>
+              
+              
 
                 <!-- <img src="images/img5.jpg" alt="Product Image 2" class="thumbnail">
                 <img src="images/about.jpg" alt="Product Image 3" class="thumbnail">
@@ -125,7 +132,6 @@
                         mainImage.style.transform = `scale(${mainImage.style.transform.split('(')[1].split(')')[0] * 0.9})`;
                     }
                     });
-
                 </script>
               </div>
             </div>
@@ -143,11 +149,27 @@
                 <span class="rating-count">(150+)</span>
               </p>
               <p class="product-price">$<%= product.price %></p>
-              <% const tags = product.tags.split(','); %>
-              <div class="color-variants">
-                <% tags.forEach(function(tag) { %>
-                    <div class="swatch" data-color="blue" style="background-color: #0000ff;"></div>
-                  <% }); %>
+              <!-- <% if (product.tags) { %>
+                <% const tags = product.tags.split(','); %>
+                <div class="color-variants">
+                    <% tags.forEach(function(tag) { %>
+                        <div class="swatch" data-color="blue" style="background-color: #0000ff;"></div>
+                    <% }); %>
+                </div>
+                <% } else { %>
+                <% } %> -->
+            
+                <% if (product.tags) { %>
+                  <% const tags = product.tags.split(','); %>
+                  <div class="color-variants">
+                    <% tags.forEach(function(tag) { %>
+                      <div class="swatch" data-color="<%= tag %>" style="background-color: <%= tag %>;"></div>
+                    <% }); %>
+                  </div>
+                <% } else { %>
+                  <p>No color variants available.</p>
+                <% } %>
+                
 
                 <!-- <div class="swatch" data-color="red" style="background-color: #ff0000;"></div>
                 <div class="swatch" data-color="blue" style="background-color: #0000ff;"></div>
@@ -186,20 +208,21 @@
                     }
 
               </script>
-              <button class="btn btn-outline-dark add-to-cart px-5">Add to Cart</button>
+              <button class="btn btn-outline-dark add-to-cart px-5">Add to Cart</button><br>
               <button class="btn btn-dark buy-now px-5">Buy Now</button>
             </div>
           </div>
         </div>
-    </div>
-      
-      <div class="container">
-        <textarea rows="10" cols="170" style="border:none; line-height: 2;"><%= product.description %></textarea>
       </div>
+      <br>
+      <div class="container" >
+        <h2>Description</h2>
+        <textarea rows="10" cols="170" style="border:none; line-height: 2;resize: none;" disabled><%= product.description %></textarea>
+      </div><br>
       
       <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-      <script src="product-page.js"></script> 
+      <!-- <script src="product-page.js"></script>  -->
         <!-- PRODUCTS -->
 
     <!-- Footer Start -->
@@ -230,6 +253,5 @@
         </div>
       </footer>
     <!-- Footer End -->
-</body>
-
+  </body>
 </html>

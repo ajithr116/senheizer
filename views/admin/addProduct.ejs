@@ -41,6 +41,14 @@
         label{
             color:black;
         }
+                img {
+            max-width: 100px; /* Set your desired maximum width */
+            max-height: 100px; /* Set your desired maximum height */
+            width: auto;
+            height: auto;
+            border-radius: 10px;
+        }
+
 
     </style>
 </head>
@@ -68,20 +76,28 @@
                         <img class="rounded-circle" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
                         <div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
                     </div> -->
-                    <div class="ms-3">
-                        <!-- <h6 class="mb-0">Jhon Doe</h6>
-                        <span>Admin</span> -->
-                    </div>
+                    <!-- <div class="ms-3">
+                         <h6 class="mb-0">Jhon Doe</h6>
+                        <span>Admin</span> 
+                    </div> -->
                 </div>
                 <div class="navbar-nav w-100">
                     <a href="./index" class="nav-item nav-link "><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
-                    <div class="nav-item dropdown">
+                    <!-- <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown"><i class="fa fa-laptop me-2"></i>Product Details</a>
                         <div class="dropdown-menu bg-transparent border-0">
                             <a href="./viewProduct" class="dropdown-item">View products</a>
                             <a href="./addProduct" class="dropdown-item active">Add product</a>
                         </div>
+                    </div> -->
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle active"><i class="fa fa-laptop me-2"></i>Product Details</a>
+                        <div class="dropdown-menu bg-transparent border-0 show"> 
+                            <a href="./viewProduct" class="dropdown-item ">View products</a>
+                          <a href="./addProduct" class="dropdown-item active">Add product</a>
+                        </div>
                     </div>
+                      
                     <a href="./userManagement" class="nav-item nav-link"><i class="fa fa-th me-2"></i>User manage</a>
                     <a href="./categoryManage" class="nav-item nav-link"><i class="fa fa-keyboard me-2"></i>Category manage</a>
                     <!-- <a href="table.html" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Tables</a> -->
@@ -120,16 +136,51 @@
                                     <input type="text" name="pName" class="form-control" id="productName" aria-describedby="productNameHelp" required>
                                 </div>
                         
-                                <div class="mb-3">
+                                <!-- <div class="mb-3">
                                     <label for="formFileMultiple" class="form-label">Multiple files input</label>
                                     <input class="form-control" type="file" name="pImages" id="formFileMultiple" multiple style="width: 50%;">
+                                </div> -->
+                                
+                                <div class="mb-3">
+                                    <label for="formFileMultiple" class="form-label">Multiple files input</label><br>
+                                    <input class="form-control" type="file" name="pImages" id="formFileMultiple" multiple style="width: 50%;">
+                                    <input type="hidden" name="ppimages" ><br>
+                                    <div id="image-previews"></div>
                                 </div>
+                                <script>
+                                   const fileInput = document.getElementById("formFileMultiple");
+                                    const previewContainer = document.getElementById("image-previews");
+
+                                    fileInput.addEventListener("change", (event) => {
+                                    const selectedFiles = event.target.files;
+
+                                    previewContainer.innerHTML = ""; // Clear previous previews
+
+                                    for (let i = 0; i < selectedFiles.length; i++) {
+                                        const file = selectedFiles[i];
+                                        const imagePreview = document.createElement("img");
+                                        imagePreview.src = URL.createObjectURL(file);
+                                        imagePreview.classList.add("selected-image-preview");
+                                        previewContainer.appendChild(imagePreview);
+                                    }
+                                    });
+                                </script>
 
                                 <div class="mb-3">
                                     <label for="category" class="form-label">Category</label>
-                                    <input type="text" name="pCategory" class="form-control" id="category" aria-describedby="categoryHelp"  style="width: 50%;" >
-                                    
+                                    <select name="pCategory" class="form-select" id="category" aria-describedby="categoryHelp" style="width: 50%;" required>
+                                        <option>category</option>
+                                        <% for(let res of categories){ %>
+                                            <% if(!res.isDeleted){%>
+                                                <option value="<%= res._id %>">
+                                                    <%= res.name %>
+                                                </option>
+                                            <%}%>
+
+                                        <% } %>
+                                    </select>
                                 </div>
+                                  
                                 
                                 <div class="mb-3">
                                     <label for="category" class="form-label">Brand</label>

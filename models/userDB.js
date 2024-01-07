@@ -5,7 +5,7 @@ const url = 'mongodb://127.0.0.1:27017';
 const dbName = 'senheizer';
 
 
-//------------------------
+//-----------------------
     // Format joined date
     let joinedDate = new Date().toLocaleString('en-US', {
       timeZone: 'UTC',
@@ -98,7 +98,9 @@ async function authenticateUser(email, password) {
         joinedDate: joinedDate,
         status:true,
         isDeleted:false,
-        address: addressID
+        address: {
+          addressID: addressID
+        }
       };  
       // Insert a document into the collection
       const result = await collection.insertOne(document);

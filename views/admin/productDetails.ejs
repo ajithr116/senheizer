@@ -67,10 +67,10 @@
                         <img class="rounded-circle" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
                         <div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
                     </div> -->
-                    <div class="ms-3">
-                        <!-- <h6 class="mb-0">Jhon Doe</h6>
-                        <span>Admin</span> -->
-                    </div>
+                    <!-- <div class="ms-3">
+                        <h6 class="mb-0">Jhon Doe</h6>
+                        <span>Admin</span> 
+                    </div> -->
                 </div>
                 <div class="navbar-nav w-100">
                     <a href="./index" class="nav-item nav-link "><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
@@ -118,7 +118,7 @@
                                 <div class="mb-3">
                                     <label for="productName" class="form-label">Product ID</label>
                                     <% const newID = proID %>
-                                    <input type="text" class="form-control" id="productName" value="<%= newID %>" aria-describedby="productNameHelp" disabled style="width:70px;">
+                                    <input type="text" class="form-control" id="productName" value="<%= newID %>" aria-describedby="productNameHelp" disabled >
                                 </div>
                         
                                 <div class="mb-3">
@@ -132,20 +132,54 @@
                                 </div> -->
 
                                 <div class="mb-3">
-                                    <% const imageFilenames = product.images.split(';'); %>
-                                    <% imageFilenames.forEach(filename => { %>
+                                    <% for (const filename of product.images) { %>
                                         <img src="/uploads/<%= filename %>" alt="Product Image">
-                                      <% }) %>     
-                                      <br><br>
-                                      <label for="formFileMultiple" class="form-label">Multiple files input</label><br>
-                                      <input class="form-control" type="file" name="pImages" id="formFileMultiple" multiple style="width: 50%;">                           
+                                        <input type="checkbox" value="<%= filename %>" name="pppimages" checked>
+                                      <% } %>                                      
+                                  
+                                    <br><br>
+                                    <label for="formFileMultiple" class="form-label">Multiple files input</label><br>
+                                    <input class="form-control" type="file" name="pImages" id="formFileMultiple" multiple style="width: 50%;">
+                                    <input type="hidden" name="ppimages" value="<%= product.images %>">
+                                    <div id="image-previews"></div>
                                 </div>
+                                <script>
+                                   const fileInput = document.getElementById("formFileMultiple");
+                                    const previewContainer = document.getElementById("image-previews");
+
+                                    fileInput.addEventListener("change", (event) => {
+                                    const selectedFiles = event.target.files;
+
+                                    previewContainer.innerHTML = ""; // Clear previous previews
+
+                                    for (let i = 0; i < selectedFiles.length; i++) {
+                                        const file = selectedFiles[i];
+                                        const imagePreview = document.createElement("img");
+                                        imagePreview.src = URL.createObjectURL(file);
+                                        imagePreview.classList.add("selected-image-preview");
+                                        previewContainer.appendChild(imagePreview);
+                                    }
+                                    });
+                                    
+                                     
+                                </script>
 
 
                                 <div class="mb-3">
                                     <label for="category" class="form-label">Category</label>
-                                    <input type="text" class="form-control" value="<%= product.category %>" name="uProductCategory" id="category" aria-describedby="categoryHelp"  style="width: 50%;">
+                                    <select name="pCategory" class="form-select" id="category" aria-describedby="categoryHelp" style="width: 50%;" required>
+                                        <option value="<%= product2.category._id %>"><%= product2.category.name %></option>
+                                        <% for(let res of categories){ %>
+                                            <% if(!res.isDeleted) {%>
+                                                <option value="<%= res._id %>">
+                                                    <%= res.name %>
+                                                </option>
+                                            <% }%>
+                                        <% } %>
+                                    </select>                                
                                 </div>
+
+                                
                                 
                                 <div class="mb-3">
                                     <label for="category" class="form-label">Brand</label>
