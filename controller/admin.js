@@ -1,5 +1,11 @@
 const express = require("express");
 const sharp = require('sharp');
+const path = require('path'); // Import the path module
+const os = require('os'); // Import the os module for temporary path
+const fs = require('fs'); // Import the fs module for file operations
+
+// ... rest of your code
+
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
@@ -194,7 +200,7 @@ const adminUsermanage = async (req, res) => {
 };
 
 // submit products 
-/*const adminSubmitProduct = async (req, res) => {
+const adminSubmitProduct = async (req, res) => {
     // const productName = req.body.pName;
     // console.log(productName);
 
@@ -244,43 +250,64 @@ const adminUsermanage = async (req, res) => {
         console.log(err);
         res.status(500).send('intername server error ');
     }
-}*/
-const adminSubmitProduct = async (req, res,next) => {
-    try {
-      // Await the uploaded images directly
-    //   const images = await upload.array('pImages')(req, res,next);
+}
 
-      const images = upload.array('pImages')
-      (req,res,(err)=>{
-          if(err){
-              return res.status(400).send("error uploading images" + err);
-        }});
+/*const adminSubmitProduct = async (req, res) => {
+    try {
+      upload.array('pImages')
+        (req, res, (err) => {
+          if (err) {
+            return res.status(400).send("error uploading images" + err);
+          }
   
-      // Ensure images are available before processing
-      if (!images) {
-        return res.status(400).send("No images uploaded");
-      }
+          Promise.all(req.files.map(async (file) => {
+            
+            const tempPath = path.join(os.tmpdir(), file.filename); // Use temporary path
+            try {
+              await sharp(file.path)
+                .resize(400, 200)
+                .toFile(tempPath);
   
-      // Process images asynchronously
-      const croppedImages = await Promise.all(images.map(async (file) => {
-        const imagePath = `cropped-${file.filename}.jpg`;
+              fs.renameSync(tempPath, file.destination + '/' + file.filename); // Rename and move to final destination
+            } catch (err) {
+              console.error('Error resizing image:', err);
+              return res.status(500).send('Error processing images');
+            }
+          }))
+          .then(() => {
+            // ... rest of your product creation logic using the original filenames ..
+            const images = req.files.map((file) => file.filename); // Create the images array
+
+
+            const {pName: productName,pCategory: productCategory,pBrand: productBrand,pPrice: productPrice,pQuantity: productQuantity,pColors: productTags,pDesc: productDesc} = req.body;
+            
+            const newProduct = new Product({
+                name: productName, 
+                category: productCategory,
+                brand: productBrand,
+                price: productPrice,
+                quantity: productQuantity,
+                images: images,
+                tags: productTags,
+                description: productDesc
+              });
+          
+              const savedProduct =  newProduct.save();
+
+            // console.log(productName, '-', productBrand, '-', productCategory, '-', productPrice, '-', productDesc, '-', productQuantity, '-', productTags, '-', images);
   
-        await sharp(file.path)
-          .extract({ width: 100, height: 100, left: 10, top: 10 })
-          .toFile(imagePath);
-  
-        return imagePath;
-      }));
-  
-      // Create the product with cropped image paths
-      // ... (rest of your product creation logic)
-  
-      res.redirect('/admin/viewProduct');
+            res.redirect('/admin/viewProduct');
+          })
+          .catch((err) => {
+            console.error('Error processing images:', err);
+            res.status(500).send('Internal server error');
+          });
+        });
     } catch (err) {
       console.error(err);
       res.status(500).send('Internal server error');
     }
-};
+};*/
   
 const adminDeleteProduct = async (req,res)=>{
     try{

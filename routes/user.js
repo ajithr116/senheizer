@@ -4,6 +4,7 @@ const nodemailer = require('nodemailer');
 const router = express.Router();
 const userController = require('../controller/user');
 const functionController = require('../userFunctions/usersFun')
+const userProfileController = require('../controller/userProfile');
 
 
 
@@ -390,6 +391,26 @@ router.post('/otpverify',userController.userOtpVerify);
 router.get('/index',checkUserBlocked,userController.userIndex);
 router.get('/products',checkUserBlocked,userController.userProducts);
 router.get('/productPage',checkUserBlocked,userController.userProductPage);
+
+//user profile settings
+router.get('/profile',checkUserBlocked,userController.userProfile);
+router.post('/profile',userController.userUpdateProfile);
+router.get('/addaddress',checkUserBlocked,userController.userAddAddress);
+router.post('/addaddress',userController.userAddAddressDetails);
+router.get('/editaddress',checkUserBlocked,userController.userEditAddress);
+router.post('/editaddress',userController.userUpdateAddress);
+router.get('/deleteaddress',userController.userDeleteAddress);
+
+//user forgot passwored
+router.get('/forgotpassword',userController.userForgotpassword);
+router.post('/forgotpassword',userController.userForgetPasswordEmail);
+router.get('/passwordotp',userController.userPasswordOtp);
+router.post('/passwordotp',userController.userOtp);
+router.get('/resendotp',userController.userResentOtp);
+router.get('/resetpassword',userController.userResetPassword);
+router.post('/resetpassword',userController.userSubmitResetPassword);
+
+
 router.get('/logout',userController.userLogout);
 
 

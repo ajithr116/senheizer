@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
+const nodemailer = require('nodemailer');
 require('dotenv').config();
+
 const User = require('../models/user'); 
 const Product = require('../models/products'); 
 
@@ -61,7 +63,7 @@ async function checkEmailExist(email) {
     
     }
     
-    async function insertUserData(firstName,lastName,email,password) {
+    async function insertUserData(firstName,lastName,email,password,phoneNumber) {
       try {
         // await connectDB(); // Ensure database connection
   
@@ -69,7 +71,8 @@ async function checkEmailExist(email) {
           firstName,
           lastName,
           email,
-          password
+          password,
+          phoneNumber
         });
         const savedUser = await user.save()
         .then((data)=>{console.log("data added",data)})
@@ -148,6 +151,39 @@ async function checkEmailExist(email) {
     }
   }
   
+const sendMail = async (req,res,email)=>{
+
+  console.log("reached");
+
+  var val = Math.floor(1000 + Math.random() * 9000);
+  req.session.randomNumber=val;
+  console.log("val" ,val);
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: process.env.EMAIL_ADDRESS,
+        pass: process.env.PASS
+      }
+  });
+
+  console.log('rEmail' ,email);
+  const mailOptions = {
+      from: process.env.EMAIL_ADDRESS,
+      to: email,
+      subject: 'Your OTP Verification Code',
+      text: `Your OTP is: ${val}`
+  };
+  console.log("sended");
+
+  transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+          console.error(error);
+          // Display a user-friendly error message or redirect to an error page
+      } else {
+          console.log('Email sent:', info.response);
+      }
+  });
+}
   
   module.exports = {
     checkEmailExist,
@@ -157,6 +193,6 @@ async function checkEmailExist(email) {
     getAllProduct,
     getAllProductPage,
     getProductDetails,
-    
+    sendMail,
   };
   

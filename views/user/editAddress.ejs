@@ -1,0 +1,271 @@
+
+</DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Products</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+
+    <!-- Favicon -->
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+
+<!-- Bootstrap JS (required for the Bootstrap components to work) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+  <style>
+    
+  </style>
+
+<link rel="stylesheet" href="cssu/products.css">
+
+</head>
+
+<body >
+    <div class="container-fluid fixed-top bg-light px-0">
+        <div class="top-bar row gx-0 align-items-center d-none d-lg-flex">
+            <!-- Uncomment the following lines if you want to display additional information in the top bar -->
+            <!-- <div class="col-lg-6 px-5 text-start">
+                <small><i class="fa fa-map-marker-alt me-2"></i>123 Street, Manglore, India</small>
+                <small class="ms-4"><i class="fa fa-envelope me-2"></i>info@Craftycorner.com</small>
+            </div> -->
+            <!-- Uncomment the following lines if you want to display social media icons in the top bar -->
+            <!-- <div class="col-lg-6 px-5 text-end">
+                <small>Follow us:</small>
+                <a class="text-body ms-3" href=""><i class="fab fa-facebook-f"></i></a>
+                <a class="text-body ms-3" href=""><i class="fab fa-twitter"></i></a>
+                <a class="text-body ms-3" href=""><i class="fab fa-linkedin-in"></i></a>
+                <a class="text-body ms-3" href=""><i class="fab fa-instagram"></i></a>
+            </div> -->
+        </div>
+
+        <nav class="navbar navbar-expand-lg navbar-light bg-light py-lg-0 px-lg-5">
+            <a href="/index" class="navbar-brand ms-4 ms-lg-0">
+                <h1 class="fw-bold text-black m-0">SENHEIZER</h1>
+            </a>
+            <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <div class="navbar-nav mx-auto">
+                    <a href="/index" class="nav-item nav-link ">Home</a>
+                    <a href="/products" class="nav-item nav-link ">Products</a>
+                    <a href="https://www.google.com" class="nav-item nav-link ">Cart</a>
+                    <!-- <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Pages</a>
+                        <div class="dropdown-menu m-0">
+                            <a href="https://www.google.com" class="dropdown-item">Seller's Camp</a>
+                            <a href="https://www.google.com" class="dropdown-item">Craftsmen</a>
+                        </div>
+                    </div> -->
+                    <a href="https://www.google.com" class="nav-item nav-link">Orders</a>
+                    <a href="https://www.google.com" class="nav-item nav-link">Wishlist</a>
+                    <a href="/profile" class="nav-item nav-link  active " >Profile</a>
+                </div>
+                <div class="d-none d-lg-flex ms-2">
+                    <a class="btn btn-outline-danger" href="/logout">Logout</a>
+                </div>
+            </div>
+            
+        </nav>
+    </div>
+    <br><br><br><br>
+    <div id="alert" style="display: none;">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Phone number</strong> format not match
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+    </div> 
+    <div class="container">
+        <form action="/editaddress?addressId=<%= address._id %>" method="POST">
+            <h3>Address settings</h3><br>
+            <div class="col-md-5">
+                <label>Full Name</label>
+                <input type="text" name="newAddressName" value="<%= address.name %>"  class="form-control" style="height:50px;border-radius: 10px;border:1px solid black;" placeholder="Name" required>
+                <p>
+            </div>
+            <!-- <div class="col-md-5">
+                <label>Phone number</label>
+                <input type="text" name="newAddressPhoneNo" class="form-control" style="height:50px;border-radius: 10px;border:1px solid black;" placeholder="Phone number"  min="10" max="10" maxlength="10">
+            </div> -->
+            <div class="form-row">
+                <div class="col">
+                    <label>Phone number</label>
+                    <input type="tel" name="newPhoneNo" id="phno" value="<%= address.phone %>"  min="10" max="10" maxlength="10" class="form-control" style="height:50px;border-radius: 10px;border:1px solid black;" placeholder="phone number" required>
+                    <p id="phno2" style="visibility:hidden">format does not match</p>
+                </div>
+                <div class="col">
+                    <label>Pincode / ZIP</label>
+                    <input type="tel" name="newZip" value="<%= address.pincode %>" id="pin" min='6' max="6" maxlength="6" class="form-control" style="height:50px;border-radius: 10px;border:1px solid black;" placeholder="Last name" required>
+                    <p id="pin2" style="visibility:hidden">format does not match</p>
+                </div>  
+            </div>
+            <div class="form-row">
+                <div class="col">
+                    <label>State</label>
+                    <select  class="form-control" name="newState" style="height: 50px; border-radius: 10px; border: 1px solid black;" required>
+                        <option value="<%= address.state %>"><%= address.state%></option>
+                        <option value="Andhra Pradesh">Andhra Pradesh</option>
+                        <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                        <option value="Assam">Assam</option>
+                        <option value="Bihar">Bihar</option>
+                        <option value="Chhattisgarh">Chhattisgarh</option>
+                        <option value="Goa">Goa</option>
+                        <option value="Gujarat">Gujarat</option>
+                        <option value="Haryana">Haryana</option>
+                        <option value="Himachal Pradesh">Himachal Pradesh</option>
+                        <option value="Jharkhand">Jharkhand</option>
+                        <option value="Karnataka">Karnataka</option>
+                        <option value="Kerala">Kerala</option>
+                        <option value="Madhya Pradesh">Madhya Pradesh</option>
+                        <option value="Maharashtra">Maharashtra</option>
+                        <option value="Manipur">Manipur</option>
+                        <option value="Meghalaya">Meghalaya</option>
+                        <option value="Mizoram">Mizoram</option>
+                        <option value="Nagaland">Nagaland</option>
+                        <option value="Odisha">Odisha</option>
+                        <option value="Punjab">Punjab</option>
+                        <option value="Rajasthan">Rajasthan</option>
+                        <option value="Sikkim">Sikkim</option>
+                        <option value="Tamil Nadu">Tamil Nadu</option>
+                        <option value="Telangana">Telangana</option>
+                        <option value="Tripura">Tripura</option>
+                        <option value="Uttar Pradesh">Uttar Pradesh</option>
+                        <option value="Uttarakhand">Uttarakhand</option>
+                        <option value="West Bengal">West Bengal</option>
+                        <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
+                        <option value="Chandigarh">Chandigarh</option>
+                        <option value="Dadra and Nagar Haveli and Daman and Diu">Dadra and Nagar Haveli and Daman and Diu</option>
+                        <option value="Delhi">Delhi</option>
+                        <option value="Lakshadweep">Lakshadweep</option>
+                        <option value="Puducherry">Puducherry</option>
+                    </select>
+                </div>
+                
+                
+                <div class="col">
+                <label>District</label>
+                <input type="text" value="<%= address.district %>"  name="newDistrict" class="form-control" style="height:50px;border-radius: 10px;border:1px solid black;" placeholder="District" required>
+                </div>
+                <br>
+            </div>
+            <br>
+            <div class="col">
+                <div class="form-group">
+                    <label for="exampleFormControlTextarea1">Full address</label>
+                    <textarea  name="newFullAddress" class="form-control" id="exampleFormControlTextarea1" style="border-radius: 10px; border: 1px solid black;resize:none" cols="15" rows="5" required><%= address.address %></textarea>
+                </div>
+            </div>
+            
+
+            <script>
+                document.querySelectorAll('.edit-link2').forEach(link => {
+                link.addEventListener('click', () => {
+                    const inputField2 = link.previousElementSibling;
+                    inputField2.disabled = false;
+                    
+                    // ... rest of your code
+                    });
+                });
+            </script>
+            <br>
+            <div class="col">
+                <input type="submit" class="btn btn-success" value="Add address" style="width:500px;">
+            </div>
+        </form>
+        <% if (typeof error !== 'undefined') { %>   
+            <% if(error==1){%>
+                <script>
+                    const phno = document.getElementById('phno');
+                    const phno2 = document.getElementById('phno2')
+                    phno.style.borderColor="red";
+                    phno.placeholder="format not match";
+                    phno2.style.visibility='visible';
+                    setTimeout(()=>{
+                        phno.style.borderColor='black';
+                        phno.placeholder="Phone number";
+
+                    },3000);
+                </script>
+            <%}else if(error==2){%>
+                <script>
+                    const pin = document.getElementById('pin');
+                    const pin2 = document.getElementById('pin2')
+                    pin.style.borderColor="red";
+                    pin.placeholder="format not match";
+                    pin2.style.visibility='visible';
+                    setTimeout(()=>{
+                        pin.style.borderColor='black';
+                        pin.placeholder="Pin / ZIP";
+
+                    },3000);
+                </script>
+            <%}else if(error==3){%>
+                <script>
+                    pin.style.borderColor="red";
+                    pin.placeholder="format not match";
+                    phno.style.borderColor="red";
+                    phno.placeholder="format not match";
+                    pin2.style.visibility='visible';
+                    phno2.style.visibility='visible';
+                    setTimeout(()=>{
+                        pin.style.borderColor='black';
+                        pin.placeholder="Pin / ZIP";
+                        phno.style.borderColor='black';
+                        phno.placeholder="Phone number";
+                    },3000);
+                </script>
+            <%}%>
+        <%}%>
+    </div>
+
+    <!-- PRODUCTS -->
+    <!-- Bootstrap JS (required for the Bootstrap components to work) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <br><br><br>
+    
+    <!-- Footer Start -->
+    <footer>
+        <div class="footer-content">
+          <div class="footer-section about">
+            <h2>About Us</h2>
+            <p>Your company description goes here.</p>
+          </div>
+          <div class="footer-section contact">
+            <h2>Contact Us</h2>
+            <p>Email: example@example.com<br>Phone: +123 456 7890</p>
+            <!-- Add two textboxes and one button -->
+            <div class="contact-form">
+              <input type="text" placeholder="Your Name">
+              <input type="text" placeholder="Your Email">
+              <button>Contact</button>
+            </div>
+          </div>
+          <div class="footer-section social">
+            <h2>Follow Us</h2>
+            <p>Stay connected on social media:</p>
+            <!-- Add your social media icons or links here -->
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>&copy; 2023 Your Website. All rights reserved.</p>
+        </div>
+      </footer>
+    <!-- Footer End -->
+</body>
+
+</html>
+

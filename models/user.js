@@ -23,16 +23,20 @@ const uniqueUid = "u"+forUniqueId;
   //----------------------
 
 const userSchema = new mongoose.Schema({
-  _id: {
+  uniqueID: {
     type: String,
     required: true,
     // unique: true, // Ensure unique _id values
     default: uniqueUid
   },
   firstName: {
-    type:String
+    type:String,
+    required:true
   },
-  lastName: String,
+  lastName: {
+    type:String,
+    required:true
+  },
   email: {
     type: String,
     required: true,
@@ -41,6 +45,11 @@ const userSchema = new mongoose.Schema({
   password: {
     type:String
   }, // Consider hashing password before storing
+  phoneNumber: {
+    type: Number,
+    required: true,
+    unique: true
+  },
   joinedDate: {
     type: String,
     default: joinedDate // Set default to current date and time
