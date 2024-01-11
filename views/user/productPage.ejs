@@ -62,7 +62,7 @@
                 <div class="navbar-nav mx-auto">
                     <a href="/index" class="nav-item nav-link ">Home</a>
                     <a href="/products" class="nav-item nav-link active">Products</a>
-                    <a href="https:/www.google.com" class="nav-item nav-link ">Cart</a>
+                    <a href="/cart" class="nav-item nav-link ">Cart</a>
                     <!-- <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Pages</a>
                         <div class="dropdown-menu m-0">
@@ -73,7 +73,7 @@
                     <a href="https://www.google.com" class="nav-item nav-link">Orders</a>
                     <a href="https://www.google.com" class="nav-item nav-link">Wishlist</a>
                     <a href="https://www.google.com" class="nav-item nav-link">Contact Us</a>
-                    <a href="https://www.google.com" class="nav-item nav-link">Profile</a>
+                    <a href="/profil" class="nav-item nav-link">Profile</a>
                 </div>
                 <div class="d-none d-lg-flex ms-2">
                     <a class="btn btn-outline-danger" href="/logout">Logout</a>
@@ -208,7 +208,8 @@
                     }
 
               </script>
-              <button class="btn btn-outline-dark add-to-cart px-5">Add to Cart</button><br>
+              <a href="/addtocart?productId=<%= product._id %>" class="btn btn-outline-dark addto cart px-5">Add to cart</a>
+              <br>
               <button class="btn btn-dark buy-now px-5">Buy Now</button>
             </div>
           </div>

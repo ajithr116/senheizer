@@ -1,0 +1,291 @@
+
+
+
+</DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Products</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+
+    <!-- Favicon -->
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+
+      <!-- Bootstrap JS (required for the Bootstrap components to work) -->
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <style>
+      body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      }
+
+      footer {
+        margin-top: auto;
+      }
+      .container {
+        width: 80%;
+        margin: auto;
+      }
+
+      .cart-item {
+        border: 1px solid #ccc;
+        margin-bottom: 20px;
+        padding: 20px;
+      }
+
+      .cart-item h4 {
+        margin: 0 0 10px 0;
+      }
+
+      .summary {
+        position: sticky;
+        top: 60px;
+        padding: 20px;
+        border: 1px solid #ccc;
+      }
+
+      .summary button {
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 20px 2px;
+        cursor: pointer;
+      }
+
+    </style>
+
+  <link rel="stylesheet" href="cssu/products.css">
+
+  </head>
+
+<body>
+    <div class="container-fluid fixed-top bg-light px-0">
+        <div class="top-bar row gx-0 align-items-center d-none d-lg-flex">
+            <!-- Uncomment the following lines if you want to display additional information in the top bar -->
+            <!-- <div class="col-lg-6 px-5 text-start">
+                <small><i class="fa fa-map-marker-alt me-2"></i>123 Street, Manglore, India</small>
+                <small class="ms-4"><i class="fa fa-envelope me-2"></i>info@Craftycorner.com</small>
+            </div> -->
+            <!-- Uncomment the following lines if you want to display social media icons in the top bar -->
+            <!-- <div class="col-lg-6 px-5 text-end">
+                <small>Follow us:</small>
+                <a class="text-body ms-3" href=""><i class="fab fa-facebook-f"></i></a>
+                <a class="text-body ms-3" href=""><i class="fab fa-twitter"></i></a>
+                <a class="text-body ms-3" href=""><i class="fab fa-linkedin-in"></i></a>
+                <a class="text-body ms-3" href=""><i class="fab fa-instagram"></i></a>
+            </div> -->
+        </div>
+
+        <nav class="navbar navbar-expand-lg navbar-light bg-light py-lg-0 px-lg-5">
+            <a href="/index" class="navbar-brand ms-4 ms-lg-0">
+                <h1 class="fw-bold text-black m-0">SENHEIZER</h1>
+            </a>
+            <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <div class="navbar-nav mx-auto">
+                    <a href="/index" class="nav-item nav-link ">Home</a>
+                    <a href="/products" class="nav-item nav-link ">Products</a>
+                    <a href="https://www.google.com" class="nav-item nav-link ">Cart</a>
+                    <!-- <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Pages</a>
+                        <div class="dropdown-menu m-0">
+                            <a href="https://www.google.com" class="dropdown-item">Seller's Camp</a>
+                            <a href="https://www.google.com" class="dropdown-item">Craftsmen</a>
+                        </div>
+                    </div> -->
+                    <a href="https://www.google.com" class="nav-item nav-link">Orders</a>
+                    <a href="https://www.google.com" class="nav-item nav-link">Wishlist</a>
+                    <!-- <a href="https://www.google.com" class="nav-item nav-link">Contact Us</a> -->
+                    <a href="/profile" class="nav-item nav-link rounded active " >Profile</a>
+                </div>
+                <div class="d-none d-lg-flex ms-2">
+                    <a class="btn btn-outline-danger" href="/logout">Logout</a>
+                </div>
+            </div>
+            
+        </nav>
+    </div>
+    <br><br><br>
+
+      <div id="alert" style="display: none;">
+          <div class="alert alert-danger alert-dismissible fade show" role="alert">
+              <strong>Phone number</strong> format not match
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+      </div> 
+
+      <div class="container-fluid">
+        <div class="row">
+          <!-- Product details -->
+          <div class="col-md-9 mx-5">
+            <h2>Shopping Cart</h2>
+            <div class="cart-container">
+              <% if (cartItems.length > 0) { %>
+                <% cartItems.forEach(item => { %>
+                  <div class="cart-item d-flex justify-content-around" style="border-radius: 10px;background-color: rgb(223, 219, 219);">
+                    <img src="/uploads/<%= item.product.images[0] %>" style="height:auto;width:100px;border:1px solid black;border-radius: 10px;"> <div>
+                      <a href="/productPage?productId=<%= item.product._id %>" style="text-decoration: none;">
+                        <h5><%= item.product.name.substring(0, 50) + (item.product.name.length > 20 ? '...' : '')  %></h5>
+                      </a>
+                      
+                      <p><%= item.product.brand %></p>
+                    </div>
+                    <div>
+                      <p><b>Price</b>: $ <%= item.product.price %></p>
+                      <button class="quantity-btn btn-primary" data-action="decrease" style="border:none">-</button>
+                      <input type="number" value="<%= item.quantity %>" readonly style="width:40px;border:none">
+                      <button class="quantity-btn btn-primary" data-action="increase" style="border:none">+</button>
+                    
+                    </div>
+                    <div>
+                      
+                      <a class="btn btn-danger" href="/removeproduct?cartProductId=<%= item.product._id %>">Remove</a>
+                    </div>
+                  </div>
+                  
+                <% }) %>
+              <% } else { %>
+                <p>Your cart is empty.</p>
+                <a href="/products">Shop now</a>
+              <% } %>
+            </div>
+            
+            
+            <script>
+              window.onload = function() {
+                var quantityButtons = document.querySelectorAll('.quantity-btn');
+                quantityButtons.forEach(function(button) {
+                  button.addEventListener('click', function(event) {
+                    var action = event.target.getAttribute('data-action');
+                    var input = event.target.parentElement.querySelector('input');
+                    var currentValue = parseInt(input.value);
+                    if (action === 'increase') {
+                      input.value = currentValue + 1;
+                    } else if (action === 'decrease' && currentValue > 1) {
+                      input.value = currentValue - 1;
+                    }
+                  });
+                });
+              };
+            </script>
+      
+            <!-- Repeat .cart-item for each product in the cart -->
+          </div>
+      
+          <!-- Sticky summary -->
+          <div class="col-md-2 sticky-top" style="margin-top: 50px;border-radius: 30px;">
+            <div class="summary " style="border-radius: 30px;background-color: rgb(223, 219, 219);">
+              <h3>Grand total</h3>
+              <hr style="background-color: black;">
+              <p>Subtotal: $ <b><%= subtotal.toFixed(2) %></b></p>
+              <p>Tax: $ <b><%= tax.toFixed(2) %></b></p>
+              <input type="text" style='border-radius: 10px; border:none;' placeholder=" COUPON CODE">
+              <hr style="background-color: black;">
+
+              <p>Total: $ <b><%= total.toFixed(2) %></b></p>
+              
+              <a href="https://www.google.com"><button class="btn btn-dark">Checkout</button></a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <script>
+document.querySelectorAll('.quantity-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const input = btn.parentElement.querySelector('.quantity-input');
+    let value = parseInt(input.value);
+    const item = btn.parentElement.parentElement.parentElement.dataset.item; // Access item data
+
+    if (btn.dataset.action === 'increase' && value < item.quantity) {
+      value++;
+    } else if (btn.dataset.action === 'decrease' && value > 1) {
+      value--;
+    }
+
+    fetch('/updatecart', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        productID: item.productID,
+        quantity: value
+      })
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          input.value = value;
+          const itemPrice = btn.parentElement.querySelector('p[data-price]');
+          itemPrice.textContent = '$' + (value * item.product.price).toFixed(2);
+
+          // Recalculate summary values
+          // ... (using logic from userCartDetails function)
+
+          // Update summary elements in the DOM
+          // ...
+        } else {
+          // Handle error (e.g., display an error message)
+        }
+      });
+      });
+    });
+
+    </script>
+
+    <!-- PRODUCTS -->
+    <!-- Bootstrap JS (required for the Bootstrap components to work) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <br><br><br>
+    
+    <!-- Footer Start -->
+    <footer>
+        <div class="footer-content">
+          <div class="footer-section about">
+            <h2>About Us</h2>
+            <p>Your company description goes here.</p>
+          </div>
+          <div class="footer-section contact">
+            <h2>Contact Us</h2>
+            <p>Email: example@example.com<br>Phone: +123 456 7890</p>
+            <!-- Add two textboxes and one button -->
+            <div class="contact-form">
+              <input type="text" placeholder="Your Name">
+              <input type="text" placeholder="Your Email">
+              <button>Contact</button>
+            </div>
+          </div>
+          <div class="footer-section social">
+            <h2>Follow Us</h2>
+            <p>Stay connected on social media:</p>
+            <!-- Add your social media icons or links here -->
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>&copy; 2023 Your Website. All rights reserved.</p>
+        </div>
+      </footer>
+    <!-- Footer End -->
+</body>
+
+</html>

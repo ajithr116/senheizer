@@ -70,8 +70,8 @@ app.use((req, res, next) => {
     next();
 });
 
-// app.use('/resetpassword',(req,res)=>{
-//     res.render('user/resetPassword');
+// app.use('/cart',(req,res)=>{
+//     res.render('user/cart');
 // })
 
 

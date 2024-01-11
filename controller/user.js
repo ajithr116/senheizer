@@ -4,6 +4,7 @@ require('dotenv').config();
 const User = require('../models/user'); 
 const Product = require('../models/products');
 const Address = require('../models/address'); 
+const Category = require("../models/category");
 const userController = require('../userFunctions/usersFun');
 
 
@@ -32,7 +33,7 @@ const userSubmit = async(req,res,next)=>{
 
   const reEmail = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
   var rePassword = /^(?=.*[A-Z])(?=.*\W).{8,}$/;
-
+    
   if(req.session.uid){
       res.redirect('/home'); 
   }
@@ -319,10 +320,22 @@ const userIndex = async(req,res)=>{
 const userProducts = async(req,res)=>{
   if (req.session.uid) {
 
-      const product = await userController.getAllProductPage();
+      let product = await userController.getAllProductPage();
+      const category = await Category.find({isDeleted:false});
+
+      const searchQuery = req.query.search;         //The filter method in JavaScript is a powerful tool for iterating through an array and selecting only the elements that meet a specific condition. It returns a new array containing the filtered elements.
       
+      if (searchQuery) {
+            product = product.filter(product => {
+            return (
+            product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            product.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            product.tags.toLowerCase().includes(searchQuery.toLowerCase())
+          );
+        });
+      }
       // console.log(product);
-      res.render('user/products',{products:product});
+      res.render('user/products',{products:product,category});
   } 
   else {
       // res.setHeader('Cache-Control', 'no-cache,no-store,must-revalidate');
@@ -509,16 +522,15 @@ const userUpdateAddress = async (req,res)=>{
 
 const userDeleteAddress = async(req,res)=>{
     const addressId = req.query.addressid; // Get the address ID from the query parameters
+    const userId = req.session.uid;
     // console.log("--id",addressId);
 
     try {
         // Using findByIdAndRemove()
-        const deletedAddress = await Address.findByIdAndRemove(addressId);
-        console.log("Deleted address:", deletedAddress);
-    
+        const deletedAddress = await Address.findByIdAndRemove(addressId);        
+        const updatedUser = await User.findByIdAndUpdate(userId,{$pull: {address: addressId}},{ new: true });
         // Or using deleteOne()
         // const result = await Address.deleteOne({ _id: addressId });
-        console.log("Delete result:", deletedAddress);
         res.redirect('/profile');
     } catch (error) {
         console.error("Error deleting address:", error);
@@ -526,6 +538,9 @@ const userDeleteAddress = async(req,res)=>{
 }
 
 const userForgotpassword  = async(req,res)=>{
+
+    // req.session.randomNumber=null;
+
     res.render('user/forgotpassword');
 }
 
@@ -591,7 +606,11 @@ const userResentOtp = async (req,res)=>{
 
 const userResetPassword = async (req,res)=>{
     if(req.session.step==2){
-        res.render('user/resetpassword');
+        
+        const notMatch = req.session.notMatch;
+        req.session.notMatch = null;
+
+        res.render('user/resetpassword',{notMatch});
     }
     else{
         res.redirect('/forgotpassword');
@@ -599,9 +618,28 @@ const userResetPassword = async (req,res)=>{
 }
 
 const userSubmitResetPassword = async(req,res)=>{
-    console.log("reached");
+    // console.log("reached");
     const{password:password,verifyPassword:verifyPassword}=req.body;
-    console.log("--",password,"--",verifyPassword);  
+    const specialCharacterRegex = /^(?=.*[A-Z])(?=.*\W).{8,}$/;;
+    const email = req.session.email;
+    if(specialCharacterRegex.test(password)){
+        if(password==verifyPassword){
+            const user = await User.findOne({ email });
+            const updatedUser = await User.findByIdAndUpdate(user._id, {password: password}, { new: true });
+            // console.log("--",password,"--",verifyPassword);
+            // console.log('--',updatedUser);
+            res.redirect('/login');
+        }
+        else{
+            req.session.notMatch=2;
+            console.log("reached2");
+            res.redirect('/resetPassword');
+        }
+    }
+    else{
+        req.session.notMatch=1;
+        res.redirect('/resetPassword');
+    }
 }
 
 module.exports = {
