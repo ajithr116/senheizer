@@ -16,7 +16,7 @@ const addToCartController = require('../controller/cartAndOrders');
 //     next();
 // })
 const checkUserBlocked = async (req,res,next)=>{
-    console.log("reached middelware");
+    // console.log("reached middelware");
     if(await functionController.isUserDeleted(req.session.email)){
         res.redirect('./logout');
     } else {
@@ -52,15 +52,18 @@ router.get('/resendotp',userController.userResentOtp);
 router.get('/resetpassword',userController.userResetPassword);
 router.post('/resetpassword',userController.userSubmitResetPassword);
 
-//cart and orders
+//cart and orders, checkout
 router.get('/addtocart',checkUserBlocked,addToCartController.addToCart);
 router.get('/cart',checkUserBlocked,addToCartController.userCartDetails)
 router.get('/removeproduct',addToCartController.userRemoveProductFromCart);
-router.post('/updatecart',addToCartController.userUpdateCart);
+router.post('/updatecart',addToCartController.userUpdateCart); //pending
+router.get('/checkout',checkUserBlocked,addToCartController.userCheckout);
+//----tricky
+router.get('/paymentsuccess',addToCartController.userPayment);
+
+router.get('/payment',checkUserBlocked,addToCartController.userPaymentPage);
 
 router.get('/logout',userController.userLogout);
-
-
 
 
 module.exports = router;

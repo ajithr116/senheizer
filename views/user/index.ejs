@@ -227,12 +227,10 @@
                             <p class="card-text fw-bolder h5" style="color:white;">$<%= product.price %></p><br>
                             <!-- <p class="card-text"><%= product.description %></p> -->
                             <div class="d-flex flex-column justify-content-between align-items-center">
-                                <a href="/productPage?productId=<%= product._id %>" class="btn btn-cart btn-outline-light mb-2" style="background-color: white;color:black;">Add to Cart</a>
+                                <a href="/addtocart?productId=<%= product._id %>" class="btn btn-cart btn-outline-light mb-2" style="background-color: white;color:black;">Add to Cart</a>
                                 <button class="btn btn-buy btn-primary mb-2">Buy Now</button>
                             </div>
                         </div>
-                        
-
                     </div></a>
                   </div>
                 <% }) %>

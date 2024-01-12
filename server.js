@@ -31,7 +31,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(session({ secret: '1hhh2vsdj2342bSDf523', resave: false, saveUninitialized: false }));
 app.set('view engine', 'ejs');
 app.use(flash());
-
+app.use(express.json());
 // app.use(
 //     session({
 //         secret: 'aSdfsdfSDFse#',
@@ -70,8 +70,8 @@ app.use((req, res, next) => {
     next();
 });
 
-// app.use('/cart',(req,res)=>{
-//     res.render('user/cart');
+// app.use('/checkout',(req,res)=>{
+//     res.render('user/checkout');
 // })
 
 

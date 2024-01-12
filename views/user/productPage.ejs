@@ -179,8 +179,8 @@
                 
               </div>
               <div class="quantity">
-                <label for="quantity">Quantity:</label>
-                <input type="number" id="quantity" value="1" min="1">
+                <label for="quantity">Quantity : <span class="badge badge-dark"><%= product.quantity %></span></label>
+                <!-- <input type="number" id="quantity" value="1" min="1"> -->
                 <span><i class="fa fa-heart pl-5 " style="font-size: 1.5em;"></i></span>
 
               </div>
@@ -208,12 +208,17 @@
                     }
 
               </script>
-              <a href="/addtocart?productId=<%= product._id %>" class="btn btn-outline-dark addto cart px-5">Add to cart</a>
+              <!-- <a href="/addtocart?productId=<%= product._id %>" class="btn btn-outline-dark addto cart px-5">Add to cart</a> -->
+              <%if(product.quantity==0){%>
+                <button  class="btn btn-outline-light " style="color:black;border: 1px solid black;" disabled>Add to cart</button>
+              <%}else{%>
+                <a href="/addtocart?productId=<%= product._id %>" class="btn btn-outline-light " style="color:black;border: 1px solid black;">Add to cart</a>
+              <%}%>
               <br>
               <button class="btn btn-dark buy-now px-5">Buy Now</button>
             </div>
           </div>
-        </div>
+      </div>
       </div>
       <br>
       <div class="container" >

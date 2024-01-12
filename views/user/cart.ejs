@@ -154,10 +154,44 @@
                     </div>
                     <div>
                       <p><b>Price</b>: $ <%= item.product.price %></p>
-                      <button class="quantity-btn btn-primary" data-action="decrease" style="border:none">-</button>
+                      <!-- <button class="quantity-btn btn-primary" data-action="decrease" style="border:none">-</button>
                       <input type="number" value="<%= item.quantity %>" readonly style="width:40px;border:none">
-                      <button class="quantity-btn btn-primary" data-action="increase" style="border:none">+</button>
-                    
+                      <button class="quantity-btn btn-primary" data-action="increase" style="border:none">+</button> -->
+                      <input type="range" min="0" max="100" oninput="updateRangeInput(this)" value="<%= item.quantity %>" data-product-id="<%= item.product._id %>">
+                      <input type="text" value="<%= item.quantity %>" style="width:40px;border:none" data-product-id="<%= item.product._id %>">
+                      
+                      <script>
+                      function updateRangeInput(elem) {
+                        $(elem).next().val($(elem).val());
+                      }
+                      
+                      $('input[type="range"], input[type="text"]').on('input', function() {
+                      const value = $(this).val();
+                      const productId = $(this).data('product-id');
+                      
+                      fetch('/updatecart', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                          productID: productId,
+                          quantity: value
+                        })
+                      })
+                      .then(response => response.json())
+                      .then(data => {
+                        if (data.success) {
+                            console.log("good");
+                            const subtotal = document.getElementById('subTotal');
+                            subtotal.style.backgroundColor = "red";
+                        } else {
+                          console.log("bad");
+                          const subtotal = document.getElementById('subTotal');
+                          subtotal.style.backgroundColor = "red";
+                        }
+                      });
+                    });
+
+                      </script>
                     </div>
                     <div>
                       
@@ -173,7 +207,7 @@
             </div>
             
             
-            <script>
+            <!-- <script>
               window.onload = function() {
                 var quantityButtons = document.querySelectorAll('.quantity-btn');
                 quantityButtons.forEach(function(button) {
@@ -189,7 +223,8 @@
                   });
                 });
               };
-            </script>
+
+              </script> -->
       
             <!-- Repeat .cart-item for each product in the cart -->
           </div>
@@ -199,59 +234,20 @@
             <div class="summary " style="border-radius: 30px;background-color: rgb(223, 219, 219);">
               <h3>Grand total</h3>
               <hr style="background-color: black;">
-              <p>Subtotal: $ <b><%= subtotal.toFixed(2) %></b></p>
+              <p>Subtotal: $ <b id="subTotal"><%= subtotal.toFixed(2) %></b></p>
               <p>Tax: $ <b><%= tax.toFixed(2) %></b></p>
+              <p>Shipping: $ <b style="background-color: rgb(105, 255, 105);"> FREE SHIPPING</b></p>
               <input type="text" style='border-radius: 10px; border:none;' placeholder=" COUPON CODE">
               <hr style="background-color: black;">
 
               <p>Total: $ <b><%= total.toFixed(2) %></b></p>
               
-              <a href="https://www.google.com"><button class="btn btn-dark">Checkout</button></a>
+              <a href="/checkout"><button class="btn btn-dark">Checkout</button></a>
             </div>
           </div>
         </div>
       </div>
-      <script>
-document.querySelectorAll('.quantity-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const input = btn.parentElement.querySelector('.quantity-input');
-    let value = parseInt(input.value);
-    const item = btn.parentElement.parentElement.parentElement.dataset.item; // Access item data
 
-    if (btn.dataset.action === 'increase' && value < item.quantity) {
-      value++;
-    } else if (btn.dataset.action === 'decrease' && value > 1) {
-      value--;
-    }
-
-    fetch('/updatecart', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        productID: item.productID,
-        quantity: value
-      })
-    })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          input.value = value;
-          const itemPrice = btn.parentElement.querySelector('p[data-price]');
-          itemPrice.textContent = '$' + (value * item.product.price).toFixed(2);
-
-          // Recalculate summary values
-          // ... (using logic from userCartDetails function)
-
-          // Update summary elements in the DOM
-          // ...
-        } else {
-          // Handle error (e.g., display an error message)
-        }
-      });
-      });
-    });
-
-    </script>
 
     <!-- PRODUCTS -->
     <!-- Bootstrap JS (required for the Bootstrap components to work) -->

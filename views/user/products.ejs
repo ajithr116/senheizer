@@ -24,6 +24,12 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <style>
+.stock-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 100; /* Ensure it's above the image */
+}
 
 </style>
 
@@ -314,9 +320,16 @@
             <figure class="card card-product-grid">
               <div class="img-wrap">
                 <!-- <span class="badge badge-danger"> NEW </span> -->
+                <% if(product.quantity==0){ %>
+                  <span class="badge badge-danger stock-badge">In Stock <span class="badge-light px-1"><%= product.quantity %></span></span>
+                <%}else{%>
+                  <span class="badge badge-success stock-badge">In Stock <span class="badge-light px-1"><%= product.quantity %></span></span>
+                <%}%>
+
                 <img src="/uploads/<%= product.images[0] %>" class="img-fluid" style="border-radius: 10px; width: 200px; height: 200px;">                
                 <a class="btn-overlay" href="/productPage?productId=<%= product._id %>"><i class="fa fa-search-plus"></i> Quick view</a>
-              </div> <figcaption class="info-wrap">
+              </div>
+               <figcaption class="info-wrap">
                 <div class="fix-height">
                   <a href="/productPage?productId=<%= product._id %>" class="title"><%= product.name.substring(0, 50) + (product.name.length > 20 ? '...' : '') %></a>
                   <div class="rating-price-wishlist">
@@ -340,14 +353,18 @@
                   </div>
                 </div>
                 <div class="actions">
-                  <a href="/addtocart?productId=<%= product._id %>" class="btn btn-outline-light " style="color:black;border: 1px solid black;">Add to cart</a>
+                  <%if(product.quantity==0){%>
+                    <button  class="btn btn-outline-light " style="color:black;border: 1px solid black;" disabled>Add to cart</button>
+                  <%}else{%>
+                    <a href="/addtocart?productId=<%= product._id %>" class="btn btn-outline-light " style="color:black;border: 1px solid black;">Add to cart</a>
+                  <%}%>
                   <a href="https://www.google.com" class="btn btn-dark">Buy now</a>
                 </div>
               </figcaption>
             </figure>
         </div>
         <%}%>
-          <%})%> 
+      <%})%> 
     </div> <!-- row end.// -->
     
     

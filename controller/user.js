@@ -380,12 +380,17 @@ const userProfile = async (req,res)=>{
     if (req.session.uid) {
 
         const userDetails = await User.findById(req.session.uid);
-        
+        const checkoutPage = req.query.checkoutPage;
+        let change = 0
+
+        if(checkoutPage==1){
+            change=1;
+        }
         // console.log("--",userDetails);
         // In your server-side route or controller
         const user = await User.findById(req.session.uid).populate('address');
         let error = req.session.error;
-        res.render('user/profile',{userDetails,error,user});
+        res.render('user/profile',{userDetails,error,user,change});
     } 
     else {
         res.redirect('/login');
@@ -420,6 +425,10 @@ const userAddAddress = async(req,res)=>{
         // console.log("--",userDetails);
         const error = req.session.error;
         const id = req.session.uid;
+        const check = req.query.checkoutPage;
+        if(check==1){
+            req.session.change=1;
+        }
         res.render('user/addAddress',{error,id});
     } 
     else {
@@ -431,6 +440,7 @@ const userAddAddress = async(req,res)=>{
 const userAddAddressDetails = async(req,res)=>{
     const{newAddressName:addressName,newPhoneNo:phoneNo,newZip:zipCode,newState:state,newDistrict:distrct,newFullAddress:fullAddress}=req.body;
     const userId = req.query.userId;
+    console.log("")
     // console.log('--',userId);
     // Check phone number length
     if (phoneNo.length !== 10 && zipCode.length !== 6) {
@@ -473,7 +483,13 @@ const userAddAddressDetails = async(req,res)=>{
                 } catch (error) {
                     console.error("Error updating user with address:", error);
                 }
-                res.redirect('/profile');
+                if(req.session.change==1){
+                    req.session.change='';
+                    res.redirect('/checkout');
+                }
+                else{
+                    res.redirect('/profile');
+                }
                 // console.log("--", addressName,"--",phoneNo,"--",zipCode,"--",state,"--",distrct,"--",fullAddress);
             }     
         }
@@ -500,7 +516,7 @@ const userEditAddress = async(req,res)=>{
 const userUpdateAddress = async (req,res)=>{
 
     const{newAddressName:addressName,newPhoneNo:phoneNo,newZip:zipCode,newState:state,newDistrict:distrct,newFullAddress:fullAddress}=req.body;
-    // console.log("--", addressName,"--",phoneNo,"--",zipCode,"--",state,"--",distrct,"--",fullAddress,"--",req.query.addressId);
+    console.log("--", addressName,"--",phoneNo,"--",zipCode,"--",state,"--",distrct,"--",fullAddress,"--",req.query.addressId);
 
     const addressId = req.query.addressId; // Get the address ID from the query parameters
         const update = {
