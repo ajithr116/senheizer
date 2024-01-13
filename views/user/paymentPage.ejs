@@ -113,7 +113,7 @@
                             <a href="https://www.google.com" class="dropdown-item">Craftsmen</a>
                         </div>
                     </div> -->
-                    <a href="https://www.google.com" class="nav-item nav-link">Orders</a>
+                    <a href="/orders" class="nav-item nav-link">Orders</a>
                     <a href="https://www.google.com" class="nav-item nav-link">Wishlist</a>
                     <!-- <a href="https://www.google.com" class="nav-item nav-link">Contact Us</a> -->
                     <a href="/profile" class="nav-item nav-link rounded " >Profile</a>
@@ -139,6 +139,7 @@
       <div class="container">
         <div class="row">
           <!-- Product details -->
+          <h3>Payment</h3>
           <div class="col-md-8">
             <div class="cart-container my-5 px-5" >
                 <div class="accordion accordion-flush" id="accordionFlushExample" style="border:1px solid black">
@@ -150,7 +151,7 @@
                       </h2>
                       <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
                         <div class="accordion-body">
-                        <input type="text">
+                          <input type="text"><a class="btn btn-warning">Link</a>
                         </div>
                       </div>
                     </div>
@@ -162,7 +163,7 @@
                       </h2>
                       <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
                         <div class="accordion-body">
-                            <input type="text">
+                            <input type="text"><a class="btn btn-warning">Link</a>
                         </div>
                       </div>
                     </div>
@@ -174,7 +175,7 @@
                       </h2>
                       <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
                         <div class="accordion-body">
-                            <a type="button" class="btn btn-success" href="/paymentsuccess?addressid=<%= addressId %>">Cash on delivery</a>
+                            <a type="button" class="btn btn-success" href="/paymentsuccess?addressid=<%= addressId %>&paymentMethod=cashOnDelivery">Cash on delivery</a>
                         </div>
                       </div>
                     </div>

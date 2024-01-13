@@ -69,7 +69,24 @@
         margin: 20px 2px;
         cursor: pointer;
       }
+      .container {
+            width: 80%;
+            margin: auto;
+        }
 
+        .order-success {
+            text-align: center;
+            margin-top: 100px;
+        }
+
+        .order-success i {
+            font-size: 100px;
+            color: #28a745; /* Green color */
+        }
+
+        .order-success h1 {
+            color: #28a745; /* Green color */
+        }
     </style>
 
   <link rel="stylesheet" href="cssu/products.css">
@@ -113,7 +130,7 @@
                             <a href="https://www.google.com" class="dropdown-item">Craftsmen</a>
                         </div>
                     </div> -->
-                    <a href="https://www.google.com" class="nav-item nav-link">Orders</a>
+                    <a href="/orders" class="nav-item nav-link">Orders</a>
                     <a href="https://www.google.com" class="nav-item nav-link">Wishlist</a>
                     <!-- <a href="https://www.google.com" class="nav-item nav-link">Contact Us</a> -->
                     <a href="/profile" class="nav-item nav-link rounded " >Profile</a>
@@ -136,10 +153,13 @@
             </div>
       </div> 
 
-    <div class="container">
-        <div class="row-10" style="border: 1px solid black;">
-            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Non iste natus minima consequuntur numquam enim neque nam, accusamus commodi culpa, omnis dicta provident. Consectetur deleniti, accusamus ut ipsam quo debitis!</p>
-        </div>
+      <div class="container order-success p-5" style="border-radius: 10px;border:1px solid green">
+        <i class="fas fa-check-circle"></i>
+        <h1>Your Order is Successful!</h1>
+        <p style="background-color: #28a745; color:white" class="py-2">Thank you for shopping with us. Your order has been successfully placed.</p>
+        <p>Your Oder ID : <b><%= orderId %></p>
+        <a href="/orders" class="btn btn-dark mt-3">View Orders</a>
+        <a href="/index" class="btn btn-dark mt-3">Home</a>
     </div>
 
 

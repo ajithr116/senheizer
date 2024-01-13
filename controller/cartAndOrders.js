@@ -6,6 +6,7 @@ const Product = require('../models/products');
 const Address = require('../models/address'); 
 const Category = require("../models/category");
 const userController = require('../userFunctions/usersFun');
+const Order = require('../models/orders');
 
 
 // const addToCart = async (req, res) => {
@@ -114,7 +115,7 @@ const addToCart = async (req, res) => {
         const subtotal = populatedCartItems.reduce((acc, item) => acc + item.quantity * item.price, 0);
         const tax = subtotal * 0.1;
         const total = subtotal + tax;
-
+        req.session.total = total;
         res.render('user/cart', { cartItems: populatedCartItems, subtotal, tax, total });
     } catch (error) {
         console.error(error);
@@ -211,6 +212,7 @@ const userCheckout = async(req,res)=>{
   if (req.session.uid) {
     const userId = req.session.uid;
     const user = await User.findById(userId);
+    req.session.passPayment = 1;
 
     // Fetch product details for each cart item
     const cartItems = user.cart.map(async item => {
@@ -247,34 +249,42 @@ const userCheckout = async(req,res)=>{
 
 const userPaymentPage = async(req,res)=>{
   if(req.session.uid){
-    const addressId = req.query.addressid;
-    const userId = req.session.uid;
-    const user = await User.findById(userId);
-
-    // Fetch product details for each cart item
-    const cartItems = user.cart.map(async item => {
-      const product = await Product.findById(item.productID);
-      return {
-        productID: item.productID,
-        quantity: item.quantity,
-        price: item.price,
-        product: product
-      };
-    });
-    try{
-      const populatedCartItems = await Promise.all(cartItems);
-
-      const subtotal = populatedCartItems.reduce((acc, item) => acc + item.quantity * item.price, 0);
-      const tax = subtotal * 0.1;
-      const total = subtotal + tax;
-  
-      const userAddress = await User.findById(req.session.uid).populate('address');
-      console.log("--",addressId);
-      // console.log("--",userAddress,"--",total,"--")
-      res.render("user/paymentPage",{subtotal, tax, total,addressId});
-    }
-    catch(err){
-      console.log("error " , err);
+    if(req.session.passPayment==1){
+      if(req.session.total!=0){
+        const addressId = req.query.addressid;
+        const userId = req.session.uid;
+        const user = await User.findById(userId);
+    
+        // Fetch product details for each cart item
+        const cartItems = user.cart.map(async item => {
+          const product = await Product.findById(item.productID);
+          return {
+            productID: item.productID,
+            quantity: item.quantity,
+            price: item.price,
+            product: product
+          };
+        });
+        try{
+          const populatedCartItems = await Promise.all(cartItems);
+    
+          const subtotal = populatedCartItems.reduce((acc, item) => acc + item.quantity * item.price, 0);
+          const tax = subtotal * 0.1;
+          const total = subtotal + tax;
+      
+          const userAddress = await User.findById(req.session.uid).populate('address');
+          console.log("--",addressId);
+          // console.log("--",userAddress,"--",total,"--")
+          res.render("user/paymentPage",{subtotal, tax, total,addressId});
+        }
+        catch(err){
+          console.log("error " , err);
+        }
+      }
+      else{
+        console.log("total or cart is empty");
+        res.redirect('/products');
+      }
     }
   }
   else{
@@ -283,10 +293,56 @@ const userPaymentPage = async(req,res)=>{
 }
 
 
+// const userPayment = async(req,res)=>{
+//   if(req.session.uid){
+//     const addressId = req.query.addressid;
+//     const paymentMethod = req.query.paymentMethod;
+//     const userId = req.session.uid;
+//     const user = await User.findById(userId);
+
+//     try{
+//         const cartItems = user.cart.map(async item => {
+//         const product = await Product.findById(item.productID);
+//         return {
+//           productID: item.productID,
+//           quantity: item.quantity,
+//           price: item.price,
+//           product: product
+//         };
+//       });
+
+//       const populatedCartItems = await Promise.all(cartItems);
+
+//       const subtotal = populatedCartItems.reduce((acc, item) => acc + item.quantity * item.price, 0);
+//       const tax = subtotal * 0.1;
+//       const total = subtotal + tax;
+//       console.log("reached");
+
+//       populatedCartItems.forEach(item => {
+//         console.log("Quantity of item with productID", item.productID, "is", item.quantity,"##",item.price);
+//       });
+      
+
+
+//       console.log("{{",addressId,"}}{{",userId,"}}{{",total,"}}{{",paymentMethod,"}}");
+//       res.render('user/ordersuccess');
+      
+//     }
+//     catch(err){
+//       console.log(err,"error happen");
+//     }
+//   }
+//   else{
+//     res.redirect('/login');
+//   }
+// }
+
 const userPayment = async(req,res)=>{
   if(req.session.uid){
     const addressId = req.query.addressid;
+    const paymentMethod = req.query.paymentMethod;
     const userId = req.session.uid;
+    req.session.passPayment='';
     const user = await User.findById(userId);
 
     try{
@@ -305,25 +361,62 @@ const userPayment = async(req,res)=>{
       const subtotal = populatedCartItems.reduce((acc, item) => acc + item.quantity * item.price, 0);
       const tax = subtotal * 0.1;
       const total = subtotal + tax;
-      console.log("reached");
 
-      populatedCartItems.forEach(item => {
-        console.log("Quantity of item with productID", item.productID, "is", item.quantity,"##",item.price);
+      const order = new Order({
+        userID: userId,
+        items: populatedCartItems.map(item => ({
+          productID: item.productID,
+          quantity: item.quantity,
+          price: item.price
+        })),
+        totalPrice: total,
+        shippingAddressID: addressId,
+        paymentMethod: paymentMethod,
       });
-      
 
-      console.log("{{",addressId,"}}{{",userId,"}}{{",total,"}}=====");
-      res.render('user/ordersuccess');
-      
+      await order.save();       // Save the Order to the database
+      user.cart = [];       // Clear the user's cart
+      await user.save();
+      const orderId = order.orderID;
+      res.render('user/ordersuccess',{orderId});
     }
     catch(err){
-      console.log(err,"error happen");
+      console.log(err,"error happen");    //when order is empty it gets error so go back to product page . this error is getting because not passwing addressId
+      res.redirect('/products');
     }
   }
   else{
     res.redirect('/login');
   }
 }
+
+const userOrders = async(req,res)=>{
+  if(req.session.uid){
+    // Fetch the orders for the current user and populate the product and address details
+    const orders = await Order.find({ userID: req.session.uid }).populate('items.productID').populate('shippingAddressID');
+
+    // Pass the orders to the view
+    res.render('user/orders', { orders: orders });
+  }
+  else{
+    res.redirect('/login');
+  }
+}
+
+const userDeleteOrder = async(req,res)=>{
+  const orderId = req.query.orderId;
+  
+  try {
+    await Order.findByIdAndDelete(orderId);
+
+    // res.send('Order deleted successfully');
+    res.redirect('/orders')
+  } catch(err) {
+    console.log(err);
+    res.status(500).send('Server Error');
+  }
+}
+
 
 module.exports = {
     addToCart,
@@ -333,4 +426,6 @@ module.exports = {
     userCheckout,
     userPayment,
     userPaymentPage,
+    userOrders,
+    userDeleteOrder,
 }

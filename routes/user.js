@@ -24,6 +24,8 @@ const checkUserBlocked = async (req,res,next)=>{
     }
 }
 
+
+
 router.get('/login',userController.userLogin);
 router.post('/submit',userController.userSubmit);
 router.get('/signup',userController.userSignup);
@@ -52,17 +54,19 @@ router.get('/resendotp',userController.userResentOtp);
 router.get('/resetpassword',userController.userResetPassword);
 router.post('/resetpassword',userController.userSubmitResetPassword);
 
-//cart and orders, checkout
+//cart and orders, checkout, orders
 router.get('/addtocart',checkUserBlocked,addToCartController.addToCart);
 router.get('/cart',checkUserBlocked,addToCartController.userCartDetails)
 router.get('/removeproduct',addToCartController.userRemoveProductFromCart);
 router.post('/updatecart',addToCartController.userUpdateCart); //pending
 router.get('/checkout',checkUserBlocked,addToCartController.userCheckout);
+
 //----tricky
 router.get('/paymentsuccess',addToCartController.userPayment);
 
 router.get('/payment',checkUserBlocked,addToCartController.userPaymentPage);
-
+router.get('/orders',checkUserBlocked,addToCartController.userOrders);
+router.get('/deleteorder',addToCartController.userDeleteOrder);
 router.get('/logout',userController.userLogout);
 
 

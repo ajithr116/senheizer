@@ -4,6 +4,7 @@ const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const adminController = require('../controller/admin');
 const adminCategoryController = require('../controller/category');
+const adminOrderController = require("../controller/orderManagement");
 const multer  = require('multer')
 const upload = multer({ dest: 'uploads/' })
 
@@ -69,6 +70,12 @@ router.get('/addCategory',adminCategoryController.adminCategory);
 router.post('/submitcategory',adminCategoryController.adminSubmitCategory);
 router.get('/blockcategory',adminCategoryController.adminBlockCategory);
 router.get('/unblockcategory',adminCategoryController.adminUnBlockCategory);
+
+//order management 
+router.get('/ordermanagement',adminOrderController.adminOrders);
+router.get('/orderdetails',adminOrderController.adminOrderDetails);
+router.post('/status',adminOrderController.adminUpdateStatus);
+
 router.get('/',adminController.adminDefault);
 
 

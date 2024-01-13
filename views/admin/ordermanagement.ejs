@@ -22,12 +22,18 @@
     <!-- Icon Font Stylesheet -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
-    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
-    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+    <!-- <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script> -->
 
     <!-- Libraries Stylesheet -->
-    <link href="/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
-    <link href="/lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
+    <!-- <link href="/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet"> -->
+    <!-- <link href="/lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" /> -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
+
+    <!-- <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.6.4.min.js"></script> -->
+    <!-- <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script> -->
 
     <!-- Customized Bootstrap Stylesheet -->
     <link href="/css/bootstrap.min.css" rel="stylesheet">
@@ -77,8 +83,8 @@
                         </div>
                     </div>
                     <a href="./userManagement" class="nav-item nav-link"><i class="fa fa-th me-2"></i>User manage</a>
-                    <a href="./categoryManage" class="nav-item nav-link active"><i class="fa fa-keyboard me-2"></i>Category manage</a>
-                    <a href="./ordermanagement" class="nav-item nav-link"><i class="fa fa-box me-2"></i>Order manage</a>
+                    <a href="./categoryManage" class="nav-item nav-link "><i class="fa fa-keyboard me-2"></i>Category manage</a>
+                    <a href="./ordermanagement" class="nav-item nav-link active"><i class="fa fa-box me-2"></i>Order manage</a>
 
                     <!-- <a href="table.html" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Tables</a> -->
                     <!-- <a href="chart.html" class="nav-item nav-link"><i class="fa fa-chart-bar me-2"></i>Charts</a>
@@ -105,61 +111,76 @@
 
 
             <!-- Blank Start -->
-            <div class="container-fluid pt-4 px-4">
+            <div class="container-fluid pt-4 px-2">
                 <div class="container-fluid pt-4 px-5">
                     <div class="col-12">
                         <div class="bg-light rounded h-100 p-4">
-                            <h6 class="mb-4">Responsive Table</h6>
-                            <a class="btn btn-primary" href="./addCategory" >Add new </a><br><br>
-
-                            <div class="table-responsive">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">ID</th>
-                                            <th scope="col">Category</th>
-                                            <th scope="col">status</th>
-                                            <th scope="col">Action</th>
-
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <% categories.forEach((category, index) => { %>
-                                            <tr>
-                                              <th scope="row"><%= index + 1 %></th>
-                                              <td><%= category.name %></td>
-                                              <td>
-                                                <% if (category.isDeleted) { %> <span class="bg-danger px-3" style="color:white">-deleted-</span>
-                                                <% } else { %>
-                                                    <span class="bg-success px-3" style="color:white">-not-deleted-</span>
-                                                <% } %>
-                                            </td>
-                                              <!-- <td>
-                                                <% if (category.isDeleted) { %> <button type="button" class="btn btn-warning" disabled href="#">Deleted</button>
-                                                <% } else { %>
-                                                  <a class="btn btn-danger" onclick="return confirm('Are you sure?')" href="./blockcategory?categoryId=<%= category._id %>">Delete</a>
-                                                <% } %>
-                                                </td> -->
-                                                <td>
-                                                    <% if (category.isDeleted) { %> 
-                                                       <a class="btn btn-success" onclick="return confirm('Are you sure?')" href="./blockcategory?categoryId=<%= category._id %>" >unblock</a>
-                                                    <% } else { %>
-                                                      <a class="btn btn-danger" onclick="return confirm('Are you sure?')" href="./unblockcategory?categoryId=<%= category._id%>">block</a>
-                                                    <% } %>
-                                                </td>
-                                            </tr>
-                                          <% }) %>
-                                    </tbody>
-                                    
-                                    
-                                </table>
+                            <h6 class="mb-4">Order management</h6>
+            
+                            <!-- Filter, Sort, and Search Row -->
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <!-- Filter Dropdown -->
+                                    <label for="filterSelect" class="form-label">Filter by Category:</label>
+                                    <select class="form-select" id="filterSelect">
+                                        <option value="">All</option>
+                                        <!-- Add your category options dynamically here -->
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <!-- Sort Dropdown -->
+                                    <label for="sortSelect" class="form-label">Sort by:</label>
+                                    <select class="form-select" id="sortSelect">
+                                        <option value="id_asc">Ascending</option>
+                                        <option value="id_desc">Descending</option>
+                                        <!-- Add more sorting options as needed -->
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <!-- Search Input -->
+                                    <label for="searchInput" class="form-label">Search:</label>
+                                    <input type="text" class="form-control" id="searchInput" placeholder="Type to search">
+                                </div>
                             </div>
-
+            
+                            <!-- Table -->
+                            <div class="table-responsive">
+                                <table id="yourTableId" class="table">
+                                  <thead>
+                                    <tr>
+                                      <th scope="col">ID</th>
+                                      <th scope="col">Name</th>
+                                      <th scope="col">Total items</th>
+                                      <th scope="col">Total</th>
+                                      <th scope="col">Status</th>
+                                      <th scope="col">More details</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <% orders.forEach(order => { %>
+                                      <tr>
+                                        <td scope="col"><%= order.orderID %></td>
+                                        <td scope="col"><%= order.userID.firstName %> <%= order.userID.lastName %></td>
+                                        <td scope="col"><%= order.items.length %></td>
+                                        <td scope="col">$<%= order.totalPrice %></td>
+                                        <% if(order.orderStatus=="pending"){%>
+                                            <td scope="col" class="bg-warning" ><%= order.orderStatus %></td>
+                                        <%}else if(order.orderStatus=="canceled"){%>
+                                            <td scope="col" class="bg-danger"><%= order.orderStatus %></td>
+                                        <%}else if(order.orderStatus=="delivered"){%>
+                                            <td scope="col" class="bg-success"></td><%= order.orderStatus %></td>
+                                        <%}%>
+                                        <td scope="col"><a href="./orderdetails?orderId=<%= order._id %>">Details</a></td>
+                                      </tr>
+                                    <% }) %>
+                                  </tbody>
+                                </table>
+                            </div>                              
                         </div>
                     </div>
                 </div>
-                
             </div>
+            
 
             
             <!-- Blank End -->
