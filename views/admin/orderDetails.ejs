@@ -127,17 +127,17 @@
                                 </div>
                                 <div class="col-md-6">
                                     <% if(order.orderStatus=="pending"){%>
-                                        <p scope="col" class="bg-warning" ><%= order.orderStatus %></p>
+                                        <p scope="col" class="bg-warning" style="color:white" ><%= order.orderStatus %></p>
                                     <%}else if(order.orderStatus=="canceled"){%>
-                                        <p scope="col" class="bg-danger"><%= order.orderStatus %></p>
+                                        <p scope="col" class="bg-danger " style="color:white"><%= order.orderStatus %></p>
                                     <%}else if(order.orderStatus=="delivered"){%>
-                                        <p scope="col" class="bg-success"></p><%= order.orderStatus %></td>
+                                        <p scope="col" class="bg-success " style="color:white"><%= order.orderStatus %></p>
                                     <%}%>
                                     <p>Order ID : <b><%= order.orderID %></b></p>
                                     <p>Phone No: <b><%= order.userID.phoneNumber %></b></p>
                                     <p>Email: <b><%= order.userID.email %></b></p>
                                     <p>Pincode:<b><%= order.shippingAddressID.pincode %></b></p>
-                                    <p>Payment Method<b> : <%= order._id %></b></p>
+                                    <p>Payment Method<b> : <%= order.paymentMethod %></b></p>
                                 </div>
                             </div>
                             <div class="container-fluid pt-4 px-2">
@@ -171,14 +171,26 @@
                                 <p>Grand total (including tax): <b><%= grandTotal.toFixed(2) %></b></p>
                                 <div class="container">
                                     <form action="./status?orderId=<%= order._id %>" method="POST">
-                                        <select name="status" value="<%= order.orderStatus %>" class="" style="width:150px;height:40px;border-radius: 10px;">
+                                        <select name="status" value="<%= order.orderStatus %>" class="" onchange="selected()" id="statusControl" style="width:150px;height:40px;border-radius: 10px;">
+                                            <option value="<%= order.orderStatus %>"><%= order.orderStatus %></option>
                                             <option value="pending">pending</option>
                                             <option value="delivered">delivered</option>
                                             <option value="canceled">canceled</option>
                                         </select>
+                                        <input type="number" id="paymentBox" style="height:40px;border-radius:10px;border:1px solid black;visibility:hidden">
                                         <input type="submit" class="btn btn-success" value="Proceed">
                                     </form>
-
+                                    <script>
+                                    function selected(){
+                                        const status = document.getElementById('statusControl').value;
+                                        if(status=="canceled"){
+                                            const paymentBox = document.getElementById('paymentBox');
+                                            paymentBox.style.visibility="visible";
+                                        }else {
+                                            paymentBox.style.visibility = "hidden";
+                                        }
+                                    }
+                                    </script>
                                 </div>
                             </div>                            
                         </div>

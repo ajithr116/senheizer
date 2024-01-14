@@ -100,7 +100,7 @@
             <h2 class="d-flex justify-content-center mt-4">Orders</h2>
         <%}%>
         <% orders.forEach(order => { %> <!-- Loop over each order -->
-            <div class="m-2" style="border:1px solid black;border-radius:10px;">
+            <div class="m-2" style="border-radius:10px;">
                 <table class="table table-striped">
                     <thead>
                         <tr>
@@ -130,13 +130,23 @@
                             <p>Phone : <%= order.shippingAddressID.phone %></p>
                             
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-4 pb-3">
                             <h5>Status</h5>
                             <div class="d-flex">
-                                <p style>Status :</p> <p class="badge badge-success"> <%= order.orderStatus %></p>
+                                <p style>Status :</p>
+                                <% if(order.orderStatus=="pending"){ %>
+                                    <p class="badge badge-warninig bg-warning"> <%= order.orderStatus %></p>
+                                <%}else if(order.orderStatus=="canceled"){%>
+                                    <p class="badge badge-warninig bg-danger"> <%= order.orderStatus %></p>
+                                <%}else if(order.orderStatus=="delivered"){%>
+                                    <p class="badge badge-success bg-success" style="color:white"> <%= order.orderStatus %></p>
+                                <%}%>
                             </div>
-                                            
-                            <a class="btn btn-danger" href="/deleteorder?orderId=<%= order._id %>" onclick="alert('Are you sure you want to delete ?')">Delete Order</a> <!-- Display the status of the order -->
+                            <%if(order.orderStatus=="pending"){%>
+                                <a class="btn btn-danger" href="/deleteorder?orderId=<%= order._id %>" onclick="alert('Are you sure you want to delete ?')">Delete Order</a> <!-- Display the status of the order -->
+                            <%}else if(order.orderStatus=="delivered"){%>
+                                <a class="btn btn-primary "> Share your experience</a>
+                            <%}%>
                         </div>
                         <div class="col-md-3">
                             <h5>Grand Total</h5>

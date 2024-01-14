@@ -636,19 +636,28 @@ const userResetPassword = async (req,res)=>{
 const userSubmitResetPassword = async(req,res)=>{
     // console.log("reached");
     const{password:password,verifyPassword:verifyPassword}=req.body;
-    const specialCharacterRegex = /^(?=.*[A-Z])(?=.*\W).{8,}$/;;
+    const specialCharacterRegex = /^(?=.*[A-Z])(?=.*\W).{8,}$/;
+
+    console.log("--",password,"--",verifyPassword);
+
     const email = req.session.email;
+    // console.log("--",password,"--",verifyPassword,"--",email);
+
     if(specialCharacterRegex.test(password)){
         if(password==verifyPassword){
             const user = await User.findOne({ email });
+
+            console.log("--",user)
+
             const updatedUser = await User.findByIdAndUpdate(user._id, {password: password}, { new: true });
+            
             // console.log("--",password,"--",verifyPassword);
             // console.log('--',updatedUser);
             res.redirect('/login');
         }
         else{
             req.session.notMatch=2;
-            console.log("reached2");
+            // console.log("reached2");
             res.redirect('/resetPassword');
         }
     }

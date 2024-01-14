@@ -161,35 +161,35 @@
                       <input type="text" value="<%= item.quantity %>" style="width:40px;border:none" data-product-id="<%= item.product._id %>">
                       
                       <script>
-                      function updateRangeInput(elem) {
-                        $(elem).next().val($(elem).val());
-                      }
-                      
-                      $('input[type="range"], input[type="text"]').on('input', function() {
-                      const value = $(this).val();
-                      const productId = $(this).data('product-id');
-                      
-                      fetch('/updatecart', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                          productID: productId,
-                          quantity: value
+                        function updateRangeInput(elem) {
+                          $(elem).next().val($(elem).val());
+                        }
+                        
+                        $('input[type="range"], input[type="text"]').on('input', function() {
+                        const value = $(this).val();
+                        const productId = $(this).data('product-id');
+                        
+                        fetch('/updatecart', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({
+                            productID: productId,
+                            quantity: value
+                          })
                         })
-                      })
-                      .then(response => response.json())
-                      .then(data => {
-                        if (data.success) {
-                            console.log("good");
+                        .then(response => response.json())
+                        .then(data => {
+                          if (data.success) {
+                              console.log("good");
+                              const subtotal = document.getElementById('subTotal');
+                              subtotal.style.backgroundColor = "red";
+                          } else {
+                            console.log("bad");
                             const subtotal = document.getElementById('subTotal');
                             subtotal.style.backgroundColor = "red";
-                        } else {
-                          console.log("bad");
-                          const subtotal = document.getElementById('subTotal');
-                          subtotal.style.backgroundColor = "red";
-                        }
+                          }
+                        });
                       });
-                    });
 
                       </script>
                     </div>

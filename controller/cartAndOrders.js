@@ -394,7 +394,7 @@ const userOrders = async(req,res)=>{
   if(req.session.uid){
     // Fetch the orders for the current user and populate the product and address details
     const orders = await Order.find({ userID: req.session.uid }).populate('items.productID').populate('shippingAddressID');
-
+    
     // Pass the orders to the view
     res.render('user/orders', { orders: orders });
   }

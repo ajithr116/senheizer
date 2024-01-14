@@ -164,11 +164,11 @@
                                         <td scope="col"><%= order.items.length %></td>
                                         <td scope="col">$<%= order.totalPrice %></td>
                                         <% if(order.orderStatus=="pending"){%>
-                                            <td scope="col" class="bg-warning" ><%= order.orderStatus %></td>
+                                            <td scope="col" class="bg-warning" style="color:aliceblue"><%= order.orderStatus %></td>
                                         <%}else if(order.orderStatus=="canceled"){%>
-                                            <td scope="col" class="bg-danger"><%= order.orderStatus %></td>
+                                            <td scope="col" class="bg-danger" style="color:aliceblue"><%= order.orderStatus %></td>
                                         <%}else if(order.orderStatus=="delivered"){%>
-                                            <td scope="col" class="bg-success"></td><%= order.orderStatus %></td>
+                                            <td scope="col" class="bg-success" style="color:aliceblue"><%= order.orderStatus %></td>
                                         <%}%>
                                         <td scope="col"><a href="./orderdetails?orderId=<%= order._id %>">Details</a></td>
                                       </tr>
