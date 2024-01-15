@@ -52,43 +52,45 @@ const Order = require('../models/orders');
 // }
 
 const addToCart = async (req, res) => {
-    try {
-      const userId = req.session.uid;
-      const productId = req.query.productId;
-  
-      const user = await User.findById(userId);
-      const product = await Product.findById(productId);
-  
-      if (!user || !product) {
-        console.log('User or product not found');
-        return res.status(404).send('User or product not found');
-      }
-  
-      const existingCartItem = user.cart.find((item) => item.productID.toString() === productId);
-  
-      if (existingCartItem) {
-        // console.log('Quantity of the item in the user\'s cart:', existingCartItem.quantity);
-        existingCartItem.quantity++;
-        await user.save(); // Save the user document after the update
-        return res.redirect('/cart');
-      } else {
-        user.cart.push({
-          productID: productId,
-          quantity: 1,
-          price: product.price,
-        });
-        product.quantity -= 1; // Decrease product quantity
-        await product.save(); // Save the updated product
-        await user.save(); // Save the user document
-  
-        console.log('Item added to cart');
-        return res.redirect('/cart');
-      }
-    } catch (error) {
-      console.error(error);
-      return res.status(500).send('An error occurred');
+  try {
+    const userId = req.session.uid;
+    const productId = req.query.productId;
+
+    const user = await User.findById(userId);
+    const product = await Product.findById(productId);
+
+    if (!user || !product) {
+      console.log('User or product not found');
+      return res.status(404).send('User or product not found');
     }
-  };
+
+    const existingCartItem = user.cart.find((item) => item.productID.toString() === productId);
+
+    if (existingCartItem) {
+      existingCartItem.quantity++;
+      product.quantity--; // Decrease product quantity
+      await product.save(); // Save the updated product
+      await user.save();
+      return res.redirect('/cart');
+    } else {
+      user.cart.push({
+        productID: productId,
+        quantity: 1,
+        price: product.price,
+      });
+      product.quantity--; // Decrease product quantity
+      await product.save(); // Save the updated product
+      await user.save(); // Save the user document
+
+      console.log('Item added to cart');
+      return res.redirect('/cart');
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send('An error occurred');
+  }
+};
+
   
   
 
@@ -97,10 +99,8 @@ const addToCart = async (req, res) => {
     if (req.session.uid) {
       const userId = req.session.uid;
       const user = await User.findById(userId);
-  
-      // Fetch product details for each cart item
       const cartItems = user.cart.map(async item => {
-        const product = await Product.findById(item.productID);
+      const product = await Product.findById(item.productID);
         return {
           productID: item.productID,
           quantity: item.quantity,
@@ -108,10 +108,8 @@ const addToCart = async (req, res) => {
           product: product
         };
       });
-  
       try {
         const populatedCartItems = await Promise.all(cartItems);
-
         const subtotal = populatedCartItems.reduce((acc, item) => acc + item.quantity * item.price, 0);
         const tax = subtotal * 0.1;
         const total = subtotal + tax;
@@ -182,21 +180,75 @@ const userRemoveProductFromCart = async (req, res) => {
 };
 
 
+// const userUpdateCart = async (req, res) => {
+//   console.log("reached");
+//   const userId = req.session.uid; 
+//   const { productID, quantity } = req.body;
+
+//   // console.log("--",productID,"--",quantity);
+//   try {
+//     // Find the user
+//     const user = await User.findById(userId);
+//     const item = user.cart.find(item => item.productID.toString() === productID);
+
+//     if (!item) {
+//       throw new Error('Item not found in cart');
+//     }
+
+//     const product = await Product.findById(productID);
+    
+//     item.quantity = quantity;  // Updating the quantity
+//     // product.quantity = product.quantity-quantity;
+//     // const newUpdatedProduct = await product.save();
+//     const newUpdatedQuantity = await user.save();
+
+//     // console.log("-=-",product.quantity-quantity);
+
+//     const subtotal = user.cart.reduce((acc, item) => acc + item.quantity * item.price, 0);
+//     const tax = subtotal * 0.1; 
+//     const total = subtotal + tax;
+
+//     res.json({
+//       success: true,
+//       subtotal: subtotal,
+//       tax: tax,
+//       total: total
+//     });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ success: false, error: error.message });
+//   }
+// };
+
 const userUpdateCart = async (req, res) => {
   console.log("reached");
-  const productID = req.body.productID;
-  const quantity = req.body.quantity;
+  const userId = req.session.uid; 
+  const { productID, quantity } = req.body;
 
-  console.log("--",productID,"--",quantity);
   try {
-    // Perform cart update logic (replace with your implementation)
-    // const updatedCart = updateCart(productID, quantity);
+    // Find the user
+    const user = await User.findById(userId);
+    const item = user.cart.find(item => item.productID.toString() === productID);
 
-    const subtotal = calculateSubtotal(updatedCart);
-    const tax = calculateTax(subtotal);
+    if (!item) {
+      throw new Error('Item not found in cart');
+    }
+
+    const product = await Product.findById(productID);
+    
+    const oldQuantity = item.quantity; // Get the old quantity
+    item.quantity = quantity;  // Updating the quantity
+
+    // Adjust the product quantity
+    product.quantity = product.quantity + oldQuantity - quantity;
+    await product.save(); // Save the updated product
+
+    const newUpdatedQuantity = await user.save();
+
+    const subtotal = user.cart.reduce((acc, item) => acc + item.quantity * item.price, 0);
+    const tax = subtotal * 0.1; 
     const total = subtotal + tax;
 
-    // console.log("--",subtotal,"--",tax,"--",total);
     res.json({
       success: true,
       subtotal: subtotal,
@@ -204,9 +256,11 @@ const userUpdateCart = async (req, res) => {
       total: total
     });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ success: false, error: error.message });
   }
 };
+
 
 const userCheckout = async(req,res)=>{
   if (req.session.uid) {
@@ -214,7 +268,6 @@ const userCheckout = async(req,res)=>{
     const user = await User.findById(userId);
     req.session.passPayment = 1;
 
-    // Fetch product details for each cart item
     const cartItems = user.cart.map(async item => {
       const product = await Product.findById(item.productID);
       return {
@@ -232,8 +285,6 @@ const userCheckout = async(req,res)=>{
       const total = subtotal + tax;
   
       const userAddress = await User.findById(req.session.uid).populate('address');
-
-      // console.log("--",userAddress,"--",total,"--")
       
       res.render('user/checkout', { cartItems: populatedCartItems, subtotal, tax, total, userAddress});
     }
@@ -381,7 +432,7 @@ const userPayment = async(req,res)=>{
       res.render('user/ordersuccess',{orderId});
     }
     catch(err){
-      console.log(err,"error happen");    //when order is empty it gets error so go back to product page . this error is getting because not passwing addressId
+      console.log(err,"error happen");   
       res.redirect('/products');
     }
   }
@@ -392,10 +443,7 @@ const userPayment = async(req,res)=>{
 
 const userOrders = async(req,res)=>{
   if(req.session.uid){
-    // Fetch the orders for the current user and populate the product and address details
     const orders = await Order.find({ userID: req.session.uid }).populate('items.productID').populate('shippingAddressID');
-    
-    // Pass the orders to the view
     res.render('user/orders', { orders: orders });
   }
   else{

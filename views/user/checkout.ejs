@@ -151,7 +151,11 @@
                     </div>
                     <div class="container-fluid d-flex justify-content-between">
                       <a class="px-3 mx-1 btn btn-primary" href="/editaddress?addressid=<%= userAddress.address[i]._id %>">Edit</a>
-                      <a class="btn btn-warning" href="/payment?addressid=<%= userAddress.address[i]._id %>">Use this address</a>
+                      <% if(total!=0){%>
+                        <a class="btn btn-warning" href="/payment?addressid=<%= userAddress.address[i]._id %>">Use this address</a>
+                      <%}else{%>
+                        <button class="btn btn-warning" disabled>Cart is empty</button>
+                        <%}%>
                       <!-- <a class="px-3" onclick="return alert('are you sure ?')" href="/deleteaddress?addressid=<%= userAddress.address[i]._id %>">Delete</a> -->
                     </div>
                   </div><br>
@@ -198,6 +202,8 @@
               <p>Subtotal: $ <b id="subTotal"><%= subtotal.toFixed(2) %></b></p>
               <p>Tax: $ <b><%= tax.toFixed(2) %></b></p>
               <p>Shipping: $ <b style="background-color: rgb(105, 255, 105);"> FREE SHIPPING</b></p>
+              <input type="text" style='border-radius: 10px; border:none;' placeholder=" COUPON CODE">
+
               <hr style="background-color: black;">
               <p>Total: $ <b><%= total.toFixed(2) %></b></p>
               

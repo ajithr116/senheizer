@@ -157,7 +157,7 @@
                       <!-- <button class="quantity-btn btn-primary" data-action="decrease" style="border:none">-</button>
                       <input type="number" value="<%= item.quantity %>" readonly style="width:40px;border:none">
                       <button class="quantity-btn btn-primary" data-action="increase" style="border:none">+</button> -->
-                      <input type="range" min="0" max="100" oninput="updateRangeInput(this)" value="<%= item.quantity %>" data-product-id="<%= item.product._id %>">
+                      <input type="range" min="1" max="100" oninput="updateRangeInput(this)" value="<%= item.quantity %>" data-product-id="<%= item.product._id %>">
                       <input type="text" value="<%= item.quantity %>" style="width:40px;border:none" data-product-id="<%= item.product._id %>">
                       
                       <script>
@@ -180,17 +180,15 @@
                         .then(response => response.json())
                         .then(data => {
                           if (data.success) {
-                              console.log("good");
-                              const subtotal = document.getElementById('subTotal');
-                              subtotal.style.backgroundColor = "red";
+                            // Update the subtotal, tax, and total values in the HTML
+                            document.getElementById('subTotal').textContent = data.subtotal.toFixed(2);
+                            document.getElementById('tax').textContent = data.tax.toFixed(2);
+                            document.getElementById('total').textContent = data.total.toFixed(2);
                           } else {
-                            console.log("bad");
-                            const subtotal = document.getElementById('subTotal');
-                            subtotal.style.backgroundColor = "red";
+                            console.log("Error updating cart");
                           }
                         });
                       });
-
                       </script>
                     </div>
                     <div>
@@ -235,9 +233,9 @@
               <h3>Grand total</h3>
               <hr style="background-color: black;">
               <p>Subtotal: $ <b id="subTotal"><%= subtotal.toFixed(2) %></b></p>
-              <p>Tax: $ <b><%= tax.toFixed(2) %></b></p>
+              <p>Tax: $ <b id="tax"><%= tax.toFixed(2) %></b></p>
               <p>Shipping: $ <b style="background-color: rgb(105, 255, 105);"> FREE SHIPPING</b></p>
-              <input type="text" style='border-radius: 10px; border:none;' placeholder=" COUPON CODE">
+              <!-- <input type="text" style='border-radius: 10px; border:none;' placeholder=" COUPON CODE"> -->
               <hr style="background-color: black;">
 
               <p>Total: $ <b><%= total.toFixed(2) %></b></p>

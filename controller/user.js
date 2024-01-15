@@ -38,62 +38,49 @@ const userSubmit = async(req,res,next)=>{
       res.redirect('/home'); 
   }
   else{
-      
-      try{
-          if(true){
-              const exists = await userController.checkEmailExist(email);     //function to find email exists or not
-              
-              if (exists) {
-
-                  const isBlocked = await userController.isUserDeleted(email);
-
-                  if(isBlocked==true){
+    try{
+        if(true){
+            const exists = await userController.checkEmailExist(email);     //function to find email exists or not
+                if (exists) {
+                    const isBlocked = await userController.isUserDeleted(email);
+                    if(isBlocked==true){
                       req.session.error = 5 // email blocked
                       res.redirect('/login');
-                  }
-                  else{
-                      // console.log('Email exists');
-                      if(rePassword.test(password)){
-
-                          req.session.email=email;
-                      
-                          const user = await userController.authenticateUser(email,password);
-
-                          if(user){
-                              // const hashedPassword = await bcrypt.hash(password, 10);
-                              req.session.uid=user._id;
-                              req.session.email=email;
-                              console.log("successfully logged in");
-                              res.redirect('./index');
-                          }
-                          else{
-                              // console.log('Authentication failed');
-                              req.session.error = 4 // email and password not match
-                              res.redirect('/login');
-                          }
-                      }
-                      else{
-                          // console.log('Password not match the format');
+                    }else{
+                        if(rePassword.test(password)){
+                            req.session.email=email;
+                            const user = await userController.authenticateUser(email,password);
+                            if(user){
+                                req.session.uid=user._id;
+                                req.session.email=email;
+                                console.log("successfully logged in");
+                                res.redirect('./index');
+                            }
+                            else{
+                                req.session.error = 4 // email and password not match
+                                res.redirect('/login');
+                            }
+                        }
+                        else{
                           req.session.error = 3 // password 3 not the match the format
                           res.redirect('/login');
-                      }
-                  }
-              } 
-              else {
-                  // console.log('Email does not exist');
+                        }
+                    }
+                } 
+                else {
                   req.session.error = 2 // Error code 3 email does not exists
                   res.redirect('/login');
-              }
-          }
-          else{
+                }
+            }
+            else{
               req.session.error = 1 // Error code 3 regular expression not mathch
               res.redirect('/login');
-          }
-      }
-      catch(err){
+            }
+        }
+        catch(err){
           next(err);
-      }
-  }
+        }
+    }
 };
 
 
@@ -103,9 +90,6 @@ const userSignup = async (req,res)=>{
   } else {
       const error = req.session.error;
       req.session.error = null;
-      
-      // res.setHeader('Cache-Control', 'no-cache,no-store,must-revalidate');
-      // res.render('./user/login');
 
       res.render('./user/signup',{ error: error });
   }
@@ -116,12 +100,6 @@ const userSubmitForm = async(req,res,next)=>{
   const nameRegex = /^[a-zA-Z]{1,30}$/;    //only alphabet and upto 30 
   var rePassword = /^(?=.*[A-Z])(?=.*\W).{8,}$/;
   const reEmail = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
-
-  // const firstName = req.body.uFirstName;
-  // const lastName = req.body.uLastName;
-  // const email = req.body.uEmail;
-  // const password = req.body.uPassword;
-  // const confirmPassword = req.body.uConfirmPassword;
 
   const {uFirstName: firstName,uLastName: lastName,uEmail: email,uPassword: password,uConfirmPassword: confirmPassword,uPhoneNo:phoneNumber} = req.body;
     
@@ -276,24 +254,15 @@ const userOtpVerify = async(req,res)=>{
           console.log("upload = ",upload);
 
           req.session.destroy((err) => {
-              // req.session.username=upload;
               console.log("---otp successfull");
-              
-              // setTimeout(()=>{
-              //     res.redirect('/login');
-              // },3000)
-              
           })
           res.render('user/otp',{otpWrong:true,email:rEmail});
       }
       else{
+        console.log("wrong otp");
+        res.render('user/otp',{otpWrong:false,email:req.session.rEmail});
 
-          console.log("wrong otp");
-          
-          // res.render('user/otp',{otpWrong:false});
-          res.render('user/otp',{otpWrong:false,email:req.session.rEmail});
-
-      }
+        }
   } 
   else {
       // res.setHeader('Cache-Control', 'no-cache,no-store,must-revalidate');
@@ -361,11 +330,6 @@ const userProductPage = async(req,res)=>{
 
 const userLogout = async (req,res)=>{
   try{
-    //   req.session.destroy((err) => {
-    //   if (err) {
-    //       console.error('Session destruction error:', err);
-    //   }
-    //   res.clearCookie('connect.sid');
         req.session.uid='';
       // res.setHeader('Cache-Control', 'no-cache,no-store,must-revalidate');
       res.redirect('./login');
@@ -376,182 +340,182 @@ const userLogout = async (req,res)=>{
   }
 };
 
-const userProfile = async (req,res)=>{
-    if (req.session.uid) {
+// const userProfile = async (req,res)=>{
+//     if (req.session.uid) {
 
-        const userDetails = await User.findById(req.session.uid);
-        const checkoutPage = req.query.checkoutPage;
-        let change = 0
+//         const userDetails = await User.findById(req.session.uid);
+//         const checkoutPage = req.query.checkoutPage;
+//         let change = 0
 
-        if(checkoutPage==1){
-            change=1;
-        }
-        // console.log("--",userDetails);
-        // In your server-side route or controller
-        const user = await User.findById(req.session.uid).populate('address');
-        let error = req.session.error;
-        res.render('user/profile',{userDetails,error,user,change});
-    } 
-    else {
-        res.redirect('/login');
-    }
-}
+//         if(checkoutPage==1){
+//             change=1;
+//         }
+//         // console.log("--",userDetails);
+//         // In your server-side route or controller
+//         const user = await User.findById(req.session.uid).populate('address');
+//         let error = req.session.error;
+//         res.render('user/profile',{userDetails,error,user,change});
+//     } 
+//     else {
+//         res.redirect('/login');
+//     }
+// }
 
 
-const userUpdateProfile = async (req,res)=>{
-    const{updateFirstName:firstName,updateLastName:lastName,updateEmail:email,updatePhoneNo:phoneNo} = req.body;
-    if (!phoneNo || !/^\d{10}$/.test(phoneNo)) {
-        req.session.error = 1;
-    }
+// const userUpdateProfile = async (req,res)=>{
+//     const{updateFirstName:firstName,updateLastName:lastName,updateEmail:email,updatePhoneNo:phoneNo} = req.body;
+//     if (!phoneNo || !/^\d{10}$/.test(phoneNo)) {
+//         req.session.error = 1;
+//     }
     
-    const userId = req.query.userId;
-    // console.log("--", firstName,"--",lastName,"--",email,"--",phoneNo,"--",userId);
+//     const userId = req.query.userId;
+//     // console.log("--", firstName,"--",lastName,"--",email,"--",phoneNo,"--",userId);
 
-    try {
-        const user = await User.findByIdAndUpdate({_id:userId}, {$set:{firstName:firstName,lastName:lastName,email:email,phoneNumber:phoneNo}});
-        // console.log("--",user);
-        res.redirect('/profile');
-    } 
-    catch (error) {
-        console.error(error);
-        res.status(500).send('Error updating profile');
-    }
-}
+//     try {
+//         const user = await User.findByIdAndUpdate({_id:userId}, {$set:{firstName:firstName,lastName:lastName,email:email,phoneNumber:phoneNo}});
+//         // console.log("--",user);
+//         res.redirect('/profile');
+//     } 
+//     catch (error) {
+//         console.error(error);
+//         res.status(500).send('Error updating profile');
+//     }
+// }
 
-const userAddAddress = async(req,res)=>{
-    if (req.session.uid) {
+// const userAddAddress = async(req,res)=>{
+//     if (req.session.uid) {
         
-        const userDetails = await User.findById(req.session.uid);
-        // console.log("--",userDetails);
-        const error = req.session.error;
-        const id = req.session.uid;
-        const check = req.query.checkoutPage;
-        if(check==1){
-            req.session.change=1;
-        }
-        res.render('user/addAddress',{error,id});
-    } 
-    else {
-        res.redirect('/login');
-    }
-}
+//         const userDetails = await User.findById(req.session.uid);
+//         // console.log("--",userDetails);
+//         const error = req.session.error;
+//         const id = req.session.uid;
+//         const check = req.query.checkoutPage;
+//         if(check==1){
+//             req.session.change=1;
+//         }
+//         res.render('user/addAddress',{error,id});
+//     } 
+//     else {
+//         res.redirect('/login');
+//     }
+// }
 
 
-const userAddAddressDetails = async(req,res)=>{
-    const{newAddressName:addressName,newPhoneNo:phoneNo,newZip:zipCode,newState:state,newDistrict:distrct,newFullAddress:fullAddress}=req.body;
-    const userId = req.query.userId;
-    console.log("")
-    // console.log('--',userId);
-    // Check phone number length
-    if (phoneNo.length !== 10 && zipCode.length !== 6) {
-        req.session.error = 3;
-        res.redirect('/addaddress');
-    }else{
-        if (phoneNo.length !== 10) {
-            req.session.error = 1;
-            res.redirect('/addaddress');
-        }
-        else{
-            if (zipCode.length !== 6) {
-                req.session.error = 2;
-                res.redirect('/addaddress');
-            }   
-            else{
-                const newAddress = new Address({
-                    district: distrct,
-                    state: state,
-                    pincode: zipCode, // Assuming zipCode holds the pincod
-                    address: fullAddress,
-                    name: addressName,
-                    phone: phoneNo,
-                    userId: userId
-                  });
+// const userAddAddressDetails = async(req,res)=>{
+//     const{newAddressName:addressName,newPhoneNo:phoneNo,newZip:zipCode,newState:state,newDistrict:distrct,newFullAddress:fullAddress}=req.body;
+//     const userId = req.query.userId;
+//     console.log("")
+//     // console.log('--',userId);
+//     // Check phone number length
+//     if (phoneNo.length !== 10 && zipCode.length !== 6) {
+//         req.session.error = 3;
+//         res.redirect('/addaddress');
+//     }else{
+//         if (phoneNo.length !== 10) {
+//             req.session.error = 1;
+//             res.redirect('/addaddress');
+//         }
+//         else{
+//             if (zipCode.length !== 6) {
+//                 req.session.error = 2;
+//                 res.redirect('/addaddress');
+//             }   
+//             else{
+//                 const newAddress = new Address({
+//                     district: distrct,
+//                     state: state,
+//                     pincode: zipCode, // Assuming zipCode holds the pincod
+//                     address: fullAddress,
+//                     name: addressName,
+//                     phone: phoneNo,
+//                     userId: userId
+//                   });
 
-                const address = await newAddress.save()
-                .catch(error => {
-                console.error("Error saving address:", error);
-                });
+//                 const address = await newAddress.save()
+//                 .catch(error => {
+//                 console.error("Error saving address:", error);
+//                 });
                   
-                // console.log("---",address._id);
-                try {
-                    const user = await User.findById(userId);
-                    user.address.push(address._id);
-                    const updatedUser = await user.save();
-                    res.set('Cache-Control', 'no-store')
+//                 // console.log("---",address._id);
+//                 try {
+//                     const user = await User.findById(userId);
+//                     user.address.push(address._id);
+//                     const updatedUser = await user.save();
+//                     res.set('Cache-Control', 'no-store')
 
-                    console.log("User updated with address:", updatedUser);
-                } catch (error) {
-                    console.error("Error updating user with address:", error);
-                }
-                if(req.session.change==1){
-                    req.session.change='';
-                    res.redirect('/checkout');
-                }
-                else{
-                    res.redirect('/profile');
-                }
-                // console.log("--", addressName,"--",phoneNo,"--",zipCode,"--",state,"--",distrct,"--",fullAddress);
-            }     
-        }
-    }
-}
+//                     console.log("User updated with address:", updatedUser);
+//                 } catch (error) {
+//                     console.error("Error updating user with address:", error);
+//                 }
+//                 if(req.session.change==1){
+//                     req.session.change='';
+//                     res.redirect('/checkout');
+//                 }
+//                 else{
+//                     res.redirect('/profile');
+//                 }
+//                 // console.log("--", addressName,"--",phoneNo,"--",zipCode,"--",state,"--",distrct,"--",fullAddress);
+//             }     
+//         }
+//     }
+// }
 
-const userEditAddress = async(req,res)=>{
-    if (req.session.uid) {
+// const userEditAddress = async(req,res)=>{
+//     if (req.session.uid) {
         
-         const addressId = req.query.addressid;
+//          const addressId = req.query.addressid;
 
-       const address = await Address.findById(addressId);
-    //    console.log("----",address);
-        // console.log("--",userDetails);
-        const error = req.session.error;
-        const id = req.session.uid;
-        res.render('user/editAddress',{error,id,address});
-    } 
-    else {
-        res.redirect('/login');
-    }
-}
+//        const address = await Address.findById(addressId);
+//     //    console.log("----",address);
+//         // console.log("--",userDetails);
+//         const error = req.session.error;
+//         const id = req.session.uid;
+//         res.render('user/editAddress',{error,id,address});
+//     } 
+//     else {
+//         res.redirect('/login');
+//     }
+// }
 
-const userUpdateAddress = async (req,res)=>{
+// const userUpdateAddress = async (req,res)=>{
 
-    const{newAddressName:addressName,newPhoneNo:phoneNo,newZip:zipCode,newState:state,newDistrict:distrct,newFullAddress:fullAddress}=req.body;
-    console.log("--", addressName,"--",phoneNo,"--",zipCode,"--",state,"--",distrct,"--",fullAddress,"--",req.query.addressId);
+//     const{newAddressName:addressName,newPhoneNo:phoneNo,newZip:zipCode,newState:state,newDistrict:distrct,newFullAddress:fullAddress}=req.body;
+//     console.log("--", addressName,"--",phoneNo,"--",zipCode,"--",state,"--",distrct,"--",fullAddress,"--",req.query.addressId);
 
-    const addressId = req.query.addressId; // Get the address ID from the query parameters
-        const update = {
-            district: distrct,
-            state: state,
-            pincode: zipCode,
-            address: fullAddress,
-            name: addressName,
-            phone: phoneNo,
-        }; 
-        try {
-            const address = await Address.findByIdAndUpdate(addressId, update, { new: true });
-            console.log("Updated address:", address);
-        } catch (error) {
-            console.error("Error updating address:", error);
-        }
-    res.redirect('/profile');
-}
+//     const addressId = req.query.addressId; // Get the address ID from the query parameters
+//         const update = {
+//             district: distrct,
+//             state: state,
+//             pincode: zipCode,
+//             address: fullAddress,
+//             name: addressName,
+//             phone: phoneNo,
+//         }; 
+//         try {
+//             const address = await Address.findByIdAndUpdate(addressId, update, { new: true });
+//             console.log("Updated address:", address);
+//         } catch (error) {
+//             console.error("Error updating address:", error);
+//         }
+//     res.redirect('/profile');
+// }
 
-const userDeleteAddress = async(req,res)=>{
-    const addressId = req.query.addressid; // Get the address ID from the query parameters
-    const userId = req.session.uid;
-    // console.log("--id",addressId);
+// const userDeleteAddress = async(req,res)=>{
+//     const addressId = req.query.addressid; // Get the address ID from the query parameters
+//     const userId = req.session.uid;
+//     // console.log("--id",addressId);
 
-    try {
-        // Using findByIdAndRemove()
-        const deletedAddress = await Address.findByIdAndRemove(addressId);        
-        const updatedUser = await User.findByIdAndUpdate(userId,{$pull: {address: addressId}},{ new: true });
-        // Or using deleteOne()
-        // const result = await Address.deleteOne({ _id: addressId });
-        res.redirect('/profile');
-    } catch (error) {
-        console.error("Error deleting address:", error);
-    }
-}
+//     try {
+//         // Using findByIdAndRemove()
+//         const deletedAddress = await Address.findByIdAndRemove(addressId);        
+//         const updatedUser = await User.findByIdAndUpdate(userId,{$pull: {address: addressId}},{ new: true });
+//         // Or using deleteOne()
+//         // const result = await Address.deleteOne({ _id: addressId });
+//         res.redirect('/profile');
+//     } catch (error) {
+//         console.error("Error deleting address:", error);
+//     }
+// }
 
 const userForgotpassword  = async(req,res)=>{
 
@@ -641,7 +605,6 @@ const userSubmitResetPassword = async(req,res)=>{
     console.log("--",password,"--",verifyPassword);
 
     const email = req.session.email;
-    // console.log("--",password,"--",verifyPassword,"--",email);
 
     if(specialCharacterRegex.test(password)){
         if(password==verifyPassword){
@@ -652,12 +615,13 @@ const userSubmitResetPassword = async(req,res)=>{
             const updatedUser = await User.findByIdAndUpdate(user._id, {password: password}, { new: true });
             
             // console.log("--",password,"--",verifyPassword);
-            // console.log('--',updatedUser);
-            res.redirect('/login');
+            req.session.notMatch=3;
+            res.redirect('/resetPassword');
+
+            // res.redirect('/login');
         }
         else{
             req.session.notMatch=2;
-            // console.log("reached2");
             res.redirect('/resetPassword');
         }
     }
@@ -678,13 +642,13 @@ module.exports = {
   userProducts,
   userProductPage,
   userLogout,
-  userUpdateProfile,
-  userProfile,
-  userAddAddress,
-  userAddAddressDetails,
-  userEditAddress,
-  userUpdateAddress,
-  userDeleteAddress,
+//   userUpdateProfile,
+//   userProfile,
+//   userAddAddress,
+//   userAddAddressDetails,
+//   userEditAddress,
+//   userUpdateAddress,
+//   userDeleteAddress,
   userForgotpassword,
   userForgetPasswordEmail,
   userPasswordOtp,

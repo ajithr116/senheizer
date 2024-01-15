@@ -93,15 +93,15 @@
     </div>
     <br>      
       
-    <div class="container mt-2 py-3">
+    <div class="container">
         <% if(orders==0){%>
             <h2 class="d-flex justify-content-center mt-4">Orders Empty. <a href="/products">Surf now</a> </h2>
         <%}else {%>
             <h2 class="d-flex justify-content-center mt-4">Orders</h2>
         <%}%>
         <% orders.forEach(order => { %> <!-- Loop over each order -->
-            <div class="m-2" style="border-radius:10px;">
-                <table class="table table-striped">
+            <div class="" style="border:1px solid black;border-radius: 0 0 10px 10px;">
+                <table class="table table-sm">
                     <thead>
                         <tr>
                             <th>Product Name</th>
@@ -122,14 +122,19 @@
                     </tbody>
                 </table>
 
-                <div class="container" style="border-top:2px solid black; background-color: rgb(214, 212, 212);">
+                <div class="container" style="border:3px solid black;border-radius:10px ;background-color: rgb(214, 212, 212);">
                     <div class="row"> <!-- Add this row -->
                         <div class="col-md-5">
                             <h5>Address</h5>
-                            <p>Address: <%= order.shippingAddressID.address.substring(0, 50) + (order.shippingAddressID.address.length > 20 ? '...' : '') %></p>
-                            <p>Phone : <%= order.shippingAddressID.phone %></p>
-                            
-                        </div>
+                            <% if (order.shippingAddressID) { %>
+                              <p>Address: <%= order.shippingAddressID.address.substring(0, 50) + (order.shippingAddressID.address.length > 20 ? '...' : '') %></p>
+                              <p>Phone : <%= order.shippingAddressID.phone %></p>
+                            <% } else { %>
+                              <p>Address: Not available</p>
+                              <p>Phone : Not available</p>
+                            <% } %>
+                          </div>
+                          
                         <div class="col-md-4 pb-3">
                             <h5>Status</h5>
                             <div class="d-flex">
@@ -142,22 +147,23 @@
                                     <p class="badge badge-success bg-success" style="color:white"> <%= order.orderStatus %></p>
                                 <%}%>
                             </div>
+                            
+                            <p>Ordered Date : <%= order.orderDate %> </p>
+                        </div>
+                        <div class="col-md-3">
+                            <h5>Grand Total</h5>
+                            <p >Total : <b><%= order.totalPrice %></b></p>
                             <%if(order.orderStatus=="pending"){%>
                                 <a class="btn btn-danger" href="/deleteorder?orderId=<%= order._id %>" onclick="alert('Are you sure you want to delete ?')">Delete Order</a> <!-- Display the status of the order -->
                             <%}else if(order.orderStatus=="delivered"){%>
                                 <a class="btn btn-primary "> Share your experience</a>
                             <%}%>
                         </div>
-                        <div class="col-md-3">
-                            <h5>Grand Total</h5>
-                            <p >Total : <b><%= order.totalPrice %></b></p>
-  
-                        </div>
                     </div> <!-- Close the row -->
                 </div>
                 
                 <!-- Add a button to delete the order -->
-            </div>
+            </div><br><br>
         <% }) %>
 
     </div>

@@ -37,13 +37,13 @@ router.get('/products',checkUserBlocked,userController.userProducts);
 router.get('/productPage',checkUserBlocked,userController.userProductPage);
 
 //user profile settings
-router.get('/profile',checkUserBlocked,userController.userProfile);
-router.post('/profile',userController.userUpdateProfile);
-router.get('/addaddress',checkUserBlocked,userController.userAddAddress);
-router.post('/addaddress',userController.userAddAddressDetails);
-router.get('/editaddress',checkUserBlocked,userController.userEditAddress);
-router.post('/editaddress',userController.userUpdateAddress);
-router.get('/deleteaddress',userController.userDeleteAddress);
+router.get('/profile',checkUserBlocked,userProfileController.userProfile);
+router.post('/profile',userProfileController.userUpdateProfile);
+router.get('/addaddress',checkUserBlocked,userProfileController.userAddAddress);
+router.post('/addaddress',userProfileController.userAddAddressDetails);
+router.get('/editaddress',checkUserBlocked,userProfileController.userEditAddress);
+router.post('/editaddress',userProfileController.userUpdateAddress);
+router.get('/deleteaddress',userProfileController.userDeleteAddress);
 
 //user forgot passwored
 router.get('/forgotpassword',userController.userForgotpassword);
