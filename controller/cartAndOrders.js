@@ -98,6 +98,7 @@ const addToCart = async (req, res) => {
   const userCartDetails = async (req, res) => {
     if (req.session.uid) {
       const userId = req.session.uid;
+      req.session.step=1;
       const user = await User.findById(userId);
       const cartItems = user.cart.map(async item => {
       const product = await Product.findById(item.productID);
@@ -264,35 +265,38 @@ const userUpdateCart = async (req, res) => {
 
 const userCheckout = async(req,res)=>{
   if (req.session.uid) {
-    const userId = req.session.uid;
-    const user = await User.findById(userId);
-    req.session.passPayment = 1;
+    if(req.session.step==1){
+      const userId = req.session.uid;
+      const user = await User.findById(userId);
+      req.session.passPayment = 1;
 
-    const cartItems = user.cart.map(async item => {
-      const product = await Product.findById(item.productID);
-      return {
-        productID: item.productID,
-        quantity: item.quantity,
-        price: item.price,
-        product: product
-      };
-    });
-    try{
-      const populatedCartItems = await Promise.all(cartItems);
+      const cartItems = user.cart.map(async item => {
+        const product = await Product.findById(item.productID);
+        return {
+          productID: item.productID,
+          quantity: item.quantity,
+          price: item.price,
+          product: product
+        };
+      });
+        try{
+          const populatedCartItems = await Promise.all(cartItems);
 
-      const subtotal = populatedCartItems.reduce((acc, item) => acc + item.quantity * item.price, 0);
-      const tax = subtotal * 0.1;
-      const total = subtotal + tax;
-  
-      const userAddress = await User.findById(req.session.uid).populate('address');
-      
-      res.render('user/checkout', { cartItems: populatedCartItems, subtotal, tax, total, userAddress});
-    }
-    catch(err){
-      res.status(500).json({ success: false, error: err.message });
-    }
-  } 
-  else {
+          const subtotal = populatedCartItems.reduce((acc, item) => acc + item.quantity * item.price, 0);
+          const tax = subtotal * 0.1;
+          const total = subtotal + tax;
+
+          const userAddress = await User.findById(req.session.uid).populate('address');
+          req.session.step=2;
+          res.render('user/checkout', { cartItems: populatedCartItems, subtotal, tax, total, userAddress});
+        }
+        catch(err){
+          res.status(500).json({ success: false, error: err.message });
+        }
+      }else{
+        res.redirect("/cart");
+      }
+    }else {
     res.redirect('/login');
   }
 }
@@ -300,7 +304,7 @@ const userCheckout = async(req,res)=>{
 
 const userPaymentPage = async(req,res)=>{
   if(req.session.uid){
-    if(req.session.passPayment==1){
+    if(req.session.step==2){
       if(req.session.total!=0){
         const addressId = req.query.addressid;
         const userId = req.session.uid;
@@ -324,8 +328,8 @@ const userPaymentPage = async(req,res)=>{
           const total = subtotal + tax;
       
           const userAddress = await User.findById(req.session.uid).populate('address');
-          console.log("--",addressId);
-          // console.log("--",userAddress,"--",total,"--")
+          // console.log("--",addressId);
+          req.session.step=3;
           res.render("user/paymentPage",{subtotal, tax, total,addressId});
         }
         catch(err){
@@ -336,6 +340,8 @@ const userPaymentPage = async(req,res)=>{
         console.log("total or cart is empty");
         res.redirect('/products');
       }
+    }else{
+      res.redirect('/cart');
     }
   }
   else{
@@ -390,6 +396,7 @@ const userPaymentPage = async(req,res)=>{
 
 const userPayment = async(req,res)=>{
   if(req.session.uid){
+    if(req.session.step==3){
     const addressId = req.query.addressid;
     const paymentMethod = req.query.paymentMethod;
     const userId = req.session.uid;
@@ -429,11 +436,16 @@ const userPayment = async(req,res)=>{
       user.cart = [];       // Clear the user's cart
       await user.save();
       const orderId = order.orderID;
+      req.session.step='';
       res.render('user/ordersuccess',{orderId});
     }
     catch(err){
       console.log(err,"error happen");   
       res.redirect('/products');
+    }
+  }
+    else{
+      res.redirect("/cart");
     }
   }
   else{

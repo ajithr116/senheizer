@@ -3,9 +3,11 @@ const express = require('express');
 const nodemailer = require('nodemailer');
 const router = express.Router();
 const userController = require('../controller/user');
+const userPasswordSettingsController = require('../controller/userPasswordSettings');
 const functionController = require('../userFunctions/usersFun');
 const userProfileController = require('../controller/userProfile');
 const addToCartController = require('../controller/cartAndOrders');
+const userFiltering = require('../controller/filtering');
 
 // router.use( async (req,res,next)=>{
 //     console.log("reached-");
@@ -46,13 +48,13 @@ router.post('/editaddress',userProfileController.userUpdateAddress);
 router.get('/deleteaddress',userProfileController.userDeleteAddress);
 
 //user forgot passwored
-router.get('/forgotpassword',userController.userForgotpassword);
-router.post('/forgotpassword',userController.userForgetPasswordEmail);
-router.get('/passwordotp',userController.userPasswordOtp);
-router.post('/passwordotp',userController.userOtp);
-router.get('/resendotp',userController.userResentOtp);
-router.get('/resetpassword',userController.userResetPassword);
-router.post('/resetpassword',userController.userSubmitResetPassword);
+router.get('/forgotpassword',userPasswordSettingsController.userForgotpassword);
+router.post('/forgotpassword',userPasswordSettingsController.userForgetPasswordEmail);
+router.get('/passwordotp',userPasswordSettingsController.userPasswordOtp);
+router.post('/passwordotp',userPasswordSettingsController.userOtp);
+router.get('/resendotp',userPasswordSettingsController.userResentOtp);
+router.get('/resetpassword',userPasswordSettingsController.userResetPassword);
+router.post('/resetpassword',userPasswordSettingsController.userSubmitResetPassword);
 
 //cart and orders, checkout, orders
 router.get('/addtocart',checkUserBlocked,addToCartController.addToCart);
@@ -67,6 +69,9 @@ router.get('/paymentsuccess',addToCartController.userPayment);
 router.get('/payment',checkUserBlocked,addToCartController.userPaymentPage);
 router.get('/orders',checkUserBlocked,addToCartController.userOrders);
 router.get('/deleteorder',addToCartController.userDeleteOrder);
+router.get('/products/filter',userFiltering.userFiltering)
+
+
 router.get('/logout',userController.userLogout);
 
 

@@ -4,6 +4,8 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const nodemailer = require('nodemailer');
+const Razorpay = require('razorpay');
+
 const flash = require('connect-flash');
 
 const userController = require('./controller/user');

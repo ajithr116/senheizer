@@ -87,285 +87,372 @@
         </nav>
     </div>
         <br><br><br><br>
-    <!-- PRODUCTS -->
-    <div class="container">
-        <div class="row">
-        <aside class="col-md-3">
-            
-    <div class="card">
-        <article class="filter-group">
-            <header class="card-header">
-                <a href="#" data-toggle="collapse" data-target="#collapse_1" aria-expanded="true" class="">
-                    <i class="icon-control fa fa-chevron-down"></i>
-                    <h6 class="title">Product type</h6>
-                </a>
-            </header>
-            <div class="filter-content collapse show" id="collapse_1" style="">
-                <div class="card-body">
-                    <form class="pb-3" action="products" method="GET">
-                    <div class="input-group">
-                      <input type="text" name="search"class="form-control" placeholder="Search">
-                      <div class="input-group-append">
-                        <button class="btn btn-light" type="submit">
-                          <i class="fa fa-search"></i>
-                        </button>
+        <div class="container">
+          <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel" data-bs-interval="2000">
+            <div class="carousel-inner">
+              <div class="carousel-item active">
+                  <div class="row">
+                      <div class="col-2">
+                          <img src="images/img5.jpg" class="d-block w-10" alt="First slide" style="height: 100px;">
                       </div>
+                      <div class="col-10 d-flex align-items-center justify-content-center">
+                          <div>
+                              <h5>Lorem, ipsum dolor sit amet consectetur dam commodi eligendi corporis id quos voluptates nobis a placeat, aliquam fugit sit iste, similique fugiat animi natus?</h5>
+                              <button type="button" class="btn btn-primary">Your Button</button>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <div class="carousel-item">
+                <div class="row">
+                    <div class="col-2">
+                        <img src="images/img5.jpg" class="d-block w-10" alt="First slide" style="height: 100px;">
                     </div>
-                    </form>
-                    
-                    <ul class="list-menu">
-                      <% category.forEach(category => { %>
-                        <li><a href="#"><%= category.name %></a></li>
-                      <% }); %>
-                    </ul>
-    
-                </div> <!-- card-body.// -->
+                    <div class="col-10 d-flex align-items-center justify-content-center">
+                        <div>
+                            <h5>Lorem, ipsum dolor sit amet consectetur dam commodi eligendi corporis id quos voluptates nobis a placeat, aliquam fugit sit iste, similique fugiat animi natus?</h5>
+                            <button type="button" class="btn btn-primary">Your Button</button>
+                        </div>
+                    </div>
+                </div>
+                
             </div>
-        </article> <!-- filter-group  .// -->
-        <article class="filter-group">
-            <header class="card-header">
-              <a href="#" data-toggle="collapse" data-target="#collapse_5" aria-expanded="true" class="">
-                <i class="icon-control fa fa-chevron-down"></i>
-                <h6 class="title">Colors</h6>
-              </a>
-            </header>
-          
-              <% const uniqueColors = []; %>
-              <% products.forEach(product => {
-                const colorTags = product.tags.split(',');
-                colorTags.forEach(color => uniqueColors.push(color.trim()));
-              });%>
-              <% const uniqueColorsSet = new Set(uniqueColors);%>
-              <% const uniqueColorsArray = Array.from(uniqueColorsSet);%>
-            
-            <div class="filter-content collapse show" id="collapse_5" style="">
-              <div class="card-body">
-                <% uniqueColorsArray.forEach(color => { %>
-                  <label class="checkbox-btn">
-                    <input type="checkbox" checked="" value="<%= color %>">
-                    <span><%= color %></span>
-                  </label>
-                <% }) %>
+              <div class="carousel-item">
+                <div class="row">
+                    <div class="col-2">
+                        <img src="images/img5.jpg" class="d-block w-10" alt="First slide" style="height: 100px;">
+                    </div>
+                    <div class="col-10 d-flex align-items-center justify-content-center">
+                        <div>
+                            <h5>Lorem, ipsum dolor sit amet consectetur dam commodi eligendi corporis id quos voluptates nobis a placeat, aliquam fugit sit iste, similique fugiat animi natus?</h5>
+                            <button type="button" class="btn btn-primary">Your Button</button>
+                        </div>
+                    </div>
+                </div>
               </div>
             </div>
-          </article>
-        <article class="filter-group">
-            <header class="card-header">
-                <a href="#" data-toggle="collapse" data-target="#collapse_2" aria-expanded="true" class="">
-                    <i class="icon-control fa fa-chevron-down"></i>
-                    <h6 class="title">Brands </h6>
-                </a>
-            </header>
-            <div class="filter-content collapse show" id="collapse_2" style="">
-                <div class="card-body">
-                  <% products.forEach(product => { %>
-
-                    <label class="custom-control custom-checkbox">
-                      <input type="checkbox" checked="" class="custom-control-input">
-                      <div class="custom-control-label"><%= product.brand %>  
-                          <b class="badge badge-pill badge-light float-right">120</b>  
+              <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Previous</span>
+              </button>
+              <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Next</span>
+              </button>
+          </div>
+      </div>
+      
+        <br>
+    <!-- PRODUCTS -->
+    <!-- <div class="position-fixed" style="width:390px;height:500;border:1px solid black;margin-top: -60;">
+      <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel" data-bs-interval="2000">
+          <div class="carousel-inner">
+              <div class="carousel-item active">
+                  <img src="images/img5.jpg" class="d-block w-100" alt="First slide">
+              </div>
+              <div class="carousel-item">
+                  <img src="images/about.jpg" class="d-block w-100" alt="Second slide">
+              </div>
+          </div>
+          <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Next</span>
+          </button>
+      </div>
+      <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque ut aliquam provident minima accusamus beatae alias sed error? Sapiente, doloribus? Magnam odio cumque aliquam ex ducimus natus maxime eligendi voluptatibus?</p>
+  </div> -->
+  
+    <div class="container">
+      <div class="row">
+        <aside class="col-md-3">
+            
+          <div class="card">
+            <article class="filter-group">
+                  <header class="card-header">
+                      <a href="#" data-toggle="collapse" data-target="#collapse_1" aria-expanded="true" class="">
+                          <i class="icon-control fa fa-chevron-down"></i>
+                          <h6 class="title">Product type</h6>
+                      </a>
+                  </header>
+                  <div class="filter-content collapse show" id="collapse_1" >
+                      <div class="card-body">
+                          <form class="pb-3" action="products" method="GET">
+                          <div class="input-group">
+                            <input type="text" name="search"class="form-control" placeholder="Search">
+                            <div class="input-group-append">
+                              <button class="btn btn-light" type="submit">
+                                <i class="fa fa-search"></i>
+                              </button>
+                            </div>
+                          </div>
+                          </form>
+                        <form action="/products?color&min&max&brand" method="get">   
+                          <!-- <ul class="list-menu">
+                            <% category.forEach(category => { %>
+                              <li><a ><%= category.name %></a></li>
+                            <% }); %>
+                          </ul> -->
+                          
+                      </div> 
+                  </div>
+              </article> 
+              <article class="filter-group">
+                  <header class="card-header">
+                    <a href="#" data-toggle="collapse" data-target="#collapse_5" aria-expanded="true" class="">
+                      <i class="icon-control fa fa-chevron-down"></i>
+                      <h6 class="title">Colors</h6>
+                    </a>
+                  </header>
+                
+                    <% const uniqueColors = []; %>
+                    <% products.forEach(product => {
+                      const colorTags = product.tags.split(',');
+                      colorTags.forEach(color => uniqueColors.push(color.trim()));
+                    });%>
+                    <% const uniqueColorsSet = new Set(uniqueColors);%>
+                    <% const uniqueColorsArray = Array.from(uniqueColorsSet);%>
+                  
+                  <div class="filter-content collapse show" id="collapse_5" style="">
+                    <div class="card-body">
+                      <% uniqueColorsArray.forEach(color => { %>
+                        <label class="checkbox-btn">
+                          <input type="checkbox" name="color" value="<%= color %>">
+                          <span><%= color %></span>
+                        </label>
+                      <% }) %>
+                    </div>
+                  </div>
+                </article>
+              <article class="filter-group">
+                  <header class="card-header">
+                      <a href="#" data-toggle="collapse" data-target="#collapse_2" aria-expanded="true" class="">
+                          <i class="icon-control fa fa-chevron-down"></i>
+                          <h6 class="title">Brands </h6>
+                      </a>
+                  </header>
+                  <div class="filter-content collapse show" id="collapse_2" style="">
+                      <div class="card-body">
+                        <% const uniqueBrands = new Set(); %>
+                        <% const brandCounts = {}; %>
+                        
+                        <% products.forEach(product => {
+                          uniqueBrands.add(product.brand);
+                          brandCounts[product.brand] = (brandCounts[product.brand] || 0) + 1;
+                        }); %>
+                        
+                        <% uniqueBrands.forEach(brand => { %>
+                          <label class="custom-control custom-checkbox">
+                            <input type="checkbox" name="brand" value="<%= brand %>" class="custom-control-input">
+                            <div class="custom-control-label" >
+                              <%= brand %>
+                              <b class="badge badge-pill badge-light float-right"><%= brandCounts[brand] %></b>
+                            </div>
+                          </label>
+                        <% }) %>
+                        
+                      </div> 
+                  </div>
+              </article> 
+              <article class="filter-group">
+                  <header class="card-header">
+                      <a href="#" data-toggle="collapse" data-target="#collapse_3" aria-expanded="true" class="">
+                          <i class="icon-control fa fa-chevron-down"></i>
+                          <h6 class="title">Price range </h6>
+                      </a>
+                  </header>
+                  <div class="filter-content collapse show" id="collapse_3" style="">
+                      <div class="card-body">
+                          <!-- <input type="range" class="custom-range" min="0" max="100" name="">-->
+                          <div class="form-row">
+                          <div class="form-group col-md-6">
+                            <label>Min</label>
+                            <input class="form-control" name="min" value="0" placeholder="$0" type="number" disabled>
+                          </div> 
+                          <div class="form-group text-right col-md-6">
+                            <label>Max</label>
+                            <input class="form-control" name="max" value="1000" placeholder="$10000" type="number">
+                          </div>
+                          </div> 
                       </div>
-                    </label>
-                  <%})%>
-                </div> <!-- card-body.// -->
-            </div>
-        </article> <!-- filter-group .// -->
-        <article class="filter-group">
-            <header class="card-header">
-                <a href="#" data-toggle="collapse" data-target="#collapse_3" aria-expanded="true" class="">
-                    <i class="icon-control fa fa-chevron-down"></i>
-                    <h6 class="title">Price range </h6>
-                </a>
-            </header>
-            <div class="filter-content collapse show" id="collapse_3" style="">
-                <div class="card-body">
-                    <input type="range" class="custom-range" min="0" max="100" name="">
-                    <div class="form-row">
-                    <div class="form-group col-md-6">
-                      <label>Min</label>
-                      <input class="form-control" placeholder="$0" type="number">
+                  </div>
+              </article>
+              
+              <!-- <article class="filter-group">
+                  <header class="card-header">
+                      <a href="#" data-toggle="collapse" data-target="#collapse_4" aria-expanded="true" class="">
+                          <i class="icon-control fa fa-chevron-down"></i>
+                          <h6 class="title">Sizes </h6>
+                      </a>
+                  </header>
+                  <div class="filter-content collapse show" id="collapse_4" style="">
+                      <div class="card-body">
+                        <label class="checkbox-btn">
+                          <input type="checkbox">
+                          <span class="btn btn-light"> XS </span>
+                        </label>
+          
+                        <label class="checkbox-btn">
+                          <input type="checkbox">
+                          <span class="btn btn-light"> SM </span>
+                        </label>
+          
+                        <label class="checkbox-btn">
+                          <input type="checkbox">
+                          <span class="btn btn-light"> LG </span>
+                        </label>
+          
+                        <label class="checkbox-btn">
+                          <input type="checkbox">
+                          <span class="btn btn-light"> XXL </span>
+                        </label>
                     </div>
-                    <div class="form-group text-right col-md-6">
-                      <label>Max</label>
-                      <input class="form-control" placeholder="$1,0000" type="number">
-                    </div>
-                    </div> <!-- form-row.// -->
-                    <!-- <button class="btn btn-block btn-primary">Apply</button> -->
-                </div><!-- card-body.// -->
-            </div>
-        </article> <!-- filter-group .// -->
-        
-        <article class="filter-group">
-            <header class="card-header">
-                <a href="#" data-toggle="collapse" data-target="#collapse_4" aria-expanded="true" class="">
-                    <i class="icon-control fa fa-chevron-down"></i>
-                    <h6 class="title">Sizes </h6>
-                </a>
-            </header>
-            <div class="filter-content collapse show" id="collapse_4" style="">
-                <div class="card-body">
-                  <label class="checkbox-btn">
-                    <input type="checkbox">
-                    <span class="btn btn-light"> XS </span>
-                  </label>
-    
-                  <label class="checkbox-btn">
-                    <input type="checkbox">
-                    <span class="btn btn-light"> SM </span>
-                  </label>
-    
-                  <label class="checkbox-btn">
-                    <input type="checkbox">
-                    <span class="btn btn-light"> LG </span>
-                  </label>
-    
-                  <label class="checkbox-btn">
-                    <input type="checkbox">
-                    <span class="btn btn-light"> XXL </span>
-                  </label>
-            </div><!-- card-body.// -->
-            </div>
-        </article> <!-- filter-group .// -->
-        <article class="filter-group">
-            <header class="card-header">
-                <button class="btn btn-block btn-primary">Apply</button>
-            </header>
-           <!--  <div class="filter-content collapse in" id="collapse_5" style="">
-                <div class="card-body">
-                    <label class="custom-control custom-radio">
-                      <input type="radio" name="myfilter_radio" checked="" class="custom-control-input">
-                      <div class="custom-control-label">Any condition</div>
-                    </label>
-    
-                    <label class="custom-control custom-radio">
-                      <input type="radio" name="myfilter_radio" class="custom-control-input">
-                      <div class="custom-control-label">Brand new </div>
-                    </label>
-    
-                    <label class="custom-control custom-radio">
-                      <input type="radio" name="myfilter_radio" class="custom-control-input">
-                      <div class="custom-control-label">Used items</div>
-                    </label>
-    
-                    <label class="custom-control custom-radio">
-                      <input type="radio" name="myfilter_radio" class="custom-control-input">
-                      <div class="custom-control-label">Very old</div>
-                    </label>
-                </div>
-            </div>
-        </article> -->
-    </div> <!-- card.// -->
-    
+                  </div>
+              </article>  -->
+              <article class="filter-group">
+                  <header class="card-header">
+                      <button type="submit" class="btn btn-block btn-primary">Apply</button>
+                  </header>
+                <!--  <div class="filter-content collapse in" id="collapse_5" style="">
+                      <div class="card-body">
+                          <label class="custom-control custom-radio">
+                            <input type="radio" name="myfilter_radio" checked="" class="custom-control-input">
+                            <div class="custom-control-label">Any condition</div>
+                          </label>
+          
+                          <label class="custom-control custom-radio">
+                            <input type="radio" name="myfilter_radio" class="custom-control-input">
+                            <div class="custom-control-label">Brand new </div>
+                          </label>
+          
+                          <label class="custom-control custom-radio">
+                            <input type="radio" name="myfilter_radio" class="custom-control-input">
+                            <div class="custom-control-label">Used items</div>
+                          </label>
+          
+                          <label class="custom-control custom-radio">
+                            <input type="radio" name="myfilter_radio" class="custom-control-input">
+                            <div class="custom-control-label">Very old</div>
+                          </label>
+                      </div>
+                  </div>
+              </article> -->
+          </div> 
+        </form><!-- card.// -->
         </aside>
         <main class="col-md-9">
     
-    <header class="border-bottom mb-4 pb-3">
-            <div class="form-inline">
-                <!-- <span class="mr-md-auto">32 Items found </span> -->
-                <select class="mr-2 form-control">
-                    <option>Latest items</option>
-                    <option>Trending</option>
-                    <option>Most Popular</option>
-                    <option>Cheapest</option>
-                </select>
-                <!-- <div class="btn-group">
-                    <a href="#" class="btn btn-outline-secondary" data-toggle="tooltip" title="" data-original-title="List view"> 
-                        <i class="fa fa-bars"></i></a>
-                    <a href="#" class="btn  btn-outline-secondary active" data-toggle="tooltip" title="" data-original-title="Grid view"> 
-                        <i class="fa fa-th"></i></a>
-                </div> -->
-            </div>
-    </header><!-- sect-heading -->
-    
-    <div class="row">
-        <!-- <div class="col-md-4">
-            <figure class="card card-product-grid">
-              <div class="img-wrap">
-                <img src="images/img5.jpg" class="img-fluid" style="border-radius: 10px;">
-                <a class="btn-overlay" href="#"><i class="fa fa-search-plus"></i> Quick view</a>
-              </div> <figcaption class="info-wrap">
-                <div class="fix-height">
-                  <a href="#" class="title">Great item name goes here</a>
-                  <div class="rating-price-wishlist">
-                    <div class="rating">
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-
-                      <i class="fa fa-star-half-o"></i>
-                      <span class="rating-count">150+</span>
-                      
-                    </div>
-                    <div class="price-wishlist">
-                      <div class="price-wrap">
-                        <span class="price">$1280</span>
-                        <a href="#" class="wishlist-icon"><i class="fa fa-heart"></i></a> </div>
-                      </div>
+          <header class="border-bottom mb-4 pb-3">
+                  <div class="form-inline">
+                      <!-- <span class="mr-md-auto">32 Items found </span> -->
+                      <select class="mr-2 form-control">
+                          <option>Latest items</option>
+                          <option>Trending</option>
+                          <option>Most Popular</option>
+                          <option>Cheapest</option>
+                      </select>
+                      <!-- <div class="btn-group">
+                          <a href="#" class="btn btn-outline-secondary" data-toggle="tooltip" title="" data-original-title="List view"> 
+                              <i class="fa fa-bars"></i></a>
+                          <a href="#" class="btn  btn-outline-secondary active" data-toggle="tooltip" title="" data-original-title="Grid view"> 
+                              <i class="fa fa-th"></i></a>
+                      </div> -->
                   </div>
-                </div>
-                <div class="actions">
-                  <a href="#" class="btn btn-outline-light " style="color:black;border: 1px solid black;">Add to cart</a>
-                  <a href="#" class="btn btn-dark">Buy now</a>
-                </div>
-              </figcaption>
-            </figure>
-        </div>  -->
-           
-        
-        <% products.forEach(product => { %>
-          <% if (product.isDeleted !== true) { %>
-          <div class="col-md-4">
-            <figure class="card card-product-grid">
-              <div class="img-wrap">
-                <!-- <span class="badge badge-danger"> NEW </span> -->
-                <% if(product.quantity==0){ %>
-                  <span class="badge badge-danger stock-badge">In Stock <span class="badge-light px-1"><%= product.quantity %></span></span>
-                <%}else{%>
-                  <span class="badge badge-success stock-badge">In Stock <span class="badge-light px-1"><%= product.quantity %></span></span>
-                <%}%>
+          </header><!-- sect-heading -->
+          
+          <div class="row">
+              <!-- <div class="col-md-4">
+                  <figure class="card card-product-grid">
+                    <div class="img-wrap">
+                      <img src="images/img5.jpg" class="img-fluid" style="border-radius: 10px;">
+                      <a class="btn-overlay" href="#"><i class="fa fa-search-plus"></i> Quick view</a>
+                    </div> <figcaption class="info-wrap">
+                      <div class="fix-height">
+                        <a href="#" class="title">Great item name goes here</a>
+                        <div class="rating-price-wishlist">
+                          <div class="rating">
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
 
-                <img src="/uploads/<%= product.images[0] %>" class="img-fluid" style="border-radius: 10px; width: 200px; height: 200px;">                
-                <a class="btn-overlay" href="/productPage?productId=<%= product._id %>"><i class="fa fa-search-plus"></i> Quick view</a>
+                            <i class="fa fa-star-half-o"></i>
+                            <span class="rating-count">150+</span>
+                            
+                          </div>
+                          <div class="price-wishlist">
+                            <div class="price-wrap">
+                              <span class="price">$1280</span>
+                              <a href="#" class="wishlist-icon"><i class="fa fa-heart"></i></a> </div>
+                            </div>
+                        </div>
+                      </div>
+                      <div class="actions">
+                        <a href="#" class="btn btn-outline-light " style="color:black;border: 1px solid black;">Add to cart</a>
+                        <a href="#" class="btn btn-dark">Buy now</a>
+                      </div>
+                    </figcaption>
+                  </figure>
+              </div>  -->
+                
+              
+              <% products.forEach(product => { %>
+                <% if (product.isDeleted !== true) { %>
+                <div class="col-md-4">
+                  <figure class="card card-product-grid">
+                    <div class="img-wrap">
+                      <!-- <span class="badge badge-danger"> NEW </span> -->
+                      <% if(product.quantity==0){ %>
+                        <span class="badge badge-danger stock-badge">In Stock <span class="badge-light px-1"><%= product.quantity %></span></span>
+                      <%}else{%>
+                        <span class="badge badge-success stock-badge">In Stock <span class="badge-light px-1"><%= product.quantity %></span></span>
+                      <%}%>
+
+                      <img src="/uploads/<%= product.images[0] %>" class="img-fluid" style="border-radius: 10px; width: 200px; height: 200px;">                
+                      <a class="btn-overlay" href="/productPage?productId=<%= product._id %>"><i class="fa fa-search-plus"></i> Quick view</a>
+                    </div>
+                    <figcaption class="info-wrap">
+                      <div class="fix-height">
+                        <a href="/productPage?productId=<%= product._id %>" class="title"><%= product.name.substring(0, 50) + (product.name.length > 20 ? '...' : '') %></a>
+                        <div class="rating-price-wishlist">
+                          <div class="rating">
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+
+                            <i class="fa fa-star-half-o"></i>
+                            <span class="rating-count">150+</span>
+                            
+                          </div>
+                          <div class="price-wishlist">
+                            <div class="price-wrap">
+                              <span class="price">$<%= product.price %></span>
+                              <!-- <del class="price-old">$1980</del> -->
+                              <a href="#" class="wishlist-icon"><i class="fa fa-heart"></i></a> </div>
+                            </div>
+                        </div>
+                      </div>
+                      <div class="actions">
+                        <%if(product.quantity==0){%>
+                          <button  class="btn btn-outline-light " style="color:black;border: 1px solid black;" disabled>Add to cart</button>
+                        <%}else{%>
+                          <a href="/addtocart?productId=<%= product._id %>" class="btn btn-outline-light " style="color:black;border: 1px solid black;">Add to cart</a>
+                        <%}%>
+                        <a href="https://www.google.com" class="btn btn-dark">Buy now</a>
+                      </div>
+                    </figcaption>
+                  </figure>
               </div>
-               <figcaption class="info-wrap">
-                <div class="fix-height">
-                  <a href="/productPage?productId=<%= product._id %>" class="title"><%= product.name.substring(0, 50) + (product.name.length > 20 ? '...' : '') %></a>
-                  <div class="rating-price-wishlist">
-                    <div class="rating">
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-
-                      <i class="fa fa-star-half-o"></i>
-                      <span class="rating-count">150+</span>
-                      
-                    </div>
-                    <div class="price-wishlist">
-                      <div class="price-wrap">
-                        <span class="price">$<%= product.price %></span>
-                        <!-- <del class="price-old">$1980</del> -->
-                        <a href="#" class="wishlist-icon"><i class="fa fa-heart"></i></a> </div>
-                      </div>
-                  </div>
-                </div>
-                <div class="actions">
-                  <%if(product.quantity==0){%>
-                    <button  class="btn btn-outline-light " style="color:black;border: 1px solid black;" disabled>Add to cart</button>
-                  <%}else{%>
-                    <a href="/addtocart?productId=<%= product._id %>" class="btn btn-outline-light " style="color:black;border: 1px solid black;">Add to cart</a>
-                  <%}%>
-                  <a href="https://www.google.com" class="btn btn-dark">Buy now</a>
-                </div>
-              </figcaption>
-            </figure>
-        </div>
-        <%}%>
-      <%})%> 
-    </div> <!-- row end.// -->
+              <%}%>
+            <%})%> 
+          </div> 
+    <!-- row end.// -->
     
     
     <nav class="mt-4" aria-label="Page navigation sample">
@@ -378,8 +465,8 @@
       </ul>
     </nav>
     
-        </main>
-        </div>
+    </main>
+  </div>
     </div>
     <!-- PRODUCTS -->
     <!-- Bootstrap JS (required for the Bootstrap components to work) -->
