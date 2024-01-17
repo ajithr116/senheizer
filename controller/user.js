@@ -289,15 +289,52 @@ const userIndex = async(req,res)=>{
 const userProducts = async (req, res) => {
     if (req.session.uid) {
     let product = await userController.getAllProductPage();
+    let product2 = await userController.getAllProductPage();
     const category = await Category.find({ isDeleted: false });
   
     const searchQuery = req.query.search;
     const brand = req.query.brand;
     const maxPrice = req.query.max;
     const color = req.query.color;
+    const category2 = req.query.category;
+    console.log("--",category2);
         
-    console.log("--",brand,"--",maxPrice,"--",color);
+    // console.log("--",brand,"--",maxPrice,"--",color,"--",category);
+    /* 1. .filter():
+    Used to create a new array with elements that pass a certain test.
+    Takes a callback function as an argument, which is applied to each element in the original array.
+    Only elements for which the callback function returns true are included in the new array.
     
+    2. .includes():
+    Checks if a value is present within an array.
+    Returns true if the value is found, false otherwise.
+    
+    3. .some():
+    Determines if at least one element in an array passes a test.
+    Takes a callback function as an argument, which is applied to each element.
+    Returns true as soon as the callback returns true for any element, otherwise false.*/
+    if (brand) {
+        product = product.filter(product => brand.includes(product.brand));
+    }
+    
+    if (maxPrice) {
+        product = product.filter(product => product.price <= maxPrice);
+    }
+    
+    if (color) {
+        const colorArray = color.split(',').map(color => color.trim());
+        product = product.filter(product => colorArray.some(color => product.tags.includes(color)));
+    }
+      
+        // ... other code
+
+        if (category2) {
+            const populatedProducts = await Product.find({}).populate('category');
+            product = populatedProducts.filter(product => product.category.name === category2);
+        }
+        
+        // ... other filters and rendering
+  
     if (searchQuery) {
         product = product.filter(product => {
         return (
@@ -307,13 +344,25 @@ const userProducts = async (req, res) => {
         );
         });
     }
-  
-    res.render('user/products', { products: product, category });
+    
+    res.render('user/products', { products: product, category,product2:product2});
     } else {
       res.redirect('/login');
     }
 };
   
+// const userProductCategory = async(req,res)=>{
+//     const categoryName = req.body.category; // Get the category from the request body
+//     // Your existing code to get products by category
+//     let product = await userController.getAllProductPage();
+//     const category = await Category.find({ isDeleted: false });
+//     product = product.filter(product => product.category === categoryName);
+
+//     // Send the filtered products as the response
+//     res.json(product);
+    
+// }
+
 const userProductPage = async(req,res)=>{
   if (req.session.uid) {
 
@@ -467,6 +516,7 @@ module.exports = {
   userProducts,
   userProductPage,
   userLogout,
+////   userProductCategory,
 //   userUpdateProfile,
 //   userProfile,
 //   userAddAddress,

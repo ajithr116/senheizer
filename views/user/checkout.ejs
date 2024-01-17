@@ -69,6 +69,11 @@
         margin: 20px 2px;
         cursor: pointer;
       }
+      #couponCode:focus {
+    outline: none; /* Remove the default outline */
+    border: none; /* Remove the border */
+    /* Add any other styles you want for the focused state */
+}
 
     </style>
 
@@ -152,7 +157,7 @@
                     <div class="container-fluid d-flex justify-content-between">
                       <a class="px-3 mx-1 btn btn-primary" href="/editaddress?addressid=<%= userAddress.address[i]._id %>">Edit</a>
                       <% if(total!=0){%>
-                        <a class="btn btn-warning" href="/payment?addressid=<%= userAddress.address[i]._id %>">Use this address</a>
+                        <a class="btn btn-warning" href="/payment?addressid=<%= userAddress.address[i]._id %>&couponId=">Use this address</a>
                       <%}else{%>
                         <button class="btn btn-warning" disabled>Cart is empty</button>
                         <%}%>
@@ -202,10 +207,57 @@
               <p>Subtotal: $ <b id="subTotal"><%= subtotal.toFixed(2) %></b></p>
               <p>Tax: $ <b><%= tax.toFixed(2) %></b></p>
               <p>Shipping: $ <b style="background-color: rgb(105, 255, 105);"> FREE SHIPPING</b></p>
-              <input type="text" style='border-radius: 10px; border:none;' placeholder=" COUPON CODE">
+              <input type="text" id="couponCode" style='border-radius: 5px; border:none' placeholder=" COUPON CODE">
 
               <hr style="background-color: black;">
-              <p>Total: $ <b><%= total.toFixed(2) %></b></p>
+              <p>Total: $ <b id="total"><%= total.toFixed(2) %></b></p>
+              <script>
+                const total = parseFloat(document.getElementById('total').textContent);
+                let totalValue = document.getElementById('total');
+                
+                  $(document).ready(function() {
+                      $('#couponCode').on('keyup', function() {
+                          var couponCode = $(this).val();
+              
+                          $.ajax({
+                              url: '/verifyCoupon', 
+                              type: 'POST', 
+                              data: { couponCode: couponCode },
+              
+                              success: function(response) {
+                                  if(response.discount) {
+                                    const couponCode = document.getElementById('couponCode');
+                                    // alert("id "+ response.couponId);
+                                    alert("Coupon working ");
+                                    let newTotal = total - response.discount;
+                                    totalValue.textContent = total + " - " + response.discount+" = "+newTotal;
+                                    couponCode.style.border ="2px solid green";
+
+                                    // Get the anchor tag by its class name
+                                    const anchorTag = document.querySelector('.btn.btn-warning');
+                                    // Get the current href attribute
+                                    const currentHref = anchorTag.getAttribute('href');
+                                    // Add the couponId to the href attribute
+                                    const newHref = currentHref + '&couponId=' + response.couponId;
+                                    // Set the new href attribute
+                                    anchorTag.setAttribute('href', newHref);
+                                  } 
+                              },
+                              error: function(err) {
+                                const couponCode = document.getElementById('couponCode');
+                                couponCode.style.border="2px solid red";
+
+                                if(err.responseJSON.message=="expire"){
+                                  alert("Error: " + err.responseJSON.message);
+                                  const couponCode = document.getElementById('couponCode');
+                                  couponCode.style.border="2px solid red";
+                                }
+
+                              }
+                          });
+                      });
+                  });
+              </script>
               
               <!-- <a href="https://www.google.com"><button class="btn btn-dark">Checkout</button></a> -->
             </div>
@@ -217,6 +269,8 @@
     <!-- PRODUCTS -->
     <!-- Bootstrap JS (required for the Bootstrap components to work) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
     <br><br><br>
     <!-- Footer Start -->
     <footer>

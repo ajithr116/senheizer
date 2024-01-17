@@ -8,6 +8,7 @@ const functionController = require('../userFunctions/usersFun');
 const userProfileController = require('../controller/userProfile');
 const addToCartController = require('../controller/cartAndOrders');
 const userFiltering = require('../controller/filtering');
+const wishlistController = require('../controller/wishlist');
 
 // router.use( async (req,res,next)=>{
 //     console.log("reached-");
@@ -36,6 +37,7 @@ router.get('/submitForm',userController.userSubmitForm2);
 router.post('/otpverify',userController.userOtpVerify);
 router.get('/index',checkUserBlocked,userController.userIndex);
 router.get('/products',checkUserBlocked,userController.userProducts);
+// router.post('/products',userController.userProductCategory);
 router.get('/productPage',checkUserBlocked,userController.userProductPage);
 
 //user profile settings
@@ -62,6 +64,7 @@ router.get('/cart',checkUserBlocked,addToCartController.userCartDetails)
 router.get('/removeproduct',addToCartController.userRemoveProductFromCart);
 router.post('/updatecart',addToCartController.userUpdateCart); //pending
 router.get('/checkout',checkUserBlocked,addToCartController.userCheckout);
+router.post('/verifyCoupon',addToCartController.userVerifyCoupon);
 
 //----tricky
 router.get('/paymentsuccess',addToCartController.userPayment);
@@ -69,7 +72,10 @@ router.get('/paymentsuccess',addToCartController.userPayment);
 router.get('/payment',checkUserBlocked,addToCartController.userPaymentPage);
 router.get('/orders',checkUserBlocked,addToCartController.userOrders);
 router.get('/deleteorder',addToCartController.userDeleteOrder);
-router.get('/products/filter',userFiltering.userFiltering)
+// router.get('/products/filter',userFiltering.userFiltering)
+
+//wishlist 
+router.post("/wishlist",wishlistController.userAddWishlist);
 
 
 router.get('/logout',userController.userLogout);

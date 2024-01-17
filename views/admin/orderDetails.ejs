@@ -6,7 +6,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Category management</title>
+    <title>Order management</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -85,6 +85,7 @@
                     <a href="./userManagement" class="nav-item nav-link"><i class="fa fa-th me-2"></i>User manage</a>
                     <a href="./categoryManage" class="nav-item nav-link "><i class="fa fa-keyboard me-2"></i>Category manage</a>
                     <a href="./ordermanagement" class="nav-item nav-link active"><i class="fa fa-box me-2"></i>Order manage</a>
+                    <a href="./couponManage" class="nav-item nav-link"><i class="fa fa-keyboard me-2"></i>Category manage</a>
 
                     <!-- <a href="table.html" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Tables</a> -->
                     <!-- <a href="chart.html" class="nav-item nav-link"><i class="fa fa-chart-bar me-2"></i>Charts</a>
@@ -109,8 +110,6 @@
             <%- include('navbar') %>
             <!-- Navbar End -->
 
-
-            <!-- Blank Start -->
             <div class="container-fluid pt-4 px-2">
                 <div class="container-fluid pt-4 px-5">
                     <div class="col-12">
@@ -121,9 +120,24 @@
                                     <p>First Name: <b><%= order.userID.firstName %></b></p>
                                     <p>Last Name: <b><%= order.userID.lastName %></b></p>
                                     <p>Ordered Date: <b><%= order.orderDate %></b></p>
-                                    <p>State: <b><%= order.shippingAddressID.state %></b></p>
-                                    <p>District:<b> <%= order.shippingAddressID.district %></b></p>
-                                    <p>Full address: <b><%= order.shippingAddressID.address %></b></p>
+                                    <p>State: <b><% if (order.shippingAddressID) { %>
+                                        <%= order.shippingAddressID.state %></b></b>
+                                        <% } else { %>
+                                        <b>not available.</b>
+                                      <% } %>
+                                      </b></p>
+                                    <p>District:<b> <% if (order.shippingAddressID) { %>
+                                        <%= order.shippingAddressID.district %></b></b>
+                                        <% } else { %>
+                                        <b>not available.</b>
+                                      <% } %>
+                                      </b></p>
+                                    <p>Full address: <b><% if (order.shippingAddressID) { %>
+                                        <%= order.shippingAddressID.address %></b></b>
+                                        <% } else { %>
+                                        <b>not available.</b>
+                                      <% } %>
+                                      </b></p>
                                 </div>
                                 <div class="col-md-6">
                                     <% if(order.orderStatus=="pending"){%>
@@ -136,7 +150,12 @@
                                     <p>Order ID : <b><%= order.orderID %></b></p>
                                     <p>Phone No: <b><%= order.userID.phoneNumber %></b></p>
                                     <p>Email: <b><%= order.userID.email %></b></p>
-                                    <p>Pincode:<b><%= order.shippingAddressID.pincode %></b></p>
+                                    <p>Pincode:<b><% if (order.shippingAddressID) { %>
+                                        <b><%= order.shippingAddressID.pincode %></b></b>
+                                        <% } else { %>
+                                        <b>not available.</b>
+                                      <% } %>
+                                      </b></p>
                                     <p>Payment Method<b> : <%= order.paymentMethod %></b></p>
                                 </div>
                             </div>
@@ -168,17 +187,27 @@
                             </div>
                             <div>
                                 <p>Tax rate : <b><%= taxRate.toFixed(2) %></b></p>
-                                <p>Grand total (including tax): <b><%= grandTotal.toFixed(2) %></b></p>
+                                <p>Grand total (including tax): <b><%= order.totalPrice %></b></p>
                                 <div class="container">
                                     <form action="./status?orderId=<%= order._id %>" method="POST">
-                                        <select name="status" value="<%= order.orderStatus %>" class="" onchange="selected()" id="statusControl" style="width:150px;height:40px;border-radius: 10px;">
-                                            <option value="<%= order.orderStatus %>"><%= order.orderStatus %></option>
-                                            <option value="pending">pending</option>
-                                            <option value="delivered">delivered</option>
-                                            <option value="canceled">canceled</option>
-                                        </select>
-                                        <input type="number" value="<%= grandTotal  %>" id="paymentBox" style="height:40px;border-radius:10px;border:1px solid black;visibility:hidden;" disabled>
-                                        <input type="submit" class="btn btn-success" value="Proceed">
+                                        <% if (order.shippingAddressID) { %>
+                                            <select name="status" value="<%= order.orderStatus %>" class="" onchange="selected()" id="statusControl" style="width:150px;height:40px;border-radius: 10px;">
+                                                <option value="<%= order.orderStatus %>"><%= order.orderStatus %></option>
+                                                <option value="pending">pending</option>
+                                                <option value="delivered">delivered</option>
+                                                <option value="canceled">canceled</option>
+                                            </select>
+                                            <% } else { %>
+                                            <b>not available.</b>
+                                          <% } %>
+                                          </b>
+                                        
+                                        <input type="number" value="<%= order.totalPrice %>" id="paymentBox" style="height:40px;border-radius:10px;border:1px solid black;visibility:hidden;" disabled>
+                                        <% if (order.shippingAddressID) { %>
+                                            <input type="submit" class="btn btn-success" value="Proceed">
+                                            <% } else { %>
+                                            <b>not available.</b>
+                                          <% } %>
                                     </form>
                                     <script>
                                     function selected(){
@@ -197,10 +226,6 @@
                     </div>
                 </div>
             </div>
-            
-
-              
-
             
             <!-- Blank End -->
 

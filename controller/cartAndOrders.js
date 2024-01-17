@@ -7,6 +7,7 @@ const Address = require('../models/address');
 const Category = require("../models/category");
 const userController = require('../userFunctions/usersFun');
 const Order = require('../models/orders');
+const Coupon = require('../models/coupon');
 
 
 // const addToCart = async (req, res) => {
@@ -307,8 +308,16 @@ const userPaymentPage = async(req,res)=>{
     if(req.session.step==2){
       if(req.session.total!=0){
         const addressId = req.query.addressid;
+        const couponId = req.query.couponId[1];
         const userId = req.session.uid;
+        let reducingAmount = 0 ;
         const user = await User.findById(userId);
+        
+        if(couponId){
+          // console.log("working",couponId);
+          const coupon = await Coupon.findById(couponId);
+          reducingAmount = coupon.reducingAmount
+        }
     
         // Fetch product details for each cart item
         const cartItems = user.cart.map(async item => {
@@ -325,12 +334,21 @@ const userPaymentPage = async(req,res)=>{
     
           const subtotal = populatedCartItems.reduce((acc, item) => acc + item.quantity * item.price, 0);
           const tax = subtotal * 0.1;
-          const total = subtotal + tax;
-      
+          if(reducingAmount>0){
+            const total = subtotal + tax-reducingAmount;
+            req.session.step=3;
+            req.session.discountAmt = reducingAmount;
+            req.session.couponId = couponId;
+            res.render("user/paymentPage",{subtotal, tax, total,addressId});
+          }
+          else{
+            const total = subtotal + tax;
+            req.session.step=3;
+            res.render("user/paymentPage",{subtotal, tax, total,addressId});
+          }
           const userAddress = await User.findById(req.session.uid).populate('address');
+
           // console.log("--",addressId);
-          req.session.step=3;
-          res.render("user/paymentPage",{subtotal, tax, total,addressId});
         }
         catch(err){
           console.log("error " , err);
@@ -418,7 +436,15 @@ const userPayment = async(req,res)=>{
 
       const subtotal = populatedCartItems.reduce((acc, item) => acc + item.quantity * item.price, 0);
       const tax = subtotal * 0.1;
-      const total = subtotal + tax;
+      let total=0;
+      if(req.session.discountAmt){
+        total = subtotal + tax-req.session.discountAmt;
+        await Coupon.findByIdAndUpdate(req.session.couponId, { $push: { user: userId } });
+        // Coupon.save();
+      }
+      else{
+        total = subtotal + tax;
+      } 
 
       const order = new Order({
         userID: userId,
@@ -477,6 +503,26 @@ const userDeleteOrder = async(req,res)=>{
   }
 }
 
+const userVerifyCoupon = async(req,res)=>{
+  const { couponCode } = req.body;
+  // console.log("reached",couponCode);
+  try {
+    const coupon = await Coupon.findOne({ couponCode: couponCode });
+
+    if (!coupon) {
+        return res.status(400).json({ success: false, message: 'Invalid coupon code' });
+    }
+
+    if (coupon.expireDate < Date.now()) {
+        return res.status(400).json({ success: false, message: "expire" });
+    }
+    const discount = coupon.reducingAmount;
+    // console.log("discounts ",discount);
+    return res.json({ success: true, message: 'Coupon code is valid', discount: coupon.reducingAmount, couponId:coupon._id });
+  } catch (err) {
+      return res.status(500).json({ success: false, message: 'An error occurred while verifying the coupon code' });
+  }
+}
 
 module.exports = {
     addToCart,
@@ -488,4 +534,5 @@ module.exports = {
     userPaymentPage,
     userOrders,
     userDeleteOrder,
+    userVerifyCoupon,
 }

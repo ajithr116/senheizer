@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const adminController = require('../controller/admin');
 const adminCategoryController = require('../controller/category');
 const adminOrderController = require("../controller/orderManagement");
+const adminCouponController = require('../controller/couponmanagement');
 const multer  = require('multer')
 const upload = multer({ dest: 'uploads/' })
 
@@ -55,26 +56,40 @@ router.get('/login', adminController.adminLogin);
 router.post('/aSubmit',adminController.adminSubmit);
 router.get('/index',adminController.adminIndex);
 router.get('/logout',adminController.adminLogout);
+
+//product
 router.get('/viewProduct',adminController.adminViewProducts);
 router.get('/addProduct',adminController.adminAddProduct);
 router.post('/productSubmit', adminController.adminSubmitProduct);
 router.get('/deleteproduct',adminController.adminDeleteProduct);
-router.get('/categoryManage',adminCategoryController.adminCategoryManage);
 router.get('/detailProduct',adminController.adminDetailProduct);
 router.get('/getProductDetails',adminController.adminDetailProduct);
 router.post('/updateproduct', adminController.adminUpdateProduct);
+
+//usermanangement
 router.get('/userManagement',adminController.adminUsermanage);
 router.get('/unblockuser',adminController.adminBlockUser);
 router.get('/blockuser',adminController.adminUnblockUser);
+
+//category
 router.get('/addCategory',adminCategoryController.adminCategory);
 router.post('/submitcategory',adminCategoryController.adminSubmitCategory);
 router.get('/blockcategory',adminCategoryController.adminBlockCategory);
 router.get('/unblockcategory',adminCategoryController.adminUnBlockCategory);
+router.get('/categoryManage',adminCategoryController.adminCategoryManage);
+
 
 //order management 
 router.get('/ordermanagement',adminOrderController.adminOrders);
 router.get('/orderdetails',adminOrderController.adminOrderDetails);
 router.post('/status',adminOrderController.adminUpdateStatus);
+
+//coupon management
+router.get("/couponManage",adminCouponController.adminCouponDetails);
+router.get("/addCoupon",adminCouponController.adminAddCoupon);
+router.post('/addCoupon',adminCouponController.adminSubmitCoupon);
+router.get('/unblockcoupon',adminCouponController.adminBlockCoupon);
+router.get('/blockcoupon',adminCouponController.adminUnblockCoupon);
 
 router.get('/',adminController.adminDefault);
 
