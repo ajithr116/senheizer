@@ -67,7 +67,10 @@ router.get('/checkout',checkUserBlocked,addToCartController.userCheckout);
 router.post('/verifyCoupon',addToCartController.userVerifyCoupon);
 
 //----tricky
+//-----payments---------------------------------------------------------
 router.get('/paymentsuccess',addToCartController.userPayment);
+router.get('/paymentsuccessR',checkUserBlocked,addToCartController.userPaymentR)
+//---------------------------------------------------------------------------
 
 router.get('/payment',checkUserBlocked,addToCartController.userPaymentPage);
 router.get('/orders',checkUserBlocked,addToCartController.userOrders);
@@ -76,6 +79,8 @@ router.get('/deleteorder',addToCartController.userDeleteOrder);
 
 //wishlist 
 router.post("/wishlist",wishlistController.userAddWishlist);
+
+
 
 
 router.get('/logout',userController.userLogout);

@@ -6,6 +6,7 @@ const Product = require('../models/products');
 const Address = require('../models/address'); 
 const Category = require("../models/category");
 const userController = require('../userFunctions/usersFun');
+const Wishlist = require('../models/wishlist');
 
 
 mongoose.connect(process.env.MONGODB_ADDRESS)
@@ -297,7 +298,7 @@ const userProducts = async (req, res) => {
     const maxPrice = req.query.max;
     const color = req.query.color;
     const category2 = req.query.category;
-    console.log("--",category2);
+    // console.log("--",category2);
         
     // console.log("--",brand,"--",maxPrice,"--",color,"--",category);
     /* 1. .filter():
@@ -344,8 +345,9 @@ const userProducts = async (req, res) => {
         );
         });
     }
-    
-    res.render('user/products', { products: product, category,product2:product2});
+    const wishlist = await Wishlist.find({user:req.session.uid});
+    // console.log("--",wishlist[0]);
+    res.render('user/products', { products: product, category,product2:product2,wishlist});
     } else {
       res.redirect('/login');
     }
