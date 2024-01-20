@@ -69,7 +69,7 @@ router.post('/verifyCoupon',addToCartController.userVerifyCoupon);
 //----tricky
 //-----payments---------------------------------------------------------
 router.get('/paymentsuccess',addToCartController.userPayment);
-router.get('/paymentsuccessR',checkUserBlocked,addToCartController.userPaymentR)
+// router.post('/paymentsuccessR',checkUserBlocked,addToCartController.userPaymentR)
 //---------------------------------------------------------------------------
 
 router.get('/payment',checkUserBlocked,addToCartController.userPaymentPage);

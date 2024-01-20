@@ -8,6 +8,10 @@ const Category = require("../models/category");
 const userController = require('../userFunctions/usersFun');
 const Order = require('../models/orders');
 const Coupon = require('../models/coupon');
+const Razorpay = require('razorpay');
+
+
+
 
 const addToCart = async (req, res) => {
   try {
@@ -379,80 +383,41 @@ const userVerifyCoupon = async(req,res)=>{
   }
 }
 
-const userPaymentR = async(req,res)=>{
-  if(req.session.uid){
-    if(req.session.step==3){
-    const addressId = req.query.addressid;
-    const paymentMethod = req.query.paymentMethod;
-    const userId = req.session.uid;
-    req.session.passPayment='';
-
-    const rzp = new Razorpay({
+const userPaymentR =async (req, res) => {
+  try {
+    const { addressId, total } = req.body;
+    const amount = parseInt(total)*100; // Convert to paise
+    const currency = 'INR';
+        
+    const razorpay = new Razorpay({
       key_id: process.env.KEY_ID,
       key_secret: process.env.SECRET_KEY,
-     })
-     
-     
+    });
 
-    const user = await User.findById(userId);
+    const options = {
+      amount,
+      currency,
+      receipt: shortid.generate(), // Use shortid for the receipt 
+      
+    };
 
-    try{
-        const cartItems = user.cart.map(async item => {
-        const product = await Product.findById(item.productID);
-        return {
-          productID: item.productID,
-          quantity: item.quantity,
-          price: item.price,
-          product: product
-        };
-      });
-
-      const populatedCartItems = await Promise.all(cartItems);
-
-      const subtotal = populatedCartItems.reduce((acc, item) => acc + item.quantity * item.price, 0);
-      const tax = subtotal * 0.1;
-      let total=0;
-      if(req.session.discountAmt){
-        total = subtotal + tax-req.session.discountAmt;
-        await Coupon.findByIdAndUpdate(req.session.couponId, { $push: { user: userId } });
-        // Coupon.save();
-      }
-      else{
-        total = subtotal + tax;
-      } 
-
-      const order = new Order({
-        userID: userId,
-        items: populatedCartItems.map(item => ({
-          productID: item.productID,
-          quantity: item.quantity,
-          price: item.price
-        })),
-        totalPrice: total,
-        shippingAddressID: addressId,
-        paymentMethod: paymentMethod,
-      });
-
-      await order.save();       // Save the Order to the database
-      user.cart = [];       // Clear the user's cart
-      await user.save();
-      const orderId = order.orderID;
-      req.session.step='';
-      res.render('user/ordersuccess',{orderId});
-    }
-    catch(err){
-      console.log(err,"error happen");   
-      res.redirect('/products');
-    }
+    const response = await razorpay.orders.create(options);
+    const orderId =response.id.toString();
+    res.status(200).json({
+      id: orderId,
+      amount: response.amount,
+      currency: response.currency,
+      name: "ajith",
+    });
+    console.log("response ",orderId);
+    console.log("response ",response);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error creating order');
   }
-    else{
-      res.redirect("/cart");
-    }
-  }
-  else{
-    res.redirect('/login');
-  }
-}
+};
+
+
 
 module.exports = {
     addToCart,

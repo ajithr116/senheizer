@@ -4,9 +4,10 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const nodemailer = require('nodemailer');
+const cors = require('cors');
 const Razorpay = require('razorpay');
-
 const flash = require('connect-flash');
+const shortid = require("shortid");
 
 const userController = require('./controller/user');
 
@@ -33,6 +34,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(session({ secret: '1hhh2vsdj2342bSDf523', resave: false, saveUninitialized: false }));
 app.set('view engine', 'ejs');
 app.use(flash());
+app.use(cors());
 app.use(express.json());
 // app.use(
 //     session({
@@ -72,9 +74,39 @@ app.use((req, res, next) => {
     next();
 });
 
-// app.use('/checkout',(req,res)=>{
-//     res.render('user/checkout');
-// })
+app.post('/ordersuccessR', async (req, res) => {
+  try {
+    const { addressId, total } = req.body;
+    const amount = parseInt(total)*100; // Convert to paise
+    const currency = 'INR';
+        
+    const razorpay = new Razorpay({
+      key_id: process.env.KEY_ID,
+      key_secret: process.env.SECRET_KEY,
+    });
+
+    const options = {
+      amount,
+      currency,
+      receipt: shortid.generate(), // Use shortid for the receipt 
+      
+    };
+
+    const response = await razorpay.orders.create(options);
+    const orderId =response.id.toString();
+    res.status(200).json({
+      id: orderId,
+      amount: response.amount,
+      currency: response.currency,
+      name: "ajith",
+    });
+    console.log("response ",orderId);
+    console.log("response ",response);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error creating order');
+  }
+});
 
 
 //----------------------------------------------requirements over --------------------------------------------------------------

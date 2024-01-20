@@ -71,9 +71,10 @@
       }
 
     </style>
-
+      <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  
   <link rel="stylesheet" href="cssu/products.css">
-
+    
   </head>
 
 <body>
@@ -146,7 +147,7 @@
                     <div class="accordion-item">
                       <h2 class="accordion-header" id="flush-headingOne">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-                          RazorPay
+                          PAYPAL
                         </button>
                       </h2>
                       <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
@@ -158,14 +159,77 @@
                     <div class="accordion-item">
                       <h2 class="accordion-header" id="flush-headingTwo">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
-                          PayPal
+                          RazorPay
                         </button>
                       </h2>
                       <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
                         <div class="accordion-body">
-                            <a type="button" class="btn btn-success" href="/paymentsuccessR?addressid=<%= addressId %>&paymentMethod=cashOnDelivery">RAZORPAY</a>
+                          <!-- <form action="/paymentsuccessR" method="post"> -->
+                            <input type="hidden" id="addressid" name="addressid" value="<%= addressId %>">
+                            <input type="hidden" id="total" name="total" value="<%= total %>">
+                            <button onclick=" paymentSuccessR()" type="button" id="pay-button" class="btn btn-success">RazorPay</button>
+                          <!-- </form>-->
                         </div>
                       </div>
+                      <!-- razorpay setup -->
+                      <!-- <button id="rzp-button1">Pay</button> -->
+                          
+                      <script>
+                        function paymentSuccessR(){ 
+                          const amt = document.getElementById('total').value;
+                          const addressId = document.getElementById('addressid').value;
+                          alert("amt "+amt);
+                          fetch('/ordersuccessR', {
+                            method: 'POST',
+                            body: JSON.stringify({
+                                total:amt,
+                                address:addressId
+                            }),
+                            headers: {
+                              'Content-Type': 'application/json'
+                            },
+                            })
+                            .then(response => response.json())
+                            .then(response=>{
+                              const orderId = response.id;
+                              alert("order id "+orderId);
+                              console.log("orderId ",orderId);
+                                var options = { 
+                                  "key": "rzp_test_fiIwmRET6CApc2",  
+                                  "amount": response.amount,  
+                                  "currency": "INR", 
+                                  "name":"SENHEIZER", 
+                                  "description": "testing sample", 
+                                  "order_id": orderId,
+                                  "handler": function (response){ 
+                                      console.log(response) 
+                                      alert("This step of Payment Succeeded"); 
+                                  }, 
+                                  "prefill": { 
+                                    "contact":"9876543210",  
+                                    "name": "Twinkle Sharma",   
+                                    "email": "smtwinkle@gmail.com" 
+                                  }, 
+                                  "notes" : "testing sample 2",  
+                                  "theme": { 
+                                      "color": "#2300a3" 
+                                  } 
+                                    }; 
+                                    var razorpayObject = new Razorpay(options); 
+                                    razorpayObject.open(); 
+                                    console.log(razorpayObject); 
+                      
+                                    razorpayObject.on('payment.failed', function (response){ 
+                                      console.log(response.error); 
+                                      alert("This step of Payment Failed"); 
+                                    });
+                                  })
+                                }
+                                
+                      </script>
+                      
+
+                      <!-- razorrpay setup end -->
                     </div>
                     <div class="accordion-item">
                       <h2 class="accordion-header" id="flush-headingThree">

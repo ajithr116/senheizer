@@ -13,6 +13,7 @@
     "body-parser": "^1.20.2",
     "connect-flash": "^0.1.1",
     "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
     "cropper": "^4.1.0",
     "cropperjs": "^1.6.1",
     "dotenv": "^16.3.1",
@@ -28,6 +29,7 @@
     "nodemailer": "^6.9.7",
     "path": "^0.12.7",
     "razorpay": "^2.9.2",
-    "sharp": "^0.33.1"
+    "sharp": "^0.33.1",
+    "shortid": "^2.2.16"
   }
 }
