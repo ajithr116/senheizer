@@ -6,7 +6,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Products</title>
+    <title>Orders</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -82,7 +82,7 @@
                     <a href="/orders" class="nav-item nav-link active">Orders</a>
                     <a href="https://www.google.com" class="nav-item nav-link">Wishlist</a>
                     <!-- <a href="https://www.google.com" class="nav-item nav-link">Contact Us</a> -->
-                    <a href="/profile" class="nav-item nav-link rounded active " >Profile</a>
+                    <a href="/profile" class="nav-item nav-link rounded  " >Profile</a>
                 </div>
                 <div class="d-none d-lg-flex ms-2">
                     <a class="btn btn-outline-danger" href="/logout">Logout</a>
@@ -92,12 +92,15 @@
         </nav>
     </div>
     <br>      
-      
+      <br><br>
     <div class="container">
         <% if(orders==0){%>
             <h2 class="d-flex justify-content-center mt-4">Orders Empty. <a href="/products">Surf now</a> </h2>
         <%}else {%>
-            <h2 class="d-flex justify-content-center mt-4">Orders</h2>
+            <div class="d-flex justify-content-between py-2">
+                <h3>Orders</h3>
+                <a class="btn btn-warning" href="/orderhistory">Order history</a>
+            </div>
         <%}%>
         <% orders.forEach(order => { %> <!-- Loop over each order -->
             <div class="" style="border:1px solid black;border-radius: 0 0 10px 10px;">
@@ -152,7 +155,7 @@
                         </div>
                         <div class="col-md-3">
                             <h5>Grand Total</h5>
-                            <p >Total : <b><%= order.totalPrice %></b></p>
+                            <p >Total : <b><%= order.totalPrice %></b><% if(order.paymentMethod=="RAZORPAY"){%> <span class="badge badge-info">RAZORPAY</span><%}else{%>  <span class="badge badge-info">COD</span><%}%></p>
                             <%if(order.orderStatus=="pending"){%>
                                 <a class="btn btn-danger" href="/deleteorder?orderId=<%= order._id %>" onclick="alert('Are you sure you want to delete ?')">Delete Order</a> <!-- Display the status of the order -->
                             <%}else if(order.orderStatus=="delivered"){%>

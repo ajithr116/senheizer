@@ -346,8 +346,10 @@ const userProducts = async (req, res) => {
         });
     }
     const wishlist = await Wishlist.find({user:req.session.uid});
+    const wishlistProductIds = wishlist.map(item => item.productID.toString());
+    console.log("wishlisted products ",wishlistProductIds);
     // console.log("--",wishlist[0]);
-    res.render('user/products', { products: product, category,product2:product2,wishlist});
+    res.render('user/products', { products: product, category,product2:product2,wishlistProductIds});
     } else {
       res.redirect('/login');
     }

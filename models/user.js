@@ -84,6 +84,28 @@ const userSchema = new mongoose.Schema({
   isAdmin:{
     type:String,
     default:false
+  },
+  wallet:{
+    type:Number,
+    default:0
+  },
+  walletHistory: [{
+    amount: {
+      type: Number,
+      required: true
+    },
+    type: {
+      type: String,
+      enum: ['credit', 'debit', 'refund'],
+      required: true
+    },
+    date: {
+      type: Date,
+      default: Date.now
+    }
+  }],
+  wishlist:{
+    type:Array
   }
 });
 

@@ -6,7 +6,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Category management</title>
+    <title>Order management</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -165,13 +165,17 @@
                                         <td scope="col"><%= order.items.length %></td>
                                         <td scope="col">$<%= order.totalPrice %></td>
                                         <% if(order.orderStatus=="pending"){%>
-                                            <td scope="col" class="bg-warning" style="color:aliceblue"><%= order.orderStatus %></td>
+                                            <td scope="col" class="bg-warning" style="color:rgb(78, 109, 136)"><%= order.orderStatus %></td>
                                         <%}else if(order.orderStatus=="canceled"){%>
                                             <td scope="col" class="bg-danger" style="color:aliceblue"><%= order.orderStatus %></td>
                                         <%}else if(order.orderStatus=="delivered"){%>
                                             <td scope="col" class="bg-success" style="color:aliceblue"><%= order.orderStatus %></td>
                                         <%}%>
-                                        <td scope="col"><a href="./orderdetails?orderId=<%= order._id %>">Details</a></td>
+                                        <% if(order.orderStatus=="canceled"){%>
+                                            <td scope="col"><a><span class="fas fa-tick"></span>Refunded</a></td>
+                                        <%}else{%>
+                                            <td scope="col"><a href="./orderdetails?orderId=<%= order._id %>">Details</a></td>
+                                        <%}%>
                                       </tr>
                                     <% }) %>
                                   </tbody>

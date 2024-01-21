@@ -146,8 +146,11 @@
                                                 <td><%= coupon.couponCode %></td>
                                                 <td><%= coupon.user.length %></td>
                                                 <td><%= coupon.reducingAmount %></td>
-                                                <td><%= coupon.expireDate.toLocaleDateString() %></td>
-                                                <td><%= coupon.minimumPrice %></td>
+                                                <% if (coupon.expireDate) { %>
+                                                    <td><%= coupon.expireDate.toLocaleDateString() %></td>
+                                                <% } else { %>
+                                                    <td>ifninite</td> 
+                                                <% } %>                                                                                                  <td><%= coupon.minimumPrice %></td>
                                                 <!-- <td><%= coupon.isActive ? 'No' : 'Yes' %></td> -->
                                                 <td class="d-flex align-items-center">
                                                     <% if (coupon.isDeleted) { %> 

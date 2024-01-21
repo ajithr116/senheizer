@@ -1,7 +1,7 @@
 const User = require('../models/user'); 
 const Product = require('../models/products'); 
 const userController = require('../userFunctions/usersFun');
-
+const Address=require('../models/address');
 
 
 const userProfile = async (req,res)=>{
@@ -181,6 +181,15 @@ const userDeleteAddress = async(req,res)=>{
   }
 }
 
+const userWallet = async(req,res)=>{
+    if(req.session.uid){
+        const users = await User.findById(req.session.uid).sort({date:-1});
+        res.render('user/wallet',{users});
+    }
+    else {
+        res.redirect('/login');
+    }
+}
 
 module.exports = {
     userProfile,
@@ -189,5 +198,6 @@ module.exports = {
     userUpdateAddress,
     userEditAddress,
     userAddAddressDetails,
-    userAddAddress
+    userAddAddress,
+    userWallet,
 }

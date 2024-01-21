@@ -1,7 +1,8 @@
 const Order = require('../models/orders');
 const User = require('../models/user');
 const Category = require('../models/category');
-const Products = require('../models/products')
+const Products = require('../models/products');
+const razorpay = require('razorpay');
 
 const adminOrders = async (req, res) => {
   if(req.session.aid){
@@ -40,21 +41,104 @@ const adminOrderDetails = async (req, res) => {
   }
 };
   
-const adminUpdateStatus = async(req,res)=>{
-  const status = req.body.status;
-  const orderId = req.query.orderId;
+// const adminUpdateStatus = async(req,res)=>{
+//   try {
 
-  // console.log("--",status,"--",orderId);
+//     const status = req.body.status;
+//     const orderId = req.query.orderId;
+//     const paymentId = req.query.paymentId;
+    
+//     if(paymentId){    
+//       const refundableAmount = req.body.refundableAmount;
+//       const userId = req.body.userID;
+//       console.log("--",status,"--",orderId,"--",paymentId,"--",refundableAmount,"--",userId);
+//       var instance = new razorpay({
+//         key_id: process.env.KEY_ID,
+//         key_secret: process.env.SECRET_KEY
+//       });
+//       // console.log("reached 3");
+//       instance.payments.refund(paymentId)
+//       .then(function(refund) {
+//         console.log("Refund successful: ", refund);
+//       })
+//       .catch(function(err) {
+//         console.error("Refund failed: ", err);
+//       });
+//       const updatedOrder = await Order.findByIdAndUpdate(orderId, {orderStatus: status}, { new: true });
+//       const user = User.findByIdAndUpdate(userId,{wallet:refundableAmount},{new:true});
+//       res.redirect('/admin/ordermanagement')
+
+//     }
+//     else{
+//       const updatedOrder = await Order.findByIdAndUpdate(orderId, {orderStatus: status}, { new: true });
+//       res.redirect('/admin/ordermanagement')
+//     }
+
+//   } 
+//   catch (err) {
+//     console.error('Error updating order status:', err);
+//   }
+// }
+  
+const adminUpdateStatus = async(req,res)=>{
   try {
-    const updatedOrder = await Order.findByIdAndUpdate(orderId, {orderStatus: status}, { new: true });
-    res.redirect('/admin/ordermanagement')
+    const status = req.body.status;
+    const orderId = req.query.orderId;
+    const paymentId = req.query.paymentId;
+    
+    if(paymentId){    
+      const refundableAmount = req.body.refundableAmount;
+      const userId = req.body.userID;
+      // console.log("--",status,"--",orderId,"--",paymentId,"--",refundableAmount,"--",userId);
+
+      var instance = new razorpay({
+        key_id: process.env.KEY_ID,
+        key_secret: process.env.SECRET_KEY
+      });
+
+      // console.log("reached 1");
+      instance.payments.refund(paymentId)
+      .then(async function(refund) {
+        console.log("Refund successful: ", refund);
+        // console.log("reached 2");
+
+        const user = await User.findById(userId);
+
+        const transaction = {
+          amount: refundableAmount,
+          type: 'refund'
+        };
+        // console.log("reached 3");
+
+         const parsedAmount = parseFloat(refundableAmount);
+         if (!isNaN(parsedAmount)) {
+           user.wallet += parsedAmount;
+         } else {
+           console.error("Invalid refundable amount format:", refundableAmount);
+         }
+
+        user.walletHistory.push(transaction);
+        await user.save();
+        // console.log("reached 4");
+
+        const updatedOrder = await Order.findByIdAndUpdate(orderId, {orderStatus: status}, { new: true });
+
+        res.redirect('/admin/ordermanagement');
+      })
+      .catch(function(err) {
+        console.error("Refund failed: ", err);
+      });
+    }
+    else{
+      const updatedOrder = await Order.findByIdAndUpdate(orderId, {orderStatus: status}, { new: true });
+      res.redirect('/admin/ordermanagement')
+    }
   } 
   catch (err) {
     console.error('Error updating order status:', err);
   }
-
 }
-  
+
 module.exports = {
     adminOrders,
     adminOrderDetails,

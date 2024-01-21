@@ -156,7 +156,12 @@
                                         <b>not available.</b>
                                       <% } %>
                                       </b></p>
-                                    <p>Payment Method<b> : <%= order.paymentMethod %></b></p>
+                                    <p>Payment Method : <% if(order.paymentMethod=='RAZORPAY'){ %>
+                                        <b><%= order.paymentMethod %></b>
+                                        <%}else{%>
+                                            <b><%= order.paymentMethod %></b>
+                                        <%}%>
+                                    </p>
                                 </div>
                             </div>
                             <div class="container-fluid pt-4 px-2">
@@ -189,7 +194,7 @@
                                 <p>Tax rate : <b><%= taxRate.toFixed(2) %></b></p>
                                 <p>Grand total (including tax): <b><%= order.totalPrice %></b></p>
                                 <div class="container">
-                                    <form action="./status?orderId=<%= order._id %>" method="POST">
+                                    <form action="./status?orderId=<%= order._id %>&paymentId=<%= order.paymentId %>" method="POST">
                                         <% if (order.shippingAddressID) { %>
                                             <select name="status" value="<%= order.orderStatus %>" class="" onchange="selected()" id="statusControl" style="width:150px;height:40px;border-radius: 10px;">
                                                 <option value="<%= order.orderStatus %>"><%= order.orderStatus %></option>
@@ -208,6 +213,8 @@
                                             <% } else { %>
                                             <b>not available.</b>
                                           <% } %>
+                                        <input type="hidden" name="refundableAmount" value="<%= order.totalPrice %>">
+                                        <input type="hidden" name="userID" value="<%= order.userID._id  %>">
                                     </form>
                                     <script>
                                     function selected(){

@@ -69,17 +69,23 @@ router.post('/verifyCoupon',addToCartController.userVerifyCoupon);
 //----tricky
 //-----payments---------------------------------------------------------
 router.get('/paymentsuccess',addToCartController.userPayment);
-// router.post('/paymentsuccessR',checkUserBlocked,addToCartController.userPaymentR)
+router.post('/ordersuccessR',addToCartController.userPaymentR);
+router.post("/verifypaymentR",addToCartController.userPaymentVerifiyR)
 //---------------------------------------------------------------------------
 
 router.get('/payment',checkUserBlocked,addToCartController.userPaymentPage);
 router.get('/orders',checkUserBlocked,addToCartController.userOrders);
+router.get('/orderhistory',checkUserBlocked,addToCartController.userOrderDetails);  //extrra
 router.get('/deleteorder',addToCartController.userDeleteOrder);
+router.get('/ordersuccess',checkUserBlocked,addToCartController.orderSuccessPage);
 // router.get('/products/filter',userFiltering.userFiltering)
 
 //wishlist 
-router.post("/wishlist",wishlistController.userAddWishlist);
+router.post("/addToWishlist",wishlistController.userAddToWishlist);
+router.post("/removeFromWishlist",wishlistController.userRemoveFromWishlist);
 
+//wallet
+router.get('/wallet',checkUserBlocked,userProfileController.userWallet);
 
 
 

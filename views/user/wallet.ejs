@@ -6,7 +6,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Products</title>
+    <title>Wallet</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -20,78 +20,66 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
 
 
-      <!-- Bootstrap JS (required for the Bootstrap components to work) -->
-      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<!-- Bootstrap JS (required for the Bootstrap components to work) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-    <style>
-      body {
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      }
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
 
-      footer {
-        margin-top: auto;
-      }
-      .container {
-        width: 80%;
-        margin: auto;
-      }
+    .container-fluid {
+        background-color: #ffffff;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        padding: 10px 0;
+    }
 
-      .cart-item {
-        border: 1px solid #ccc;
-        margin-bottom: 20px;
-        padding: 20px;
-      }
+    .navbar {
+        background-color: #ffffff;
+    }
 
-      .cart-item h4 {
-        margin: 0 0 10px 0;
-      }
+    .footer {
+        background-color: #343a40;
+        color: #ffffff;
+        padding: 20px 0;
+    }
 
-      .summary {
-        position: sticky;
-        top: 60px;
-        padding: 20px;
-        border: 1px solid #ccc;
-      }
-
-      .summary button {
-        color: #fff;
-        border: none;
-        padding: 10px 20px;
+    .wallet-section {
+        margin-top: 50px;
         text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 16px;
-        margin: 20px 2px;
+        color: #343a40;
+    }
+
+    .add-money-btn {
+        background-color: #28a745;
+        color: #ffffff;
+        padding: 10px 20px;
+        font-size: 18px;
+        border: none;
+        border-radius: 5px;
         cursor: pointer;
-      }
-      .container {
-            width: 80%;
-            margin: auto;
-        }
+        transition: background-color 0.3s;
+    }
 
-        .order-success {
-            text-align: center;
-            margin-top: 100px;
-        }
+    .add-money-btn:hover {
+        background-color: #218838;
+    }
 
-        .order-success i {
-            font-size: 100px;
-            color: #28a745; /* Green color */
-        }
+    .transaction-history {
+        margin-top: 30px;
+    }
 
-        .order-success h1 {
-            color: #28a745; /* Green color */
-        }
-    </style>
+    .filter-dropdown {
+        width: 150px;
+    }
+</style>
 
-  <link rel="stylesheet" href="cssu/products.css">
+<link rel="stylesheet" href="cssu/products.css">
 
-  </head>
+</head>
 
 <body>
     <div class="container-fluid fixed-top bg-light px-0">
@@ -122,7 +110,7 @@
                 <div class="navbar-nav mx-auto">
                     <a href="/index" class="nav-item nav-link ">Home</a>
                     <a href="/products" class="nav-item nav-link ">Products</a>
-                    <a href="/cart" class="nav-item nav-link active">Cart</a>
+                    <a href="/cart" class="nav-item nav-link ">Cart</a>
                     <!-- <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Pages</a>
                         <div class="dropdown-menu m-0">
@@ -133,7 +121,7 @@
                     <a href="/orders" class="nav-item nav-link">Orders</a>
                     <a href="https://www.google.com" class="nav-item nav-link">Wishlist</a>
                     <!-- <a href="https://www.google.com" class="nav-item nav-link">Contact Us</a> -->
-                    <a href="/profile" class="nav-item nav-link rounded " >Profile</a>
+                    <a href="/profile" class="nav-item nav-link active " >Profile</a>
                 </div>
                 <div class="d-none d-lg-flex ms-2">
                     <a class="btn btn-outline-danger" href="/logout">Logout</a>
@@ -144,28 +132,74 @@
     </div>
     <br><br><br>
 
-      <div id="alert" style="display: none;">
-          <div class="alert alert-danger alert-dismissible fade show" role="alert">
-              <strong>Phone number</strong> format not match
-              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
+        <div id="alert" style="display: none;">
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>Phone number</strong> format not match
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+        </div> 
+    
+    
+        <div class="container wallet-section p-3" >
+            <div class="row " >
+                <div class="col-md-5 p-3" style="border:1px solid black;border-radius: 10px;background-color: rgb(214, 212, 212);">
+                    <h4 class="mt-4" style="font-weight: 100;">Wallet Balance: <b><%= users.wallet %></b></h4>
+                    <!-- <button class="btn btn-success add-money-btn mt-3">Add Money to Wallet</button> -->
+                    <button class="btn btn-success add-money-btn mt-3" id="rzp-button1">Add Money to Wallet</button>
+                    
+                </div>
             </div>
-      </div> 
-
-      <div class="container order-success p-5" style="border-radius: 10px;border:1px solid green">
-        <i class="fas fa-check-circle"></i>
-        <h1>Your Order is Successful!</h1>
-        <p style="background-color: #28a745; color:white" class="py-2">Thank you for shopping with us. Your order has been successfully placed.</p>
-        <a href="/orders" class="btn btn-dark mt-3">View Orders</a>
-        <a href="/index" class="btn btn-dark mt-3">Home</a>
-    </div>
-
-
+        </div>
+    
+        <!-- Transaction History Section -->
+        <div class="container transaction-history">
+            <h2 class="mt-4">Transaction History</h2>
+            <div class="row mt-3">
+                <div class="col-md-4">
+                    <!-- Filter Dropdown -->
+                    <select class="form-select filter-dropdown" aria-label="Filter">
+                        <option selected>Filter</option>
+                        <option value="all">All</option>
+                        <option value="deposit">Deposit</option>
+                        <option value="withdrawal">Withdrawal</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-md-12">
+                    <!-- Transaction History Table -->
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Date</th>
+                                <th scope="col">Type</th>
+                                <th scope="col">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% users.walletHistory.forEach(historyItem => { %>
+                            <tr>
+                                <td><%= historyItem.date %></td>  <td><%= historyItem.type %></td>
+                                <td><%= historyItem.amount %></td>
+                            </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                    
+                </div>
+            </div>
+        </div>
+    
+      
     <!-- PRODUCTS -->
     <!-- Bootstrap JS (required for the Bootstrap components to work) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <br><br><br>
+    <div class="p-5">
+        
+    </div>
     <!-- Footer Start -->
     <footer>
         <div class="footer-content">

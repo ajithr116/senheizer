@@ -6,7 +6,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Products</title>
+    <title>Payment Page</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -167,7 +167,8 @@
                           <!-- <form action="/paymentsuccessR" method="post"> -->
                             <input type="hidden" id="addressid" name="addressid" value="<%= addressId %>">
                             <input type="hidden" id="total" name="total" value="<%= total %>">
-                            <button onclick=" paymentSuccessR()" type="button" id="pay-button" class="btn btn-success">RazorPay</button>
+                            <input type="hidden" id="paymentmethod" name="paymentMethod" value="RAZORPAY">
+                            <button onclick="paymentSuccessR()" type="button" id="pay-button" class="btn btn-success">RazorPay</button>
                           <!-- </form>-->
                         </div>
                       </div>
@@ -175,57 +176,155 @@
                       <!-- <button id="rzp-button1">Pay</button> -->
                           
                       <script>
-                        function paymentSuccessR(){ 
-                          const amt = document.getElementById('total').value;
-                          const addressId = document.getElementById('addressid').value;
-                          alert("amt "+amt);
-                          fetch('/ordersuccessR', {
-                            method: 'POST',
-                            body: JSON.stringify({
-                                total:amt,
-                                address:addressId
-                            }),
-                            headers: {
-                              'Content-Type': 'application/json'
-                            },
-                            })
-                            .then(response => response.json())
-                            .then(response=>{
-                              const orderId = response.id;
-                              alert("order id "+orderId);
-                              console.log("orderId ",orderId);
-                                var options = { 
-                                  "key": "rzp_test_fiIwmRET6CApc2",  
-                                  "amount": response.amount,  
-                                  "currency": "INR", 
-                                  "name":"SENHEIZER", 
-                                  "description": "testing sample", 
-                                  "order_id": orderId,
-                                  "handler": function (response){ 
-                                      console.log(response) 
-                                      alert("This step of Payment Succeeded"); 
-                                  }, 
-                                  "prefill": { 
-                                    "contact":"9876543210",  
-                                    "name": "Twinkle Sharma",   
-                                    "email": "smtwinkle@gmail.com" 
-                                  }, 
-                                  "notes" : "testing sample 2",  
-                                  "theme": { 
-                                      "color": "#2300a3" 
-                                  } 
-                                    }; 
-                                    var razorpayObject = new Razorpay(options); 
-                                    razorpayObject.open(); 
-                                    console.log(razorpayObject); 
+                        // function paymentSuccessR(){ 
+                        //   const amt = document.getElementById('total').value;
+                        //   const addressId = document.getElementById('addressid').value;
+                        //   alert("amt "+amt);
+                        //   fetch('/ordersuccessR', {
+                        //     method: 'POST',
+                        //     body: JSON.stringify({
+                        //         total:amt,
+                        //         address:addressId
+                        //     }),
+                        //     headers: {
+                        //       'Content-Type': 'application/json'
+                        //     },
+                        //     })
+                        //     .then(response => response.json())
+                        //     .then(response=>{
+                        //       const orderId = response.id;
+                        //       const strOrderId = orderId.toString()
+                        //       alert("order id "+orderId);
+                        //       console.log("orderId ",orderId);
+                        //         var options = { 
+                        //           "key": "rzp_test_ITfaRgB1ep4WpQ",  
+                        //           "amount": response.amount,  
+                        //           "currency": "INR", 
+                        //           "name":response.success, 
+                        //           "description": "testing sample", 
+                        //           "order_id": response.id,
+                        //           "handler": function (response){
+                        //                 alert(response.razorpay_payment_id);
+                        //                 alert(response.razorpay_order_id);
+                        //                 alert(response.razorpay_signature);
+                        //                 alert("response ",response);
+                        //             },
+                        //             "prefill": {
+                        //                 "name": "Gaurav Kumar",
+                        //                 "email": "gaurav.kumar@example.com",
+                        //                 "contact": "9000090000"
+                        //             },
+                        //           "notes" : "testing sample 2",  
+                        //           "theme": { 
+                        //               "color": "#2300a3" 
+                        //           } 
+                        //             }; 
+                        //             var razorpayObject = new Razorpay(options); 
+                        //             razorpayObject.open(); 
+                        //             console.log(razorpayObject); 
                       
-                                    razorpayObject.on('payment.failed', function (response){ 
-                                      console.log(response.error); 
-                                      alert("This step of Payment Failed"); 
-                                    });
-                                  })
-                                }
+                        //             razorpayObject.on('payment.failed', function (response){ 
+                        //               console.log(response.error); 
+                        //               alert("response--",response);
+                        //               alert(response.error.code);
+                        //               alert(response.error.description);
+                        //               alert(response.error.source);
+                        //               alert(response.error.step);
+                        //               alert(response.error.reason);
+                        //               alert(response.error.metadata.order_id);
+                        //               alert(response.error.metadata.payment_id);
+                        //             });
+                        //           })
+                        //         }
+                        $(document).ready(function() {
+                          var orderId;
+
+                          // AJAX call to create order ID
+                          $.ajax({
+                            url: "/ordersuccessR",
+                            method: "POST",
+                            timeout: 0,
+                            headers: {
+                              "Content-Type": "application/json"
+                            },
+                            data: JSON.stringify({
+                              amount: $("#total").val() ,
+                              addressId:$("#addressid").val()
+                            }),
+                          }).done(function(response) {
+                            orderId = response.orderId;
+                            // const name = response.name;
+                            // const email = response.email;
+                            // const contact = response.contact;
+
+                            console.log(orderId);
+                            $("#pay-button").show();
+                          });
+
+                          $("#pay-button").click(function(e) {
+                            var options = {
+                              "key": "rzp_test_ITfaRgB1ep4WpQ",
+                              "amount": $("#total").val() * 100, 
+                              "currency": "INR",
+                              "name": "SENHEIZER",
+                              "description": "Order Description",
+                              "order_id": orderId,
+                              "handler": function(response) {
+                                alert(response.razorpay_payment_id);
+                                alert(response.razorpay_order_id);
+                                alert(response.razorpay_signature); 
                                 
+                                $.ajax({
+                                    url: '/verifypaymentR',
+                                    method: 'POST',
+                                    data: {
+                                        razorpay_payment_id: response.razorpay_payment_id,
+                                        razorpay_order_id: response.razorpay_order_id,
+                                        razorpay_signature: response.razorpay_signature,
+                                        amount: $("#total").val() ,
+                                        addressId:$("#addressid").val(),
+                                        paymentMethod:$("#paymentMethod").val()
+                                    }
+                                }).done(function(serverResponse) {
+
+                                    if (serverResponse.success) {
+                                        alert("Payment verified successfully!");
+                                        // alert("orderID "+serverResponse.orderID);
+                                        window.location.href = '/ordersuccess'; 
+                                    } else {
+                                        alert("Payment verification failed:", serverResponse.error);
+                                    }
+                                }).fail(function(error) {
+                                    console.error("Verification request failed:", error);
+                                });
+
+                              },
+                              "prefill": {
+                                // "name": name,
+                                // "email": email,
+                                // "contact": contact
+                              },
+                              "notes" : "testing sample 2",
+                              "theme": {
+                                "color": "#5a5252"
+                              }
+                            };
+
+                            var rzp1 = new Razorpay(options);
+                            rzp1.on('payment.failed', function (response){
+                                alert(response.error.code);
+                                alert(response.error.description);
+                                alert(response.error.source);
+                                alert(response.error.step);
+                                alert(response.error.reason);
+                                alert(response.error.metadata.order_id);
+                                alert(response.error.metadata.payment_id);
+                              });
+                            rzp1.open();
+                            e.preventDefault();
+                          });
+                        });
+                            
                       </script>
                       
 
@@ -277,6 +376,7 @@
               <p>Subtotal: $ <b id="subTotal"><%= subtotal.toFixed(2) %></b></p>
               <p>Tax: $ <b><%= tax.toFixed(2) %></b></p>
               <p>Shipping: $ <b style="background-color: rgb(105, 255, 105);"> FREE SHIPPING</b></p>
+              
               <hr style="background-color: black;">
               <p>Total: $ <b><%= total.toFixed(2) %></b></p>
               

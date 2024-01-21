@@ -23,20 +23,20 @@ const adminAddCoupon = async(req,res)=>{
         res.redirect('/login');
     }
 }
-
-const adminSubmitCoupon  =async(req,res)=>{
-    const {couponCode,couponExpireDate,couponReduceAmt,couponMinimumAmt }= req.body;
+const adminSubmitCoupon = async (req, res) => {
+    const { couponCode, couponExpireDate, couponReduceAmt, couponMinimumAmt } = req.body;
     // console.log("--",couponCode,"--",couponExpireDate,"--",couponReduceAmt,"--",couponMinimumAmt);
 
     const coupon = new Coupon({
-        couponCode:couponCode,
-        expireDate:couponExpireDate,
-        reducingAmount:couponReduceAmt,
-        minimumPrice:couponMinimumAmt,
-    })
+        couponCode,
+        reducingAmount: couponReduceAmt,
+        minimumPrice: couponMinimumAmt,
+        expireDate: couponExpireDate || new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), 
+    });
     await coupon.save();
     res.redirect('/admin/couponManage');
-}
+};
+
 
 const adminBlockCoupon = async(req,res)=>{
     console.log( "reached");

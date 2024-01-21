@@ -50,7 +50,11 @@ const orderSchema = new mongoose.Schema({
   paymentMethod: {
     type: String
   },
-  orderDate: {
+  paymentId:{
+    type:String,
+    default:null
+  }
+  ,orderDate: {
     type: String,
     default: formattedDate,
   },

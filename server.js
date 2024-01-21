@@ -8,7 +8,6 @@ const cors = require('cors');
 const Razorpay = require('razorpay');
 const flash = require('connect-flash');
 const shortid = require("shortid");
-
 const userController = require('./controller/user');
 
 require('dotenv').config();
@@ -74,39 +73,71 @@ app.use((req, res, next) => {
     next();
 });
 
-app.post('/ordersuccessR', async (req, res) => {
-  try {
-    const { addressId, total } = req.body;
-    const amount = parseInt(total)*100; // Convert to paise
-    const currency = 'INR';
+// app.post('/ordersuccessR', async (req, res) => {
+  // try {
+  //   const { addressId, total } = req.body;
+  //   const amount = parseInt(total)*100; // Convert to paise
+  //   const currency = 'INR';
         
-    const razorpay = new Razorpay({
-      key_id: process.env.KEY_ID,
-      key_secret: process.env.SECRET_KEY,
-    });
+  //   const razorpay = new Razorpay({
+  //     key_id: process.env.KEY_ID,
+  //     key_secret: process.env.SECRET_KEY,
+  //   });
 
-    const options = {
-      amount,
-      currency,
-      receipt: shortid.generate(), // Use shortid for the receipt 
-      
-    };
+  //   const options = {
+  //     amount,
+  //     currency,
+  //     receipt: shortid.generate(),  
+  //   };
 
-    const response = await razorpay.orders.create(options);
-    const orderId =response.id.toString();
-    res.status(200).json({
-      id: orderId,
-      amount: response.amount,
-      currency: response.currency,
-      name: "ajith",
-    });
-    console.log("response ",orderId);
-    console.log("response ",response);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Error creating order');
-  }
-});
+  //   const response = await razorpay.orders.create(options,
+  //     (err,order)=>{
+  //       if(!err){
+  //         const orderId =order.id;
+  //           res.status(200).json({
+  //           success:true,
+  //           id: orderId,
+  //           amount: order.amount,
+  //           currency: order.currency,
+  //           name: "ajith",
+  //         });
+  //         console.log("response ",orderId);
+  //         console.log("response ",order);
+  //       }
+  //       else{
+  //         res.status(400).json({success:false,msg:err})
+  //       }
+  //     });
+
+  // } catch (err) {
+  //   console.error(err);
+  //   res.status(500).send('Error creating order');
+  // }
+//   try {
+//     const { addressId, amount } = req.body;
+
+//         const razorpay = new Razorpay({
+//       key_id: process.env.KEY_ID,
+//       key_secret: process.env.SECRET_KEY,
+//     });
+
+//     const options = {
+//       amount: amount * 100, // Convert to paise
+//       currency: "INR",
+//       receipt: `order_rcptid_${Date.now()}` // Generate unique receipt ID
+//     };
+
+//     const order = await razorpay.orders.create(options);
+//     console.log("orders ",order)
+
+//     res.json({ orderId: order.id });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: 'Failed to create order' });
+//   }
+
+  
+// });
 
 
 //----------------------------------------------requirements over --------------------------------------------------------------

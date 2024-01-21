@@ -233,14 +233,27 @@
                                     totalValue.textContent = total + " - " + response.discount+" = "+newTotal;
                                     couponCode.style.border ="2px solid green";
 
-                                    // Get the anchor tag by its class name
-                                    const anchorTag = document.querySelector('.btn.btn-warning');
-                                    // Get the current href attribute
-                                    const currentHref = anchorTag.getAttribute('href');
-                                    // Add the couponId to the href attribute
-                                    const newHref = currentHref + '&couponId=' + response.couponId;
-                                    // Set the new href attribute
-                                    anchorTag.setAttribute('href', newHref);
+                                    // Get all the anchor tags by their class name
+                                    const anchorTags = document.querySelectorAll('.btn.btn-warning');
+
+                                    // Loop over the anchor tags
+                                    anchorTags.forEach(anchorTag => {
+                                      // Get the current href attribute
+                                      let currentHref = anchorTag.getAttribute('href');
+
+                                      // Check if the href already has a couponId query parameter
+                                      if (currentHref.includes('couponId')) {
+                                        // If it does, remove it
+                                        currentHref = currentHref.split('&couponId')[0];
+                                      }
+
+                                      // Add the new couponId to the href
+                                      const newHref = currentHref + '&couponId=' + response.couponId;
+
+                                      // Set the new href attribute
+                                      anchorTag.setAttribute('href', newHref);
+                                    });
+
                                   } 
                               },
                               error: function(err) {
@@ -252,7 +265,6 @@
                                   const couponCode = document.getElementById('couponCode');
                                   couponCode.style.border="2px solid red";
                                 }
-
                               }
                           });
                       });

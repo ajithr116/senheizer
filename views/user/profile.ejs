@@ -96,7 +96,10 @@
     <div class="container">
 
  
-        <h3>Profile settings</h3><br>
+        <div class="d-flex justify-content-between">
+            <h3>Profile settings</h3>
+            <a href="/wallet" class="btn btn-primary" style="width:500px;"><i class="fas fa-wallet"></i> Wallet & Payments</a>
+        </div><br>
         <form action="/profile?userId=<%= userDetails._id %>" method="POST">
             <div class="form-row">
                 <input type="hidden" name="userId" value="<%= userDetails._id %>">
