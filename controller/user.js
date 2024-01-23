@@ -293,11 +293,10 @@ const userProducts = async (req, res) => {
     let product2 = await userController.getAllProductPage();
     const category = await Category.find({ isDeleted: false });
   
-    const searchQuery = req.query.search;
-    const brand = req.query.brand;
-    const maxPrice = req.query.max;
-    const color = req.query.color;
-    const category2 = req.query.category;
+    const { brand, maxPrice, color, category2 } = req.query;
+    // const searchQuery = req.body.search;
+    const searchQuery = req.query.search; 
+    // console.log("search query ",searchQuery);
     // console.log("--",category2);
         
     // console.log("--",brand,"--",maxPrice,"--",color,"--",category);
@@ -314,6 +313,9 @@ const userProducts = async (req, res) => {
     Determines if at least one element in an array passes a test.
     Takes a callback function as an argument, which is applied to each element.
     Returns true as soon as the callback returns true for any element, otherwise false.*/
+
+    console.log("--",brand,"--",maxPrice,"--",color,"--",category2,"--",searchQuery);
+
     if (brand) {
         product = product.filter(product => brand.includes(product.brand));
     }
@@ -323,33 +325,39 @@ const userProducts = async (req, res) => {
     }
     
     if (color) {
-        const colorArray = color.split(',').map(color => color.trim());
-        product = product.filter(product => colorArray.some(color => product.tags.includes(color)));
-    }
-      
-        // ... other code
-
-        if (category2) {
-            const populatedProducts = await Product.find({}).populate('category');
-            product = populatedProducts.filter(product => product.category.name === category2);
+        let colorArray;
+        if (typeof color === 'string') {
+            colorArray = color.split(',').map(c => c.trim().toLowerCase());
+        } else if (Array.isArray(color)) {
+            colorArray = color.map(c => c.trim().toLowerCase());
         }
-        
-        // ... other filters and rendering
-  
+        product = product.filter(product => {
+            const productColors = product.tags.split(',').map(tag => tag.trim().toLowerCase());
+            return colorArray.some(c => productColors.includes(c));
+        });
+    }
+    
+
+    if (category2) {
+        const populatedProducts = await Product.find({}).populate('category');
+        product = populatedProducts.filter(product => product.category.name === category2);
+    }
+    console.log("--",brand,"--",maxPrice,"--",color,"--",category2,"--",searchQuery);
     if (searchQuery) {
         product = product.filter(product => {
         return (
             product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
             product.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            product.tags.toLowerCase().includes(searchQuery.toLowerCase())
-        );
+            product.tags.toLowerCase().includes(searchQuery.toLowerCase())||
+            product.brand.toLowerCase().includes(searchQuery.toLowerCase())
+            );
         });
     }
-    const wishlist = await Wishlist.find({user:req.session.uid});
-    const wishlistProductIds = wishlist.map(item => item.productID.toString());
-    console.log("wishlisted products ",wishlistProductIds);
+    // const wishlist = await Wishlist.find({user:req.session.uid});
+    // const wishlistProductIds = wishlist.map(item => item.productID.toString());
+    // console.log("wishlisted products ",wishlistProductIds);
     // console.log("--",wishlist[0]);
-    res.render('user/products', { products: product, category,product2:product2,wishlistProductIds});
+    res.render('user/products', { products: product, category,product2:product2});
     } else {
       res.redirect('/login');
     }

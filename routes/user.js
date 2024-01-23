@@ -62,7 +62,7 @@ router.post('/resetpassword',userPasswordSettingsController.userSubmitResetPassw
 router.get('/addtocart',checkUserBlocked,addToCartController.addToCart);
 router.get('/cart',checkUserBlocked,addToCartController.userCartDetails)
 router.get('/removeproduct',addToCartController.userRemoveProductFromCart);
-router.post('/updatecart',addToCartController.userUpdateCart); //pending
+router.post('/updatecart',addToCartController.userUpdateCart); 
 router.get('/checkout',checkUserBlocked,addToCartController.userCheckout);
 router.post('/verifyCoupon',addToCartController.userVerifyCoupon);
 

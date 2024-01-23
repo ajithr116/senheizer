@@ -23,6 +23,7 @@ const adminAddCoupon = async(req,res)=>{
         res.redirect('/login');
     }
 }
+
 const adminSubmitCoupon = async (req, res) => {
     const { couponCode, couponExpireDate, couponReduceAmt, couponMinimumAmt } = req.body;
     // console.log("--",couponCode,"--",couponExpireDate,"--",couponReduceAmt,"--",couponMinimumAmt);
@@ -49,7 +50,6 @@ const adminUnblockCoupon = async(req,res)=>{
     const couponID = req.query.couponId;
     const category = await Coupon.updateOne({_id:couponID}, { $set: { isDeleted: true } }, { new: true });
     res.redirect('/admin/couponManage');
-
 }
 module.exports={
     adminCouponDetails,

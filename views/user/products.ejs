@@ -172,54 +172,7 @@
         <div class="row">
           <%- include('filterBox') %>
           <main class="col-md-9">
-            
-            <!-- <header class="border-bottom mb-4 pb-3">
-              <div class="form-inline">
-                  <select class="mr-2 form-control" name="category">
-                    <% category.forEach(category =>{%>
-                      <option value="<%= category.name %>"><%= category.name %></option>
-                    <%})%>
-                  </select>
-              </div>
-            </header> -->
-
-            <div class="row">
-                <!-- <div class="col-md-4">
-                    <figure class="card card-product-grid">
-                      <div class="img-wrap">
-                        <img src="images/img5.jpg" class="img-fluid" style="border-radius: 10px;">
-                        <a class="btn-overlay" href="#"><i class="fa fa-search-plus"></i> Quick view</a>
-                      </div> <figcaption class="info-wrap">
-                        <div class="fix-height">
-                          <a href="#" class="title">Great item name goes here</a>
-                          <div class="rating-price-wishlist">
-                            <div class="rating">
-                              <i class="fa fa-star"></i>
-                              <i class="fa fa-star"></i>
-                              <i class="fa fa-star"></i>
-                              <i class="fa fa-star"></i>
-                              <i class="fa fa-star"></i>
-
-                              <i class="fa fa-star-half-o"></i>
-                              <span class="rating-count">150+</span>
-                              
-                            </div>
-                            <div class="price-wishlist">
-                              <div class="price-wrap">
-                                <span class="price">$1280</span>
-                                <a href="#" class="wishlist-icon"><i class="fa fa-heart"></i></a> </div>
-                              </div>
-                          </div>
-                        </div>
-                        <div class="actions">
-                          <a href="#" class="btn btn-outline-light " style="color:black;border: 1px solid black;">Add to cart</a>
-                          <a href="#" class="btn btn-dark">Buy now</a>
-                        </div>
-                      </figcaption>
-                    </figure>
-                </div>  -->
-                  
-                
+            <div class="row"> 
                 <% products.forEach(product => { %>
                   <% if (product.isDeleted !== true) { %>
                   <div class="col-md-4">
@@ -231,7 +184,6 @@
                         <%}else{%>
                           <span class="badge badge-success stock-badge">In Stock <span class="badge-light px-1"><%= product.quantity %></span></span>
                         <%}%>
-
                         <img src="/uploads/<%= product.images[0] %>" class="img-fluid" style="border-radius: 10px; width: 200px; height: 200px;">                
                         <a class="btn-overlay" href="/productPage?productId=<%= product._id %>"><i class="fa fa-search-plus"></i> Quick view</a>
                       </div>
@@ -245,17 +197,15 @@
                               <i class="fa fa-star"></i>
                               <i class="fa fa-star"></i>
                               <i class="fa fa-star"></i>
-
                               <i class="fa fa-star-half-o"></i>
                               <span class="rating-count">150+</span>
-                              
                             </div>
                             <div class="price-wishlist">
                               <div class="price-wrap">
                                 <span class="price">$<%= product.price %></span>
                                 <!-- <del class="price-old">$1980</del> -->
                                 <a  href="#" class="wishlist-icon btn" style="border:none;background-color: transparent;">
-                                  <i class="fa fa-heart <%= wishlistProductIds.includes(product._id.toString()) ? 'wishlisted' : '' %>"></i>
+                                  <i class="fa fa-heart"></i>
                                 </a>                            
                                 <script>
                                   const wishlistButtons = document.querySelectorAll('.wishlist-icon');
@@ -283,25 +233,51 @@
                 <%}%>
               <%})%> 
             </div> 
-            <!-- row end.// -->
-          <script>
-
-          </script>
-          
-          
-      
             <nav class="mt-4" aria-label="Page navigation sample">
               <ul class="pagination">
-                <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
-                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                <li class="page-item "><a  id="prevButton" class="page-link" href="#">Previous</a></li>
+                <li class="page-item"><a id="nextButton" class="page-link" href="#">Next</a></li>
               </ul>
             </nav>
           </main>
         </div>
       </div>
+      <script>
+        let currentPage = 1;
+        const itemsPerPage = 9; 
+        const items = Array.from(document.querySelectorAll('.col-md-4'));
+        const totalPages = Math.ceil(items.length / itemsPerPage);
+
+        function showPage() {
+          items.forEach(item => item.style.display = 'none');
+          let start = (currentPage - 1) * itemsPerPage;
+          let end = start + itemsPerPage;
+          items.slice(start, end).forEach(item => item.style.display = '');
+          
+          document.querySelector('#prevButton').disabled = currentPage === 1;
+          document.querySelector('#nextButton').disabled = currentPage === totalPages;
+        }
+
+        function nextPage() {
+          if (currentPage < totalPages) {
+            currentPage++;
+            showPage();
+          }
+        }
+
+        function previousPage() {
+          if (currentPage > 1) {
+            currentPage--;
+            showPage();
+          }
+        }
+
+        document.querySelector('#nextButton').addEventListener('click', nextPage);
+        document.querySelector('#prevButton').addEventListener('click', previousPage);
+
+        showPage();
+
+      </script>
       <!-- PRODUCTS -->
       <!-- Bootstrap JS (required for the Bootstrap components to work) -->
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

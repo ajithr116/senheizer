@@ -78,7 +78,6 @@ router.get('/blockcategory',adminCategoryController.adminBlockCategory);
 router.get('/unblockcategory',adminCategoryController.adminUnBlockCategory);
 router.get('/categoryManage',adminCategoryController.adminCategoryManage);
 
-
 //order management 
 router.get('/ordermanagement',adminOrderController.adminOrders);
 router.get('/orderdetails',adminOrderController.adminOrderDetails);

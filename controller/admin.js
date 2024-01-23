@@ -210,14 +210,7 @@ const adminSubmitProduct = async (req, res) => {
             if(err){
                 return res.status(400).send("error uploading images" + err);
             }
-            // const productName = req.body.pName;
-            // const productCategory = req.body.pCategory;
-            // const productBrand = req.body.pBrand;
-            // const productPrice = req.body.pPrice;
-            // const productQuantity = req.body.pQuantity;
-            // const images = req.files;
-            // const productTags = req.body.pColors;
-            // const productDesc = req.body.pDesc;
+
 
             const {pName: productName,pCategory: productCategory,pBrand: productBrand,pPrice: productPrice,pQuantity: productQuantity,pColors: productTags,pDesc: productDesc} = req.body;
             const images = req.files.map((file) => file.filename);
@@ -252,62 +245,6 @@ const adminSubmitProduct = async (req, res) => {
     }
 }
 
-/*const adminSubmitProduct = async (req, res) => {
-    try {
-      upload.array('pImages')
-        (req, res, (err) => {
-          if (err) {
-            return res.status(400).send("error uploading images" + err);
-          }
-  
-          Promise.all(req.files.map(async (file) => {
-            
-            const tempPath = path.join(os.tmpdir(), file.filename); // Use temporary path
-            try {
-              await sharp(file.path)
-                .resize(400, 200)
-                .toFile(tempPath);
-  
-              fs.renameSync(tempPath, file.destination + '/' + file.filename); // Rename and move to final destination
-            } catch (err) {
-              console.error('Error resizing image:', err);
-              return res.status(500).send('Error processing images');
-            }
-          }))
-          .then(() => {
-            // ... rest of your product creation logic using the original filenames ..
-            const images = req.files.map((file) => file.filename); // Create the images array
-
-
-            const {pName: productName,pCategory: productCategory,pBrand: productBrand,pPrice: productPrice,pQuantity: productQuantity,pColors: productTags,pDesc: productDesc} = req.body;
-            
-            const newProduct = new Product({
-                name: productName, 
-                category: productCategory,
-                brand: productBrand,
-                price: productPrice,
-                quantity: productQuantity,
-                images: images,
-                tags: productTags,
-                description: productDesc
-              });
-          
-              const savedProduct =  newProduct.save();
-
-            // console.log(productName, '-', productBrand, '-', productCategory, '-', productPrice, '-', productDesc, '-', productQuantity, '-', productTags, '-', images);
-  
-            res.redirect('/admin/viewProduct');
-          })
-          .catch((err) => {
-            console.error('Error processing images:', err);
-            res.status(500).send('Internal server error');
-          });
-        });
-    } catch (err) {
-      console.error(err);
-      res.status(500).send('Internal server error');
-    }
-};*/
   
 const adminDeleteProduct = async (req,res)=>{
     try{
@@ -316,7 +253,7 @@ const adminDeleteProduct = async (req,res)=>{
             // await adminDB.deleteProduct(productID);
             const product = await Product.findByIdAndUpdate(productID, { $set: { isDeleted: true } }, { new: true });
 
-            await res.render('admin/index');
+            await res.redirect('/admin/viewProduct');
         }
         else {
             res.redirect('/admin/login');
@@ -333,7 +270,7 @@ const adminBlockUser = async (req,res)=>{
             console.log("--block",userID);
             // await adminDB.blockUser(userID);
             const user = await User.updateOne({_id:userID}, { $set: { isDeleted: true } }, { new: true });
-            await res.render('admin/index');
+            await res.redirect('/admin/userManagement');
         }
         else {
             res.redirect('/admin/login');
@@ -352,7 +289,7 @@ const adminUnblockUser = async (req,res)=>{
             console.log("--unblock",userID);
             // await adminDB.unBlockUser(userID);
             const user = await User.updateOne({_id:userID}, { $set: { isDeleted: false } }, { new: true });
-            await res.render('admin/index');
+            await res.redirect('/admin/userManagement');
         }
         else {
             res.redirect('/admin/login');

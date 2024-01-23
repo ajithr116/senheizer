@@ -264,7 +264,16 @@
                                   alert("Error: " + err.responseJSON.message);
                                   const couponCode = document.getElementById('couponCode');
                                   couponCode.style.border="2px solid red";
+                                }else if(err.responseJSON.message=="deleted"){
+                                  alert("Error: " + err.responseJSON.message);
+                                  const couponCode = document.getElementById('couponCode');
+                                  couponCode.style.border="2px solid red";
                                 }
+                                // else if(err.responseJSON.message=="less"){
+                                //   alert("Error: " + err.responseJSON.message);
+                                //   const couponCode = document.getElementById('couponCode');
+                                //   couponCode.style.border="2px solid red";
+                                // }
                               }
                           });
                       });

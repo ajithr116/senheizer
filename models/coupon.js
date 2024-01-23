@@ -24,7 +24,6 @@ const orderSchema = new mongoose.Schema({
   },
   expireDate: {
     type: Date,
-    default: Date.now() + 7 * 24 * 60 * 60 * 1000 // 7 * 24 * 60 * 60 * 1000 represents 7 days in milliseconds (7 days * 24 hours/day * 60 minutes/hour * 60 seconds/minute * 1000 milliseconds/second).
   },
   minimumPrice: {
     type: Number,

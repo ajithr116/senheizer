@@ -1,50 +1,52 @@
-<aside class="col-md-3">
-            
+<aside class="col-md-3">          
   <div class="card">
     <article class="filter-group">
-          <header class="card-header">
-              <a href="#" data-toggle="collapse" data-target="#collapse_1" aria-expanded="true" class="">
-                  <i class="icon-control fa fa-chevron-down"></i>
-                  <h6 class="title">Product type</h6>
-              </a>
-          </header>
-          <div class="filter-content collapse show" id="collapse_1" >
-              <div class="card-body">
-                  <form class="pb-3" action="products" method="GET">
-                  <div class="input-group">
-                    <input type="text" name="search"class="form-control" placeholder="Search">
-                    <div class="input-group-append">
-                      <button class="btn btn-light" type="submit">
-                        <i class="fa fa-search"></i>
-                      </button>
-                    </div>
+      <header class="card-header">
+        <a href="#" data-toggle="collapse" data-target="#collapse_1" aria-expanded="true" class="">
+          <i class="icon-control fa fa-chevron-down">
+
+          </i>
+            <h6 class="title">Product type</h6>
+        </a>
+      </header>
+        <div class="filter-content collapse show" id="collapse_1" >
+          <div class="card-body">
+            <form class="pb-3" action="/products?searchQuery=search" method="GET">
+              <div class="input-group">
+                <input type="text" name="search"class="form-control" placeholder="Search">
+                  <div class="input-group-append">
+                    <button class="btn btn-light" type="submit">
+                      <i class="fa fa-search"></i>
+                    </button>
                   </div>
-                  </form>
-                <form action="/products?color&min&max&brand&category" method="get">
-                  <h5>Category</h5>
-                  <select class=" form-control" name="category">
-                    <% category.forEach(category =>{%>
-                      <option value="<%= category.name %>"><%= category.name %></option>
-                    <%})%>
-                  </select>
-              </div> 
-          </div>
+                </div>
+            </form>
+              <form action="/products?color&min&max&brand&category2" method="get">
+                <h5>Category</h5>
+                <select class="form-control" name="category2">
+                  <option value="">Select a category</option> <% category.forEach(category => { %>
+                    <option value="<%= category.name %>"><%= category.name %></option>
+                  <% }) %>
+                </select>
+                
+          </div> 
+        </div>
       </article> 
       <article class="filter-group">
-          <header class="card-header">
-            <a href="#" data-toggle="collapse" data-target="#collapse_5" aria-expanded="true" class="">
-              <i class="icon-control fa fa-chevron-down"></i>
-              <h6 class="title">Colors</h6>
-            </a>
-          </header>
-        
-            <% const uniqueColors = []; %>
-            <% product2.forEach(product => {
-              const colorTags = product.tags.split(',');
-              colorTags.forEach(color => uniqueColors.push(color.trim()));
-            });%>
-            <% const uniqueColorsSet = new Set(uniqueColors);%>
-            <% const uniqueColorsArray = Array.from(uniqueColorsSet);%>
+        <header class="card-header">
+          <a href="#" data-toggle="collapse" data-target="#collapse_5" aria-expanded="true" class="">
+            <i class="icon-control fa fa-chevron-down"></i>
+            <h6 class="title">Colors</h6>
+          </a>
+        </header>
+<!--    -->
+          <% const uniqueColors = []; %>
+          <% product2.forEach(product => {
+            const colorTags = product.tags.split(',');
+            colorTags.forEach(color => uniqueColors.push(color.trim()));
+          });%>
+          <% const uniqueColorsSet = new Set(uniqueColors);%>
+          <% const uniqueColorsArray = Array.from(uniqueColorsSet);%>
           
           <div class="filter-content collapse show" id="collapse_5" style="">
             <div class="card-body">
@@ -56,35 +58,34 @@
               <% }) %>
             </div>
           </div>
-        </article>
+      </article>
       <article class="filter-group">
-          <header class="card-header">
-              <a href="#" data-toggle="collapse" data-target="#collapse_2" aria-expanded="true" class="">
-                  <i class="icon-control fa fa-chevron-down"></i>
-                  <h6 class="title">Brands </h6>
-              </a>
-          </header>
+        <header class="card-header">
+          <a href="#" data-toggle="collapse" data-target="#collapse_2" aria-expanded="true" class="">
+            <i class="icon-control fa fa-chevron-down"></i>
+              <h6 class="title">Brands </h6>
+          </a>
+        </header>
           <div class="filter-content collapse show" id="collapse_2" style="">
-              <div class="card-body">
-                <% const uniqueBrands = new Set(); %>
-                <% const brandCounts = {}; %>
+            <div class="card-body">
+              <% const uniqueBrands = new Set(); %>
+              <% const brandCounts = {}; %>
+              
+              <% product2.forEach(product => {
+                uniqueBrands.add(product.brand);
+                brandCounts[product.brand] = (brandCounts[product.brand] || 0) + 1;
+              }); %>
                 
-                <% product2.forEach(product => {
-                  uniqueBrands.add(product.brand);
-                  brandCounts[product.brand] = (brandCounts[product.brand] || 0) + 1;
-                }); %>
-                
-                <% uniqueBrands.forEach(brand => { %>
-                  <label class="custom-control custom-checkbox">
-                    <input type="checkbox" name="brand" value="<%= brand %>" class="custom-control-input">
-                    <div class="custom-control-label" >
-                      <%= brand %>
-                      <b class="badge badge-pill badge-light float-right"><%= brandCounts[brand] %></b>
-                    </div>
-                  </label>
-                <% }) %>
-                
-              </div> 
+              <% uniqueBrands.forEach(brand => { %>
+              <label class="custom-control custom-checkbox">
+                <input type="checkbox" name="brand" value="<%= brand %>" class="custom-control-input">
+                  <div class="custom-control-label" >
+                    <%= brand %>
+                    <b class="badge badge-pill badge-light float-right"><%= brandCounts[brand] %></b>
+                  </div>
+                </label>
+              <% }) %>
+            </div> 
           </div>
       </article> 
       <article class="filter-group">

@@ -1,3 +1,5 @@
+const userController = require('../userFunctions/usersFun')
+
 const userForgotpassword  = async(req,res)=>{
 
     // req.session.randomNumber=null;

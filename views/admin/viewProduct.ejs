@@ -167,6 +167,60 @@
                                         
                                     </tbody>
                                 </table>
+                                <div id="pagination">
+
+                                </div>
+                                <script>
+                                    var itemsPerPage = 10;
+                                    var totalItems = document.querySelectorAll('table tbody tr').length;
+                                    var totalPages = Math.ceil(totalItems / itemsPerPage);
+                                    var paginationContainer = document.getElementById('pagination');
+
+                                    for (var i = 1; i <= totalPages; i++) {
+                                        var btn = document.createElement('button');
+                                        btn.style.padding="10px";
+                                        btn.style.border="1px solid red"
+                                        btn.innerText = i;
+                                        btn.setAttribute('data-page', i);
+                                        paginationContainer.appendChild(btn);
+                                    }
+
+                                    function showPage(page) {
+                                        var rows = document.querySelectorAll('table tbody tr');
+                                        rows.forEach(function(row, index) {
+                                            if (Math.ceil((index + 1) / itemsPerPage) === parseInt(page)) {
+                                                row.style.display = 'table-row';
+                                            } else {
+                                                row.style.display = 'none';
+                                            }
+                                        });
+                                    }
+
+                                    function updateVisiblePages(page) {
+                                        var startPage = Math.max(1, page - 1);
+                                        var endPage = Math.min(totalPages, page + 1);
+                                        var buttons = document.querySelectorAll('#pagination button');
+                                        buttons.forEach(function(btn, index) {
+                                            if (index + 1 >= startPage && index + 1 <= endPage) {
+                                                btn.style.display = 'inline-block';
+                                            } else {
+                                                btn.style.display = 'none';
+                                            }
+                                        });
+                                    }
+
+                                    paginationContainer.addEventListener('click', function(e) {
+                                        if (e.target.tagName === 'BUTTON') {
+                                            var page = e.target.getAttribute('data-page');
+                                            showPage(page);
+                                            updateVisiblePages(parseInt(page));
+                                        }
+                                    });
+
+                                    showPage(1);
+                                    updateVisiblePages(1);
+
+                                </script>
                             </div>
                         </div>
                     </div>

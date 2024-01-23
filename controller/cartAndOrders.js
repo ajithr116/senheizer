@@ -422,7 +422,22 @@ const userVerifyCoupon = async(req,res)=>{
     if (coupon.expireDate < Date.now()) {
         return res.status(400).json({ success: false, message: "expire" });
     }
-    const discount = coupon.reducingAmount;
+    // if (cartTotal >= coupon.minimumPrice) {
+    //   const discount = coupon.reducingAmount;
+    //   // console.log("discounts ",discount);
+    //   return res.json({ success: true, message: 'Coupon code is valid', discount: coupon.reducingAmount, couponId:coupon._id });
+      
+    // } else {
+    //   return res.status(400).json({success: false,message:"less"});
+    // }
+
+    if(coupon.isDeleted==true){
+      return res.status(400).json({success:false,message:"deleted"})
+    }
+
+    if(coupon.minimumPrice)
+
+    // const discount = coupon.reducingAmount;
     // console.log("discounts ",discount);
     return res.json({ success: true, message: 'Coupon code is valid', discount: coupon.reducingAmount, couponId:coupon._id });
   } catch (err) {

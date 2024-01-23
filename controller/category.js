@@ -26,7 +26,7 @@ const adminBlockCategory = async (req,res)=>{
             const user = await Category.updateOne({_id:categoryID}, { $set: { isDeleted: false } }, { new: true });
             // const user = await User.findByIdAndUpdate(userID, { $set: { isDeleted: false } }, { new: true });
 
-            await res.render('admin/index');
+            await res.redirect('/admin/categoryManage');
         }
         else {
             res.redirect('/admin/login');
@@ -44,7 +44,7 @@ const adminUnBlockCategory = async (req,res)=>{
             // console.log("--unblock",categoryID);
             // await adminDB.blockUser(userID);
             const category = await Category.updateOne({_id:categoryID}, { $set: { isDeleted: true } }, { new: true });
-            await res.render('admin/index');
+            await res.redirect('/admin/categoryManage');
         }
         else {
             res.redirect('/admin/login');
