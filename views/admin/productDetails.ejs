@@ -118,7 +118,8 @@
                         <div class="bg-light rounded h-100 p-4">
                             <h6 class="mb-4">Product Form</h6>
                             <form action="./updateproduct?product=<%= product._id %>" method="POST" enctype="multipart/form-data">
-                                
+                                <input type="hidden" name="_method" value="PUT">
+
                                 <div class="mb-3">
                                     <label for="productName" class="form-label">Product ID</label>
                                     <% const newID = proID %>
@@ -260,7 +261,26 @@
                                 </div>
                                 <% if (product.isDeleted) { %> <button type="button" class="btn btn-warning" disabled href="#">Deleted</button>
                                 <% } else { %>
-                                  <a class="btn btn-danger" onclick="return confirm('Are you sure?')" href="./deleteproduct?product=<%= product._id%>">Delete</a>
+                                  <a class="btn btn-danger" onclick="deleteProduct('<%= product._id %>')">Delete</a>
+                                  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+                                  <script>
+                                    function deleteProduct(productId){
+                                        Swal.fire({
+                                            title: 'Are you sure?',
+                                            text: "ITS ONE WAY !",
+                                            icon: 'warning',
+                                            showCancelButton: true,
+                                            confirmButtonColor: 'red',
+                                            cancelButtonColor: 'green',
+                                            confirmButtonText: 'Yes, delete it!'
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                window.location.href = `./deleteproduct?product=${productId}`;
+                                            }
+                                        })
+                                    }
+                                  </script>
                                 <% } %>
                                 <!-- <a class="btn btn-success" onclick="return confirm('Are you sure?')" style="width: 10%;">UPDATE</a> -->
                                     <input type="submit" class="btn btn-success"onclick="return confirm('Are you sure?')" value="UPDATE">

@@ -24,6 +24,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
     <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
     <!-- Libraries Stylesheet -->
     <link href="/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
@@ -84,7 +86,7 @@
                         </div>
                     </div>
                     <a href="./userManagement" class="nav-item nav-link active"><i class="fa fa-th me-2"></i>User manage</a>
-                    <a href="./categoryManage" class="nav-item nav-link"><i class="fa fa-keyboard me-2"></i>Category manage</a>
+                    <a href="./categoryManage" class="nav-item nav-link "><i class="fa fa-keyboard me-2"></i>Category manage</a>
                     <a href="./ordermanagement" class="nav-item nav-link"><i class="fa fa-box me-2"></i>Order manage</a>
                     <a href="./couponManage" class="nav-item nav-link"><i class="fa fa-money-bill me-2"></i>Coupon manage</a>
 
@@ -129,29 +131,14 @@
                                             <th scope="col">Joined Date</th>
                                             <th scope="col">Status</th>
                                             <th scope="col">Action</th>
-                                            <!-- <th scope="col">Delete</th> -->
+                                            <th scope="col">Details</th>
 
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <!-- <th scope="row">1</th>
-                                            <td>Ajith R</td>
-                                            <td>Email</td>
-                                            <td>1234567890</td>
-                                            <td><span class="bg-success px-3" style="color:white">-Active-</span></td>
-                                            <td><button class="blockButton btn btn-success" onclick="toggleBlock(this)">Unblock</button></td>
-                                            <td><a class="btn btn-danger">Delete</a></td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">2</th>
-                                            <td>Ajith R</td>
-                                            <td>Email</td>
-                                            <td>1234567890</td>
-                                            <td><span class="bg-success px-3" style="color:white">-Active-</span></td>
-                                            <td><button class="blockButton btn btn-success" onclick="toggleBlock(this)">Unblock</button></td>
-                                            <td><a class="btn btn-danger">Delete</a></td>
-                                        </tr> -->
+                  
+
                                         <% users.forEach(user => { %>
                                         <tr>
                                             <!-- <th scope="row"><%= user._id %></th> -->
@@ -170,14 +157,50 @@
 
                                             <td>
                                                 <% if (user.isDeleted) { %> 
-                                                   <a class="btn btn-danger" onclick="return confirm('Are you sure?')" href="./blockuser?user=<%= user._id%>" >blocked</a>
+                                                   <!-- <a class="btn btn-danger" onclick="return confirm('Are you sure?')" href="./blockuser?user=<%= user._id%>" >blocked</a> -->
+                                                   <a class="btn btn-danger" onclick="blockuser('<%= user._id %>')" >blocked</a>
+                                                   <script>
+                                                    function blockuser(userId){
+                                                        Swal.fire({
+                                                                title: 'Are you sure?',
+                                                                text: "Block user",
+                                                                icon: 'warning',
+                                                                showCancelButton: true,
+                                                                confirmButtonColor: 'red',
+                                                                cancelButtonColor: 'green',
+                                                                confirmButtonText: 'Block user'
+                                                            }).then((result) => {
+                                                                if (result.isConfirmed) {
+                                                                    window.location.href = `./blockuser?user=${userId}`;
+                                                                }
+                                                            })
+                                                        }
+                                                   </script>
+
                                                 <% } else { %>
-                                                  <a class="btn btn-success" onclick="return confirm('Are you sure?')" href="./unblockuser?user=<%= user._id%>">unblock</a>
+                                                  <!-- <a class="btn btn-success" onclick="return confirm('Are you sure?')" href="./unblockuser?user=<%= user._id%>">unblock</a> -->
+                                                  <a class="btn btn-success" onclick="unblockuser('<%= user._id %>')" >unblocked</a>
+                                                  <script>
+                                                        function unblockuser(userId){
+                                                            Swal.fire({
+                                                                title: 'Are you sure?',
+                                                                text: "Block user",
+                                                                icon: 'warning',
+                                                                showCancelButton: true,
+                                                                confirmButtonColor: 'red',
+                                                                cancelButtonColor: 'green',
+                                                                confirmButtonText: 'Block user'
+                                                            }).then((result) => {
+                                                                if (result.isConfirmed) {
+                                                                    window.location.href = `./unblockuser?user=${userId}`;
+                                                                }
+                                                            })
+                                                        }
+                                                   </script>
                                                 <% } %>
                                             </td>
+                                            <td><a href="./userdetails?userid=<%= user._id %>">Details</a></td>
 
-                                            <!-- <td><button class="blockButton btn btn-success" onclick="toggleBlock(this)">Unblock</button></td> -->
-                                            <!-- <td><a class="btn btn-danger">Delete</a></td> -->
                                         </tr>   
                                         <% }); %>
                                     </tbody>
@@ -197,47 +220,76 @@
                                     </script>
                                     
                                 </table>
+                                <div id="pagination">
+
+                                </div>
                             </div>
+                            
                         </div>
                     </div>
                 </div>
-                
             </div>
-            <!-- Blank End -->
-
-
-            <!-- Footer Start -->
-            <!-- <div class="container-fluid pt-4 px-4">
-                <div class="bg-light rounded-top p-4">
-                    <div class="row">
-                        <div class="col-12 col-sm-6 text-center text-sm-start">
-                            &copy; <a href="#">SENHEIZER</a>, All Right Reserved. 
-                        </div>
-                        <div class="col-12 col-sm-6 text-center text-sm-end">
-                            Designed by <a href="https://www.github.com/ajithr116">Ajith R</a>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
-            <!-- Footer End -->
         </div>
         <!-- Content End -->
+        <script>
+            var itemsPerPage = 10;
+            var totalItems = document.querySelectorAll('table tbody tr').length;
+            var totalPages = Math.ceil(totalItems / itemsPerPage);
+            var paginationContainer = document.getElementById('pagination');
 
+            for (var i = 1; i <= totalPages; i++) {
+                var btn = document.createElement('button');
+                btn.style.padding="10px";
+                btn.style.border="1px solid red"
+                btn.innerText = i;
+                btn.setAttribute('data-page', i);
+                paginationContainer.appendChild(btn);
+            }
+
+            function showPage(page) {
+                var rows = document.querySelectorAll('table tbody tr');
+                rows.forEach(function(row, index) {
+                    if (Math.ceil((index + 1) / itemsPerPage) === parseInt(page)) {
+                        row.style.display = 'table-row';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            }
+            function updateVisiblePages(page) {
+                var startPage = Math.max(1, page - 1);
+                var endPage = Math.min(totalPages, page + 1);
+                var buttons = document.querySelectorAll('#pagination button');
+                buttons.forEach(function(btn, index) {
+                    if (index + 1 >= startPage && index + 1 <= endPage) {
+                        btn.style.display = 'inline-block';
+                    } else {
+                        btn.style.display = 'none';
+                    }
+                });
+            }
+
+            paginationContainer.addEventListener('click', function(e) {
+                if (e.target.tagName === 'BUTTON') {
+                    var page = e.target.getAttribute('data-page');
+                    showPage(page);
+                    updateVisiblePages(parseInt(page));
+                }
+            });
+
+            showPage(1);
+            updateVisiblePages(1);
+
+        </script>
 
         <!-- Back to Top -->
         <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
     </div>
 
     <!-- JavaScript Libraries -->
-    <!-- <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="/lib/chart/chart.min.js"></script>
-    <script src="/lib/easing/easing.min.js"></script>
-    <script src="/lib/waypoints/waypoints.min.js"></script>
-    <script src="/lib/owlcarousel/owl.carousel.min.js"></script>
-    <script src="/lib/tempusdominus/js/moment.min.js"></script>
-    <script src="/lib/tempusdominus/js/moment-timezone.min.js"></script>
-    <script src="/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script> -->
+    
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>

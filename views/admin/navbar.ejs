@@ -5,8 +5,9 @@
     <a href="#" class="sidebar-toggler flex-shrink-0">
         <i class="fa fa-bars"></i>
     </a>
-    <form class="d-none d-md-flex ms-4" style="border:1px solid black; ">
-        <input class="form-control border-0" type="search" placeholder="Search">
+    <form action="./userdetails?searchcontent=searchInput" method="get" class="d-none d-md-flex ms-4" style="border:1px solid black; width:400px">
+        <input name="searchInput" class="form-control border-0" type="search" placeholder="Search User">
+        <input type="submit" value="submit">
     </form>
     <div class="navbar-nav align-items-center ms-auto">
         <!-- <div class="nav-item dropdown">

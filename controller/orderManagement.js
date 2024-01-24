@@ -26,13 +26,12 @@ const adminOrderDetails = async (req, res) => {
       const order = await Order.findById(orderId).populate('userID shippingAddressID items.productID');
       const grandTotalWithoutTax = order.items.reduce((total, item) => total + item.quantity * item.price, 0);
       
-      const taxRate = 0.12; // Assuming a 12% tax rate (replace with your actual rate)
+      const taxRate = 0.12; 
       const taxAmount = grandTotalWithoutTax * taxRate;
       const grandTotal = grandTotalWithoutTax + taxAmount;
       
       res.render("admin/orderDetails", { order, grandTotal,taxRate });
     
-      // res.render("admin/orderDetails", { order }); // Pass the order object to the view
     } catch (err) {
       console.error('Error fetching order:', err);
     }
@@ -96,11 +95,9 @@ const adminUpdateStatus = async(req,res)=>{
         key_secret: process.env.SECRET_KEY
       });
 
-      // console.log("reached 1");
       instance.payments.refund(paymentId)
       .then(async function(refund) {
         console.log("Refund successful: ", refund);
-        // console.log("reached 2");
 
         const user = await User.findById(userId);
 
@@ -108,7 +105,6 @@ const adminUpdateStatus = async(req,res)=>{
           amount: refundableAmount,
           type: 'refund'
         };
-        // console.log("reached 3");
 
          const parsedAmount = parseFloat(refundableAmount);
          if (!isNaN(parsedAmount)) {
@@ -119,10 +115,7 @@ const adminUpdateStatus = async(req,res)=>{
 
         user.walletHistory.push(transaction);
         await user.save();
-        // console.log("reached 4");
-
         const updatedOrder = await Order.findByIdAndUpdate(orderId, {orderStatus: status}, { new: true });
-
         res.redirect('/admin/ordermanagement');
       })
       .catch(function(err) {

@@ -147,7 +147,11 @@
 
                                 <div class="mb-3">
                                     <label for="expireDate" class="form-label">Expire Date</label>
-                                    <input type="date" id="expireDateInput"  name="couponExpireDate" autocomplete="off"/>
+                                    <input type="date" id="expireDateInput"  name="couponExpireDate" min="Date.Now" autocomplete="off"/>
+                                    <script>
+                                        const expireDateInput = document.getElementById('expireDateInput');
+                                        expireDateInput.min = new Date().toISOString().slice(0, 10); 
+                                    </script>
                                 </div>
                         
                                 <div class="mb-3">

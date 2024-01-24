@@ -1,12 +1,14 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const session = require('express-session');
+const methodOverride = require('method-override');
 const cookieParser = require('cookie-parser');
+const multer  = require('multer')
+
 const adminController = require('../controller/admin');
 const adminCategoryController = require('../controller/category');
 const adminOrderController = require("../controller/orderManagement");
 const adminCouponController = require('../controller/couponmanagement');
-const multer  = require('multer')
 const upload = multer({ dest: 'uploads/' })
 
 
@@ -25,7 +27,7 @@ app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
-
+app.use(methodOverride('_method'));
 
 //errror handling
 app.use(function(err, req, res, next) {
@@ -65,11 +67,13 @@ router.get('/deleteproduct',adminController.adminDeleteProduct);
 router.get('/detailProduct',adminController.adminDetailProduct);
 router.get('/getProductDetails',adminController.adminDetailProduct);
 router.post('/updateproduct', adminController.adminUpdateProduct);
+// router.put('/updateproduct', adminController.adminUpdateProduct);
 
 //usermanangement
 router.get('/userManagement',adminController.adminUsermanage);
 router.get('/unblockuser',adminController.adminBlockUser);
 router.get('/blockuser',adminController.adminUnblockUser);
+router.get('/userdetails',adminController.adminUserDetails);
 
 //category
 router.get('/addCategory',adminCategoryController.adminCategory);

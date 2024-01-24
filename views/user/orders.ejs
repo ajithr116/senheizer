@@ -132,6 +132,9 @@
                             <% if (order.shippingAddressID) { %>
                               <p>Address: <%= order.shippingAddressID.address.substring(0, 50) + (order.shippingAddressID.address.length > 20 ? '...' : '') %></p>
                               <p>Phone : <%= order.shippingAddressID.phone %></p>
+                              <% if(order.orderStatus=="delivered"){%>
+                                <a class="btn btn-info" href="/downloadinvoice?orderId=<%= order._id %>">Download Invoice</a>
+                              <%}%>
                             <% } else { %>
                               <p>Address: Not available</p>
                               <p>Phone : Not available</p>
