@@ -9,6 +9,7 @@ const adminController = require('../controller/admin');
 const adminCategoryController = require('../controller/category');
 const adminOrderController = require("../controller/orderManagement");
 const adminCouponController = require('../controller/couponmanagement');
+const adminDashboadController = require('../controller/admindashboard');
 const upload = multer({ dest: 'uploads/' })
 
 
@@ -56,7 +57,6 @@ app.use((req, res, next) => {
 
 router.get('/login', adminController.adminLogin);
 router.post('/aSubmit',adminController.adminSubmit);
-router.get('/index',adminController.adminIndex);
 router.get('/logout',adminController.adminLogout);
 
 //product
@@ -96,7 +96,9 @@ router.get('/blockcoupon',adminCouponController.adminUnblockCoupon);
 
 router.get('/',adminController.adminDefault);
 
-
+//dashboard controller 
+router.get('/index',adminDashboadController.adminIndex );
+router.post('/userstats',adminDashboadController.userStats);    //weekly, montly, yearly
 
 router.use((req,res)=>{
     res.redirect('./login');
