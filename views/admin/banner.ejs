@@ -1,0 +1,258 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Banner management</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script> -->
+
+    <!-- Libraries Stylesheet -->
+    <!-- <link href="/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet"> -->
+    <!-- <link href="/lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" /> -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
+
+    <!-- <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.6.4.min.js"></script> -->
+    <!-- <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script> -->
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="/css/style.css" rel="stylesheet">
+
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <div class="container-xxl position-relative bg-white d-flex p-0">
+        <!-- Spinner Start -->
+        <!-- <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div> -->
+        <!-- Spinner End -->
+
+
+        <!-- Sidebar Start -->
+        <div class="sidebar pe-4 pb-3">
+            <nav class="navbar bg-light navbar-light">
+                <a href="index.html" class="navbar-brand mx-4 mb-3">
+                    <h3 class="text-dark">SENHEIZER</h3>
+                </a>
+                <div class="d-flex align-items-center ms-4 mb-4">
+                    <!-- <div class="position-relative">
+                        <img class="rounded-circle" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
+                        <div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
+                    </div> -->
+                    <!-- <div class="ms-3">
+                        <h6 class="mb-0">Jhon Doe</h6>
+                        <span>Admin</span>
+                    </div> -->
+                </div>
+                <div class="navbar-nav w-100">
+                    <a href="./index" class="nav-item nav-link "><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-laptop me-2"></i>Product Details</a>
+                        <div class="dropdown-menu bg-transparent border-0">
+                            <a href="./viewProduct" class="dropdown-item">View products</a>
+                            <a href="./addProduct" class="dropdown-item ">Add product</a>
+                        </div>
+                    </div>
+                    <a href="./userManagement" class="nav-item nav-link"><i class="fa fa-th me-2"></i>User manage</a>
+                    <a href="./categoryManage" class="nav-item nav-link "><i class="fa fa-keyboard me-2"></i>Category manage</a>
+                    <a href="./ordermanagement" class="nav-item nav-link"><i class="fa fa-box me-2"></i>Order manage</a>
+                    <a href="./couponManage" class="nav-item nav-link"><i class="fa fa-money-bill me-2"></i>Coupon manage</a>
+                    <a href="./salesReport" class="nav-item nav-link"><i class= "fa fa-chart-bar me-2"></i>Sales reports </a>
+                    <a href="./banner" class="nav-item nav-link active"><i class= "fa fa-print me-2"></i>Banner manage</a>
+                    <!-- <a href="table.html" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Tables</a> -->
+                    <!-- <a href="chart.html" class="nav-item nav-link"><i class="fa fa-chart-bar me-2"></i>Charts</a>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="far fa-file-alt me-2"></i>Pages</a>
+                        <div class="dropdown-menu bg-transparent border-0">
+                            <a href="signin.html" class="dropdown-item">Sign In</a>
+                            <a href="signup.html" class="dropdown-item">Sign Up</a>
+                            <a href="404.html" class="dropdown-item">404 Error</a>
+                            <a href="blank.html" class="dropdown-item">Blank Page</a>
+                        </div>
+                    </div> -->
+                </div>
+            </nav>
+        </div>
+        <!-- Sidebar End -->
+
+
+        <!-- Content Start -->
+        <div class="content">
+            <!-- Navbar Start -->
+            <%- include('navbar') %>
+            <!-- Navbar End -->
+
+
+            <!-- Blank Start -->
+            <div class="container-fluid pt-4 px-2">
+                <div class="container-fluid pt-4 px-5">
+                    <div class="col-12">
+                        <div class="bg-light rounded h-100 p-4">
+                            <h6 class="mb-4">Order management</h6>
+            
+                            <!-- <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <label for="filterSelect" class="form-label">Filter by Category:</label>
+                                    <select class="form-select" id="filterSelect">
+                                        <option value="">All</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="sortSelect" class="form-label">Sort by:</label>
+                                    <select class="form-select" id="sortSelect">
+                                        <option value="id_asc">Ascending</option>
+                                        <option value="id_desc">Descending</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="searchInput" class="form-label">Search:</label>
+                                    <input type="text" class="form-control" id="searchInput" placeholder="Type to search">
+                                </div>
+                            </div> -->
+                            <a class="btn btn-primary" href="./addBanner" >Add new </a><br><br>
+
+                            <!-- Table -->
+                            <div class="table-responsive">
+                                <table id="yourTableId" class="table">
+                                  <thead>
+                                    <tr>
+                                      <th scope="col">ID</th>
+                                      <th scope="col">Name</th>
+                                      <th scope="col">Total items</th>
+                                      <th scope="col">Total</th>
+                                      <th scope="col">Status</th>
+                                      <th scope="col">More details</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    
+                                  </tbody>
+                                </table>
+                                <div id="pagination">
+
+                                </div>
+                            </div>                              
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Blank End -->
+            <script>
+                var itemsPerPage = 10;
+                var totalItems = document.querySelectorAll('table tbody tr').length;
+                var totalPages = Math.ceil(totalItems / itemsPerPage);
+                var paginationContainer = document.getElementById('pagination');
+
+                for (var i = 1; i <= totalPages; i++) {
+                    var btn = document.createElement('button');
+                    btn.style.padding="10px";
+                    btn.style.border="1px solid red"
+                    btn.innerText = i;
+                    btn.setAttribute('data-page', i);
+                    paginationContainer.appendChild(btn);
+                }
+
+                function showPage(page) {
+                    var rows = document.querySelectorAll('table tbody tr');
+                    rows.forEach(function(row, index) {
+                        if (Math.ceil((index + 1) / itemsPerPage) === parseInt(page)) {
+                            row.style.display = 'table-row';
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    });
+                }
+
+                function updateVisiblePages(page) {
+                    var startPage = Math.max(1, page - 1);
+                    var endPage = Math.min(totalPages, page + 1);
+                    var buttons = document.querySelectorAll('#pagination button');
+                    buttons.forEach(function(btn, index) {
+                        if (index + 1 >= startPage && index + 1 <= endPage) {
+                            btn.style.display = 'inline-block';
+                        } else {
+                            btn.style.display = 'none';
+                        }
+                    });
+                }
+
+                paginationContainer.addEventListener('click', function(e) {
+                    if (e.target.tagName === 'BUTTON') {
+                        var page = e.target.getAttribute('data-page');
+                        showPage(page);
+                        updateVisiblePages(parseInt(page));
+                    }
+                });
+
+                showPage(1);
+                updateVisiblePages(1);
+
+            </script>
+
+            <!-- Footer Start -->
+            <!-- <div class="container-fluid pt-4 px-4">
+                <div class="bg-light rounded-top p-4">
+                    <div class="row">
+                        <div class="col-12 col-sm-6 text-center text-sm-start">
+                            &copy; <a href="#">SENHEIZER</a>, All Right Reserved. 
+                        </div>
+                        <div class="col-12 col-sm-6 text-center text-sm-end">
+                            Designed by <a href="https://www.github.com/ajithr116">Ajith R</a>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+            <!-- Footer End -->
+        </div>
+        <!-- Content End -->
+
+
+        <!-- Back to Top -->
+        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+    </div>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- <script src="lib/chart/chart.min.js"></script>
+    <script src="lib/easing/easing.min.js"></script>
+    <script src="lib/waypoints/waypoints.min.js"></script>
+    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="lib/tempusdominus/js/moment.min.js"></script>
+    <script src="lib/tempusdominus/js/moment-timezone.min.js"></script> -->
+    <script src="/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+
+    <!-- Template Javascript -->
+    <script src="/js/main.js"></script>
+</body>
+
+</html>

@@ -10,6 +10,7 @@ const adminCategoryController = require('../controller/category');
 const adminOrderController = require("../controller/orderManagement");
 const adminCouponController = require('../controller/couponmanagement');
 const adminDashboadController = require('../controller/admindashboard');
+const adminBannerController = require('../controller/bannerManagement')
 const upload = multer({ dest: 'uploads/' })
 
 
@@ -99,6 +100,19 @@ router.get('/',adminController.adminDefault);
 //dashboard controller 
 router.get('/index',adminDashboadController.adminIndex );
 router.post('/userstats',adminDashboadController.userStats);    //weekly, montly, yearly
+router.get('/salesReport',adminDashboadController.adminSalesReports);
+router.post('/salesReport2',adminDashboadController.salesReport2);
+router.get('/orderStatusAnalysis',adminDashboadController.orderStatus);
+router.get('/productPopularity',adminDashboadController.productPopularity);
+router.get('/paymentMethodPreferences',adminDashboadController.paymentMethodPreferences);
+router.post('/salesRevenue',adminDashboadController.salesRavenue);
+router.get('/downloadreport',adminDashboadController.downloadSalesReport);
+router.get('/excelconvert',adminDashboadController.excelDownload);
+
+//banner
+router.get('/banner',adminBannerController.adminBanner);
+router.get('/addBanner',adminBannerController.adminAddBanner);
+router.post('/addBanner',adminBannerController.adminUploadBanner);
 
 router.use((req,res)=>{
     res.redirect('./login');

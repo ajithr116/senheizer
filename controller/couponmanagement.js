@@ -40,7 +40,7 @@ const adminSubmitCoupon = async (req, res) => {
 
 
 const adminBlockCoupon = async(req,res)=>{
-    console.log( "reached");
+    // console.log( "reached");
     const couponID = req.query.couponId;
     const category = await Coupon.updateOne({_id:couponID}, { $set: { isDeleted: false } }, { new: true });
     res.redirect('/admin/couponManage');

@@ -81,3 +81,19 @@ const uniqueUid = "u"+forUniqueId;
 });
 
 module.exports = mongoose.model('Product', productSchema);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

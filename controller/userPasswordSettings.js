@@ -1,4 +1,5 @@
-const userController = require('../userFunctions/usersFun')
+const userController = require('../userFunctions/usersFun');
+const User = require('../models/user');
 
 const userForgotpassword  = async(req,res)=>{
 
