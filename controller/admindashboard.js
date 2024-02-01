@@ -21,92 +21,83 @@ const add = require('moments/lib/add');
   
 const adminIndex = async (req, res) => {
     if(req.session.aid){
-        const product = Product.find();
-        const totalProducts = await Product.countDocuments();
-        const totalRevenue = await Order.aggregate([{ $group: { _id: null, totalRevenue: { $sum: '$totalPrice' } } }]).then(result => result[0].totalRevenue); //then is usgin to handle async operations 
-        const totalSales = await Order.countDocuments();
-    
-        //WEeekly stats
-        const totalUsersCount = await User.countDocuments({});
-        const userStats = await getUserStats();
-
-        // const addresses = await Address.find({});
-
-        // console.log("Address", addresses);
-
-        // addresses.forEach((address)=>{
-        //     console.log("--",address.state);
-        // })
+      const product = Product.find();
+      const totalProducts = await Product.countDocuments();
+      const totalRevenue = await Order.aggregate([{ $group: { _id: null, totalRevenue: { $sum: '$totalPrice' } } }]).then(result => result[0].totalRevenue); //then is usgin to handle async operations 
+      const totalSales = await Order.countDocuments();
+  
+      //WEeekly stats
+      const totalUsersCount = await User.countDocuments({});
+      const userStats = await getUserStats();
 
  
-        const districtWiseOrderCounts = await Order.aggregate([
-            {
-                $lookup:{
-                    from:'addresses',
-                    localField:'shippingAddressID',
-                    foreignField:'_id',
-                    as:'address'
-                }
-            },
-                {
-                    $unwind:'$address'
-                },
-                {
-                    $group:{
-                        _id:'$address.state',
-                        totalDistrictOrder:{$sum:1}
-                    }
-                }
+      const districtWiseOrderCounts = await Order.aggregate([
+        {
+          $lookup:{
+            from:'addresses',
+            localField:'shippingAddressID',
+            foreignField:'_id',
+            as:'address'
+          }
+        },
+          {
+            $unwind:'$address'
+          },
+          {
+            $group:{
+              _id:'$address.state',
+              totalDistrictOrder:{$sum:1}
+            }
+          }
         ]).sort({totalDistrictOrder:-1})
         var totalOrders = districtWiseOrderCounts.reduce((total, item) => total + item.totalDistrictOrder, 0);
         res.render('admin/index',{
-            totalProducts,
-            totalRevenue,
-            totalSales,
-            ...userStats,
-            districtWiseOrderCounts,
-            totalOrders
+          totalProducts,
+          totalRevenue,
+          totalSales,
+          ...userStats,
+          districtWiseOrderCounts,
+          totalOrders
         },(err, html) => {
-            if (err) {
-                console.error(err);
-            } else {
-                res.send(html);
-            }
+          if (err) {
+            console.error(err);
+          } else {
+            res.send(html);
+          }
         }); 
     }
     else{
-        res.redirect('/admin/login');
+      res.redirect('/admin/login');
     }
 };
   
 const userStats = async(req,res)=>{
-    const timeframe = req.body.filter;
-    let startDate;
-    switch (timeframe) {
-      case 'weekly':
-        const userStats2 = await getUserStats();
-        res.status(200).json({ data: userStats2, choice: "week" });
-        break;
-      case 'monthly':
-        // startDate = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
-        const userStats = await getUserStats('monthly');
-        res.status(200).json({ data: userStats, choice: "monthy" });
-        break;
-      case 'yearly':
-        const userStats3 = await getUserStats('yearly');
-        res.status(200).json({ data: userStats3, choice: "yearly" });
-        break;
-      default:
-        startDate = new Date(0);  // Get all users if no valid timeframe is provided
-    }
+  const timeframe = req.body.filter;
+  let startDate;
+  switch (timeframe) {
+    case 'weekly':
+      const userStats2 = await getUserStats();
+      res.status(200).json({ data: userStats2, choice: "week" });
+      break;
+    case 'monthly':
+      const userStats = await getUserStats('monthly');
+      res.status(200).json({ data: userStats, choice: "monthy" });
+      break;
+    case 'yearly':
+      const userStats3 = await getUserStats('yearly');
+      res.status(200).json({ data: userStats3, choice: "yearly" });
+      break;
+    default:
+    startDate = new Date(0);  
+  }
 }
 
 const adminSalesReports = async(req,res)=>{
-    if(req.session.aid){
-      res.render('admin/salesreport');
-    }   
-    else{
-      res.redirect('/admin/login');
+  if(req.session.aid){
+    res.render('admin/salesreport');
+  }   
+  else{
+    res.redirect('/admin/login');
   }    
 }
 
@@ -115,17 +106,14 @@ const salesReport2 = async (req, res) => {
     const timeframe = req.body.filter;
     if (timeframe === 'weekly') {
       const result1 = await getOrderStats.weeklyOrderStat();
-      // console.log("--",result1);
       res.status(200).json({ choice: 'week', data: result1 });
     } 
     else if(timeframe=='monthly'){
       const result2 = await getOrderStats.monthlyOrderStat();
-      // console.log("--",result2);
       res.status(200).json({ choice: 'monthly', data: result2 });
     }
     else if (timeframe === 'yearly') {
       const result3 = await getOrderStats.yearlyOrderStat();
-      // console.log("--",result3);
       res.status(200).json({ choice: 'yearly', data: result3 });
     }
   }
@@ -152,7 +140,6 @@ const paymentMethodPreferences = async (req, res) => {
 const salesRavenue = async(req,res)=>{
   try {
     const timeframe = req.body.filter;
-    // console.log(timeframe);
     if (timeframe === "weekly") {
       const report = await getOrderStats.weeklySalesState();
       res.status(200).json({report, choice: "weekly" });
@@ -182,24 +169,23 @@ const downloadSalesReport = async(req,res)=>{
   const result1 = await getOrderStats.weeklyOrderStat();
   const result2 = await getOrderStats.monthlyOrderStat();
   const result3 = await getOrderStats.yearlyOrderStat();
-  //===0=0-0-00-0-0-
+  //---
   const result4 = await getOrderStats.orderStatus();
   const result5 = await getOrderStats.productPopularity();
   const result6 = await getOrderStats.paymentMethodPreferences();
-  //------------------------00-0-0-0-0--0-0-0-
+  //--
   const report1 = await getOrderStats.weeklySalesState();
   const report2 = await getOrderStats.monthlySalesState();
   const report3 = await getOrderStats.yearlySalesState();
-  //------0-0-0-0-0-0-0-0-0-00-00-0-0-0-0-0-0-0-0
+  //--
 
   let doc = new PDFDocument;
   let pdfPath = 'sales_report.pdf';
   let writeStream = fs.createWriteStream(pdfPath);
   doc.pipe(writeStream);
 
-  // Add your data to the document
   doc.fontSize(18)
-     .text(`Total Users Count: ${userStats2.totalUsersCount}`, { underline: true });
+    .text(`Total Users Count: ${userStats2.totalUsersCount}`, { underline: true });
 
   doc.moveDown();
   const table = {
@@ -300,8 +286,8 @@ const downloadSalesReport = async(req,res)=>{
   doc.text(`Total Sales: ${weeklyTotalSales}`);
   doc.text(`Order Count: ${weeklyOrderCount}`);
     
-  //----------------------
-  const monthlyTotalSales = report2[0].totalSales;  // Assuming single object in report2
+  //----------------
+  const monthlyTotalSales = report2[0].totalSales;  
   const monthlyOrderCount = report2[0].count;
 
   doc.moveDown();
@@ -310,14 +296,14 @@ const downloadSalesReport = async(req,res)=>{
   doc.text(`Month: ${report2[0].month}`);
   doc.text(`Total Sales: ${monthlyTotalSales}`);
   doc.text(`Order Count: ${monthlyOrderCount}`);
-  //----------------
+  //-----
   doc.moveDown();
   doc.fontSize(14)
     .text('Yearly Sales Summary:', { underline: true });
   doc.text(`Year: ${report3[0].year}`);
   doc.text(`Total Sales: $${report3[0].totalSales}`);
   doc.text(`Order Count: ${report3[0].count}`);
-  //-------------------------------
+  //----
 
   writeStream.on('finish', function() {
     res.download(pdfPath);
@@ -331,11 +317,11 @@ const excelDownload = async(req, res) => {
   const result1 = await getOrderStats.weeklyOrderStat();
   const result2 = await getOrderStats.monthlyOrderStat();
   const result3 = await getOrderStats.yearlyOrderStat();
-  //===0=0-0-00-0-0-
+  //----
   const result4 = await getOrderStats.orderStatus();
   const result5 = await getOrderStats.productPopularity();
   const result6 = await getOrderStats.paymentMethodPreferences();
-  //------------------------00-0-0-0-0--0-0-0-
+  //----
   const report1 = await getOrderStats.weeklySalesState();
   const report2 = await getOrderStats.monthlySalesState();
   const report3 = await getOrderStats.yearlySalesState();
@@ -372,12 +358,12 @@ const excelDownload = async(req, res) => {
 
   const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   for (let monthNumber = 1; monthNumber <= 12; monthNumber++) {
-    const monthName = months[monthNumber - 1]; // Map numerical month to its name
+    const monthName = months[monthNumber - 1]; 
     const matchingItem = result2.find(item => item.month === monthNumber);
     weeklyOrdersSheet.addRow([monthName, matchingItem ? matchingItem.count : 0]);
   }
 
-  //----------------------------
+  //---
   weeklyOrdersSheet.addRow([]); 
   weeklyOrdersSheet.addRow([]); 
 
@@ -387,9 +373,9 @@ const excelDownload = async(req, res) => {
   result3.forEach(item => {
     weeklyOrdersSheet.addRow([item.year, item.count]);
   });
-  //-------------------
-  worksheet.addRow([]); // Add an empty row for spacing
-  worksheet.addRow([]); // Add another empty row for spacing
+  //---
+  worksheet.addRow([]); 
+  worksheet.addRow([]); 
 
   worksheet.addRow(['Order Status Summary']);
   worksheet.addRow(['Status', 'Count']);
@@ -397,7 +383,7 @@ const excelDownload = async(req, res) => {
   result4.forEach(item => {
     worksheet.addRow([item.status, item.count]);
   });
-  //-----------------
+  //---
   const productPopularitySheet = workbook.addWorksheet('Product Popularity');
 
   productPopularitySheet.addRow(['Product Popularity Summary']);
@@ -407,8 +393,8 @@ const excelDownload = async(req, res) => {
     productPopularitySheet.addRow([item.productName, item.brand, item.count]);
   });
   //------------------------------
-  worksheet.addRow([]); // Add an empty row for spacing
-  worksheet.addRow([]); // Add another empty row for spacing
+  worksheet.addRow([]); 
+  worksheet.addRow([]); 
 
   worksheet.addRow(['Payment Method Preferences']);
   worksheet.addRow(['Method', 'Count']);
@@ -417,7 +403,7 @@ const excelDownload = async(req, res) => {
     worksheet.addRow([item._id, item.count]);
   });
 
-  //----------------------------------
+  //----
   const weeklySalesStateSheet = workbook.addWorksheet('Sales State');
 
   weeklySalesStateSheet.addRow(['Weekly Sales Summary']);
@@ -428,9 +414,9 @@ const excelDownload = async(req, res) => {
     weeklySalesStateSheet.addRow([day, matchingItem ? matchingItem.totalSales : 0, matchingItem ? matchingItem.count : 0]);
   });
   
-  //----------------------------------
-  weeklySalesStateSheet.addRow([]); // Add an empty row for spacing
-  weeklySalesStateSheet.addRow([]); // Add another empty row for spacing
+  //---
+  weeklySalesStateSheet.addRow([]); 
+  weeklySalesStateSheet.addRow([]); 
 
   weeklySalesStateSheet.addRow(['Monthly Sales Summary']);
   weeklySalesStateSheet.addRow(['Month', 'Total Sales', 'Count']);
@@ -440,8 +426,8 @@ const excelDownload = async(req, res) => {
     weeklySalesStateSheet.addRow([month, matchingItem ? matchingItem.totalSales : 0, matchingItem ? matchingItem.count : 0]);
   });
   //----------
-  weeklySalesStateSheet.addRow([]); // Add an empty row for spacing
-  weeklySalesStateSheet.addRow([]); // Add another empty row for spacing
+  weeklySalesStateSheet.addRow([]); 
+  weeklySalesStateSheet.addRow([]); 
 
   weeklySalesStateSheet.addRow(['Yearly Sales Summary']);
   weeklySalesStateSheet.addRow(['Year', 'Total Sales', 'Count']);
@@ -450,23 +436,18 @@ const excelDownload = async(req, res) => {
     weeklySalesStateSheet.addRow([item.year, item.totalSales, item.count]);
   });
 
-
   const fileName = 'output.xlsx';
   await workbook.xlsx.writeFile(fileName);
 
-  // Set headers for downloading the file
   res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
   res.setHeader('Content-Disposition', 'attachment; filename=' + fileName);
 
-  // Send the file for download
   res.download(path.resolve(fileName), (err) => {
     if (err) {
       console.log(err);
     }
   });
 }
-
-
 
 module.exports={
     adminIndex,

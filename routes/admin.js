@@ -14,14 +14,6 @@ const adminBannerController = require('../controller/bannerManagement')
 const upload = multer({ dest: 'uploads/' })
 
 
-// const adminController = require('../controller/user');
-
-
-// const port = process.env.PORT || 3000;
-
-// const urll = require('url');
-
-// const adminDB = require('../models/adminDB'); // Import the user database module
 
 const app = express();
 const router = express.Router();
@@ -34,20 +26,9 @@ app.use(methodOverride('_method'));
 //errror handling
 app.use(function(err, req, res, next) {
     console.error(err.stack); // errror stack
-    res.status(500).send('Something broke!'); 
+    res.status(404).render('admin/404page');
 });
 
-// app.use(function(req, res, next) {
-//     if (!req.session.uname) {
-//         res.setHeader('Cache-Control', 'no-cache,no-store,must-revalidate');
-//         // res.setHeader('Cache-Control', 'no-cache,no-store');
-//     }
-//     else{
-//         res.setHeader('Cache-Control', 'no-cache,no-store,must-revalidate');
-//         // res.setHeader('Cache-Control', 'no-cache,no-store');
-//     }
-//     next();
-// });
 app.use((req, res, next) => {
     res.set('Cache-Control', 'no-store')
     next()
@@ -68,7 +49,6 @@ router.get('/deleteproduct',adminController.adminDeleteProduct);
 router.get('/detailProduct',adminController.adminDetailProduct);
 router.get('/getProductDetails',adminController.adminDetailProduct);
 router.post('/updateproduct', adminController.adminUpdateProduct);
-// router.put('/updateproduct', adminController.adminUpdateProduct);
 
 //usermanangement
 router.get('/userManagement',adminController.adminUsermanage);
@@ -113,6 +93,10 @@ router.get('/excelconvert',adminDashboadController.excelDownload);
 router.get('/banner',adminBannerController.adminBanner);
 router.get('/addBanner',adminBannerController.adminAddBanner);
 router.post('/addBanner',adminBannerController.adminUploadBanner);
+router.get('/deletebanner',adminBannerController.adminBannerDelete);
+router.get('/unblockbanner',adminBannerController.adminUnblockBanner);
+router.get('/blockbanner',adminBannerController.adminBlockbanner);
+
 
 router.use((req,res)=>{
     res.redirect('./login');

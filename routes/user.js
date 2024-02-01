@@ -1,4 +1,3 @@
-// routes/userRoutes.js
 const express = require('express');
 const nodemailer = require('nodemailer');
 const router = express.Router();
@@ -11,24 +10,13 @@ const userFiltering = require('../controller/filtering');
 const wishlistController = require('../controller/wishlist');
 const downloadInvoice = require('../controller/downloadInvoice')
 
-// router.use( async (req,res,next)=>{
-//     console.log("reached-");
-//     console.log(req.session.email);
-//     if(await userController.isUserDeleted(req.session.email)){
-//         res.redirect('./logout');
-//     }
-//     next();
-// })
 const checkUserBlocked = async (req,res,next)=>{
-    // console.log("reached middelware");
     if(await functionController.isUserDeleted(req.session.email)){
         res.redirect('./logout');
     } else {
         next();
     }
 }
-
-
 
 router.get('/login',userController.userLogin);
 router.post('/submit',userController.userSubmit);
@@ -89,7 +77,8 @@ router.post("/removeFromWishlist",wishlistController.userRemoveFromWishlist);
 //wallet
 router.get('/wallet',checkUserBlocked,userProfileController.userWallet);
 
-
+//discount
+router.get('/checkDiscount',userController.discount);
 
 router.get('/logout',userController.userLogout);
 

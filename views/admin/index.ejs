@@ -196,9 +196,7 @@
                                 <h6 class="mb-0">Order status</h6>
                                 <div>
                                     <select diabled id="pieTime-filter">
-                                        <option value="weekly">Weekly</option>
-                                        <option value="monthly">Monthly</option>
-                                        <option value="yearly">Yearly</option>
+                                        <option value="weekly">ALL</option>
                                     </select>
                                 </div>
                             </div>
@@ -257,7 +255,7 @@
                                     PieChart(); 
                                 });
 
-                                PieChart(); 
+                                PieChart('weekly'); 
                             </script>
                             
                         </div>
@@ -271,11 +269,11 @@
                             <div class="d-flex align-items-center justify-content-between mb-4">
                                 <h6 class="mb-0">User Statistics</h6>
                                 <div>
-                                    <select id="time-filter">
+                                    <!-- <select id="time-filter">
                                         <option value="weekly">Weekly</option>
                                         <option value="monthly">Monthly</option>
                                         <option value="yearly">Yearly</option>
-                                    </select>
+                                    </select> -->
                                 </div>
                             </div>
                             <div class="table-responsive">

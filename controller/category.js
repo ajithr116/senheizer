@@ -1,11 +1,9 @@
 const Category = require('../models/category');
 
-const adminCategoryManage = async (req,res)=>{
+const adminCategoryManage = async (req,res,next)=>{
     try{
         if(req.session.aid){
-
             const uniqueCategories = await Category.find({});
-            // console.log("--",uniqueCategories);
             await res.render('admin/categoryManage', { categories: uniqueCategories });
         }
         else {
@@ -14,6 +12,7 @@ const adminCategoryManage = async (req,res)=>{
     }
     catch(err){
         console.log(err);
+        res.status(500).render('admin/404page');
     }
 }
 
@@ -21,11 +20,7 @@ const adminBlockCategory = async (req,res)=>{
     try{
         if(req.session.aid){
             const categoryID = req.query.categoryId;
-            // console.log("--block",categoryID);
-            // await adminDB.blockUser(userID);
             const user = await Category.updateOne({_id:categoryID}, { $set: { isDeleted: false } }, { new: true });
-            // const user = await User.findByIdAndUpdate(userID, { $set: { isDeleted: false } }, { new: true });
-
             await res.redirect('/admin/categoryManage');
         }
         else {
@@ -34,6 +29,7 @@ const adminBlockCategory = async (req,res)=>{
     }
     catch(err){
         console.log(err);
+        res.status(500).render('admin/404page');
     }
 }
 
@@ -41,8 +37,6 @@ const adminUnBlockCategory = async (req,res)=>{
     try{
         if(req.session.aid){
             const categoryID = req.query.categoryId;
-            // console.log("--unblock",categoryID);
-            // await adminDB.blockUser(userID);
             const category = await Category.updateOne({_id:categoryID}, { $set: { isDeleted: true } }, { new: true });
             await res.redirect('/admin/categoryManage');
         }
@@ -52,6 +46,7 @@ const adminUnBlockCategory = async (req,res)=>{
     }
     catch(err){
         console.log(err);
+        res.status(404).render('admin/404page');
     }
 }
 
@@ -59,9 +54,6 @@ const adminUnBlockCategory = async (req,res)=>{
 const adminCategory = async (req,res)=>{
     try{
         if(req.session.aid){
-
-            // const n = await adminDB.getUniqueCategories();
-
             await res.render('admin/addCategory');
         }
         else {
@@ -70,27 +62,20 @@ const adminCategory = async (req,res)=>{
     }
     catch(err){
         console.log(err);
+        res.status(404).render('admin/404page');
     }
 }
 
 const adminSubmitCategory = async (req,res)=>{
     try{
         if(req.session.aid){
-
-            // const n = await adminDB.getUniqueCategories();
-            // const newCategory = req.body.aCategory;
-            // const newCategoryDesc = req.body.aCategoryDesc;
-
             const{aCategory:newCategory,aCategoryDesc:newCategoryDesc}=req.body;
-
             const newUploadCategory = new Category({
                 name: newCategory,
                 description: newCategoryDesc
             });
     
             const savedCategory = await newUploadCategory.save();
-            // await adminDB.addCategory(newCategory);
-
             await res.render('admin/index');
         }
         else {
@@ -99,6 +84,7 @@ const adminSubmitCategory = async (req,res)=>{
     }
     catch(err){
         console.log(err);
+        res.status(404).render('admin/404page');
     }
 }
 

@@ -8,7 +8,7 @@ const bannerSchema = new mongoose.Schema({
     type: String,
     default:bannerId
   },
-  image: {
+  imageName: {
     type: String,
     required: true
   },
@@ -20,6 +20,9 @@ const bannerSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  linkType:{
+    type:String
+  },
   isBlocked: {
     type: Boolean,
     default: false
@@ -27,6 +30,10 @@ const bannerSchema = new mongoose.Schema({
   isDeleted: {
     type: Boolean,
     default: false
+  },
+  discountAmt:{
+    type:Number,
+    default:10
   },
   startDate: {
     type: Date,

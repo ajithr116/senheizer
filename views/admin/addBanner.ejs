@@ -134,21 +134,21 @@
                     <div class="col-sm-12 col-xl-12">
                         <div class="bg-light rounded h-100 p-4">
                             <h6 class="mb-4">Banner Form</h6>
-                            <form action="./addBanner" method="POST">
+                            <form action="./addBanner" method="POST" enctype="multipart/form-data">
 
                                 <div class="mb-3">
                                     <label for="image" class="form-label">Image URL</label>
-                                    <input style="width:50%" type="file" name="image" class="form-control" id="image" required autocomplete="off" required>
+                                    <input style="width:50%" type="file" name="image" class="form-control" id="image" required autocomplete="off" >
                                   </div>
                                   
                                   <div class="mb-3">
                                     <label for="description" class="form-label">Description</label>
-                                    <input style="width:50%" type="text" name="description" class="form-control" id="description" required autocomplete="off" required>
+                                    <input style="width:50%" type="text" name="description" class="form-control" id="description" required autocomplete="off" >
                                   </div>
                                   
                                   <div class="mb-3">
                                     <label for="linkType" class="form-label">Link Type</label>
-                                    <select style="width:50%" name="linkType" class="form-control" id="linkType" required>
+                                    <select style="width:50%" name="linkType" class="form-control" id="linkType" required >
                                       <option value="">Select...</option>
                                       <option value="product">Product</option>
                                       <option value="category">Category</option>
@@ -157,7 +157,7 @@
                                   
                                   <div class="mb-3" id="productDiv" style="display: none;">
                                     <label for="product" class="form-label">Product</label>
-                                    <select style="width:50%" name="product" class="form-control" id="product" required>
+                                    <select style="width:50%" name="product" class="form-control" id="product" >
                                         <% product.forEach(product =>{ %>
                                             <option value="<%= product._id %>"><%= product.name%></option>
                                         <%})%>
@@ -166,7 +166,7 @@
                                   
                                   <div class="mb-3" id="categoryDiv" style="display: none;">
                                     <label for="category" class="form-label">Category</label>
-                                    <select style="width:50%" name="category" class="form-control" id="category" required>
+                                    <select style="width:50%" name="category" class="form-control" id="category" >
                                         <% category.forEach(category=>{ %>
                                             <option value="<%= category.name %>"><%= category.name %></option>
                                         <% }) %>
@@ -181,7 +181,6 @@
                                           $('#productDiv').show();
                                           $('#categoryDiv').hide();
                                   
-                                          // Fetch the list of products from the database
                                           const products = getProducts();
                                           products.forEach(product => {
                                             $('#product').append(`<option value="${product.id}">${product.name}</option>`);
@@ -190,7 +189,6 @@
                                           $('#categoryDiv').show();
                                           $('#productDiv').hide();
                                   
-                                          // Fetch the list of categories from the database
                                           const categories = getCategories();
                                           categories.forEach(category => {
                                             $('#category').append(`<option value="${category.id}">${category.name}</option>`);
@@ -203,15 +201,19 @@
                                     });
                                   </script>
                                   
+                                  <div class="mb-3">
+                                    <label for="description" class="form-label">Amount to decrease</label>
+                                    <input style="width:50%" type="text" name="discountAmt" class="form-control" id="description" required autocomplete="off" >
+                                  </div>
                                   
                                   <div class="mb-3">
                                     <label for="startDate" class="form-label">Start Date</label>
-                                    <input style="width:50%" type="date" name="startDate" class="form-control" id="startDate" autocomplete="off">
+                                    <input style="width:50%" type="date" name="startDate" class="form-control" id="startDate" onchange="updateEndDateMin()" autocomplete="off">
                                   </div>
                                   
                                   <div class="mb-3">
                                     <label for="endDate" class="form-label">End Date</label>
-                                    <input style="width:50%" type="date" name="endDate" class="form-control" id="endDate" required autocomplete="off">
+                                    <input style="width:50%" type="date" name="endDate" required class="form-control" id="endDate" autocomplete="off">
                                   </div>
                                   
                                   <script>
@@ -220,11 +222,19 @@
                                     const mm = String(today.getMonth() + 1).padStart(2, '0'); 
                                     const yyyy = today.getFullYear();
                                   
-                                    const minDate = yyyy + '-' + mm + '-' + dd;
+                                    const currentDate = yyyy + '-' + mm + '-' + dd;
                                   
-                                    document.getElementById('startDate').min = minDate;
-                                    document.getElementById('endDate').min = minDate;
+                                    // Set the value of the startDate field to today's date
+                                    document.getElementById('startDate').value = currentDate;
+                                    document.getElementById('startDate').min = currentDate;
+                                    document.getElementById('endDate').min = currentDate;
+                                  
+                                    function updateEndDateMin() {
+                                      const startDate = document.getElementById('startDate').value;
+                                      document.getElementById('endDate').min = startDate;
+                                    }
                                   </script>
+                                  
                                   
                                   
                                   <div class="mb-3">

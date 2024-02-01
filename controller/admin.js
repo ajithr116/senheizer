@@ -39,7 +39,7 @@ const adminLogin = async (req, res) => {
         res.render('admin/login',{ error: error },(err, html) => {
             if (err) {
                 console.error(err);
-                res.status(500).send('Internal Server Error');
+                res.status(404).render('user/404page');
             } else {
                 res.send(html);
             }
@@ -119,7 +119,6 @@ const adminSubmit = async (req, res) => {
     }
 };
 
-
 const adminViewProducts = async (req, res) => {
     try {
       if (req.session.aid) {
@@ -132,9 +131,8 @@ const adminViewProducts = async (req, res) => {
     } catch (err) {
       console.log(err); 
     }
-  };
+};
   
-
 const adminAddProduct = async (req, res) => {
     try {
     if (req.session.aid) {
@@ -142,7 +140,7 @@ const adminAddProduct = async (req, res) => {
         res.render('admin/addProduct',{categories},(err, html) => {
         if (err) {
             console.error(err);
-            res.status(500).send('Internal Server Error');
+            res.status(404).render('user/404page');
         } else {
             res.send(html);
         }
@@ -155,11 +153,9 @@ const adminAddProduct = async (req, res) => {
     }
 };
 
-
-const adminUsermanage = async (req, res) => {
+const adminUsermanage = async (req, res, next) => {
     try {
     if (req.session.aid) {
-
         const usersdata = await User.find({});
         res.render('admin/userManagement', { users: usersdata });
     } else {
@@ -170,7 +166,6 @@ const adminUsermanage = async (req, res) => {
     }
 };
 
-// submit products 
 const adminSubmitProduct = async (req, res) => {
 
     try{
@@ -201,15 +196,13 @@ const adminSubmitProduct = async (req, res) => {
                 description: productDesc
               });
           
-              const savedProduct =  newProduct.save();
-            //   console.log("--",images)
-            // console.log(productName,'-',productBrand,'-',productCategory,'-',productPrice,'-',productDesc,'-',productQuantity,'-' , productTags,'-',images);
+            const savedProduct =  newProduct.save();
             res.redirect('/admin/viewProduct');
         });
     }
     catch(err){
         console.log(err);
-        res.status(500).send('intername server error ');
+        res.status(404).render('user/404page');
     }
 }
 
@@ -256,7 +249,6 @@ const adminSubmitProduct = async (req, res) => {
 
 //------------------------------------SENSITIVE || SENSITIVE ||  SENSITIVE-------------------------------------------
 
-
 const adminDeleteProduct = async (req,res)=>{
     try{
         if(req.session.aid){
@@ -287,6 +279,7 @@ const adminBlockUser = async (req,res)=>{
     }
     catch(err){
         console.log(err);
+        res.status(404).render('admin/404page');
     }
 }
 
@@ -296,12 +289,12 @@ const adminUnblockUser = async (req,res)=>{
         if(req.session.aid){
             const userID = req.query.user;
             console.log("--unblock",userID);
-            // await adminDB.unBlockUser(userID);
             const user = await User.updateOne({_id:userID}, { $set: { isDeleted: false } }, { new: true });
             await res.redirect('/admin/userManagement');
         }
         else {
             res.redirect('/admin/login');
+            res.status(404).render('admin/404page');
         }
     }
     catch(err){
@@ -360,12 +353,11 @@ const adminUpdateProduct = async (req,res)=>{
             // for (const image of req.files) {
             //   uploadedImages.push(image.filename);
             // }
-            const uploadedImages = req.files.map((file) => file.filename); // Extract filenames directly
+            const uploadedImages = req.files.map((file) => file.filename); 
 
-            const selectedImages = req.body.pppimages || []; // Handle potential empty array
+            const selectedImages = req.body.pppimages || []; 
             const combinedImages = [...selectedImages, ...uploadedImages];
     
-            // console.log(productID,"}-{",productName,'}-{',productBrand,'}-{',productCategory,'}-{',productPrice,'}-{',productDesc,'}-{',productQuantity,"}-{" , productTags,"}-{",combinedImages);
             Product.findByIdAndUpdate(productID, {
                 name: productName,
                 brand: productBrand,
@@ -378,7 +370,7 @@ const adminUpdateProduct = async (req,res)=>{
                 updatedAt: Date.now(), 
             })
             .then(updatedProduct => {
-                console.log('Product updated successfully:', updatedProduct);
+                console.log('Product updated successfully:');
             })
             .catch(error => {
                 console.error('Error updating product:', error);
@@ -387,14 +379,13 @@ const adminUpdateProduct = async (req,res)=>{
           });
       } catch (err) {
         console.log(err);
-        res.status(500).send('Internal server error');
+        res.status(500).render('user/404page');
     }
 }
 
 const adminUserDetails = async (req, res) => {
     if (req.session.aid) {
         const searchInput = req.query.searchInput;
-        console.log("searchInput ",searchInput);
         if (searchInput) {
             const user2 = await User.find({
             $or: [
@@ -402,12 +393,9 @@ const adminUserDetails = async (req, res) => {
                 { lastName: { $regex: searchInput, $options: 'i' } },
                 { email: { $regex: searchInput, $options: 'i' } },
             ],
-            })
-        
-        console.log("users data",user2[0]._id);
+        })
         const user = await User.findById(user2[0]._id).populate('address');
         res.render('admin/userdetails', { user });
-
         } else {
             const userId = req.query.userid;
             const user = await User.findById(userId).populate('address');
@@ -423,10 +411,8 @@ const adminDefault = async (req,res)=>{
     res.redirect('/admin/login');
 }
 module.exports = {
-    adminLogin,
-    adminSubmit,
-    adminIndex,
-    adminLogout,
+    adminLogin,adminSubmit,
+    adminIndex,adminLogout,
     adminViewProducts,
     adminAddProduct,
     adminSubmitProduct,

@@ -8,10 +8,10 @@ const adminOrders = async (req, res) => {
   if(req.session.aid){
     try {
       const orders = await Order.find().populate('userID').populate('items.productID').populate('shippingAddressID');
-
       res.render('admin/ordermanagement',{orders});
     } catch (err) {
       console.error(err);
+      res.status(404).render('admin/404page');
     }
   } else {
     res.redirect('/admin/login');
@@ -21,7 +21,6 @@ const adminOrders = async (req, res) => {
 const adminOrderDetails = async (req, res) => {
   if (req.session.aid) {
     const orderId = req.query.orderId;
-
     try {
       const order = await Order.findById(orderId).populate('userID shippingAddressID items.productID');
       const grandTotalWithoutTax = order.items.reduce((total, item) => total + item.quantity * item.price, 0);
@@ -34,6 +33,7 @@ const adminOrderDetails = async (req, res) => {
     
     } catch (err) {
       console.error('Error fetching order:', err);
+      res.status(404).render('admin/404page');
     }
   } else {
     res.redirect('/admin/login');
@@ -88,7 +88,6 @@ const adminUpdateStatus = async(req,res)=>{
     if(paymentId){    
       const refundableAmount = req.body.refundableAmount;
       const userId = req.body.userID;
-      // console.log("--",status,"--",orderId,"--",paymentId,"--",refundableAmount,"--",userId);
 
       var instance = new razorpay({
         key_id: process.env.KEY_ID,
@@ -129,6 +128,8 @@ const adminUpdateStatus = async(req,res)=>{
   } 
   catch (err) {
     console.error('Error updating order status:', err);
+    res.status(404).render('admin/404page');
+
   }
 }
 

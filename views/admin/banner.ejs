@@ -145,16 +145,36 @@
                                 <table id="yourTableId" class="table">
                                   <thead>
                                     <tr>
-                                      <th scope="col">ID</th>
-                                      <th scope="col">Name</th>
-                                      <th scope="col">Total items</th>
-                                      <th scope="col">Total</th>
+                                      <th scope="col">item</th>
+                                      <th scope="col">Desc</th>
+                                      <th scope="col">Start Date</th>
+                                      <th scope="col">End Date</th>
                                       <th scope="col">Status</th>
-                                      <th scope="col">More details</th>
+                                      <th scope="col">Delete</th>
                                     </tr>
                                   </thead>
                                   <tbody>
-                                    
+                                    <% banner.forEach(banner =>{%>
+                                    <tr>
+                                        <td><%= banner.linkType %></td>
+                                        <td><%= banner.description.substring(0, 15) + (banner.description.length > 15 ? '...' : '')  %></td>
+                                        <td><%= new Date(banner.startDate).toLocaleDateString() %></td>
+                                        <td><%= new Date(banner.endDate).toLocaleDateString() %></td>                                        
+                                        <td>
+                                            <% if(banner.isBlocked){ %>
+                                                <a href="./unblockbanner?bannerId=<%= banner._id%>" class="btn btn-danger px-3">Unblock</a>
+                                            <%}else if(banner.isBlocked==false){%>
+                                                <a href="./blockbanner?bannerId=<%= banner._id%>" class="btn btn-success px-4">Block</a>
+                                            <%}%>
+                                        </td>
+                                        <td><% if(banner.isDeleted){ %>
+                                            <a class="btn btn-warning" disabled>Deleted</a>
+                                            <%}else if(banner.isDeleted==false){%>
+                                                <a href="./deletebanner?bannerId=<%= banner._id%>" class="btn btn-danger">Delete</a>
+                                            <%}%>
+                                        </td>
+                                    </tr>
+                                    <%})%>
                                   </tbody>
                                 </table>
                                 <div id="pagination">

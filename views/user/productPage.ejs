@@ -148,7 +148,12 @@
                 <i class="fa fa-star-half-o"></i>
                 <span class="rating-count">(150+)</span>
               </p>
-              <p class="product-price">$<%= product.price %></p>
+              <div class="d-flex">
+                <p class="product-price px-3">$<%= product.price %></p>
+                <% if(banner){ %>
+                  <p  class="product-price" style="text-decoration: line-through;color:grey">$<%= banner.discountAmt + product.price %></p>
+                <%}%>
+              </div>
               <!-- <% if (product.tags) { %>
                 <% const tags = product.tags.split(','); %>
                 <div class="color-variants">
@@ -170,7 +175,6 @@
                   <p>No color variants available.</p>
                 <% } %>
                 
-
                 <!-- <div class="swatch" data-color="red" style="background-color: #ff0000;"></div>
                 <div class="swatch" data-color="blue" style="background-color: #0000ff;"></div>
                 <div class="swatch" data-color="green" style="background-color: #008000;"></div>
@@ -193,19 +197,11 @@
 
                 function handleSwatchClick(event) {
                     const selectedSwatch = event.target; // Get the clicked swatch
-
-                    // Remove active class from all swatches
                     swatches.forEach(swatch => swatch.classList.remove('active'));
-
-                    // Add active class to the selected swatch
                     selectedSwatch.classList.add('active');
-
-                    // Get the selected color value from the data-color attribute
                     const selectedColor = selectedSwatch.dataset.color;
-
-                    // Do something with the selected color, e.g., display it, update a product image, etc.
                     console.log('Selected color:', selectedColor);
-                    }
+                  }
 
               </script>
               <!-- <a href="/addtocart?productId=<%= product._id %>" class="btn btn-outline-dark addto cart px-5">Add to cart</a> -->

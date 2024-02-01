@@ -21,7 +21,6 @@ const addToCart = async (req, res) => {
 
     if (!user || !product) {
       console.log('User or product not found');
-      // return res.status(404).send('User or product not found');
     }
 
     const existingCartItem = user.cart.find((item) => item.productID.toString() === productId);
