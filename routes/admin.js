@@ -102,6 +102,4 @@ router.use((req,res)=>{
     res.redirect('./login');
 });
 
-
-
-module.exports = router;        //exporitng the router 
+module.exports = router;     

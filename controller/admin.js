@@ -405,7 +405,7 @@ const adminUserDetails = async (req, res) => {
       res.redirect('/admin/login');
     }
 };
-  
+
 
 const adminDefault = async (req,res)=>{
     res.redirect('/admin/login');

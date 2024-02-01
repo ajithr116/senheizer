@@ -1,22 +1,16 @@
-// const PDFDocument = require('pdfkit');
 const PDFDocument = require('pdfkit-table');
 const ExcelJS = require('exceljs');
 const path = require('path');
-
-
 const fs = require('fs');
 
 const User = require('../models/user');
 const Product = require('../models/products');
 const Order = require('../models/orders');
 const Category = require('../models/category');
-// const Offer = require('../models/offers');
 const Address = require('../models/address');
-
 const getUserStats = require('../utils/userstate');
 const getOrderStats = require('../utils/orderstat');
 const add = require('moments/lib/add');
-
 
   
 const adminIndex = async (req, res) => {
@@ -25,12 +19,11 @@ const adminIndex = async (req, res) => {
       const totalProducts = await Product.countDocuments();
       const totalRevenue = await Order.aggregate([{ $group: { _id: null, totalRevenue: { $sum: '$totalPrice' } } }]).then(result => result[0].totalRevenue); //then is usgin to handle async operations 
       const totalSales = await Order.countDocuments();
-  
+
       //WEeekly stats
       const totalUsersCount = await User.countDocuments({});
       const userStats = await getUserStats();
 
- 
       const districtWiseOrderCounts = await Order.aggregate([
         {
           $lookup:{
@@ -119,6 +112,7 @@ const salesReport2 = async (req, res) => {
   }
   catch(err){
     console.error(err);
+    res.status(404).render('admin/404page');
   }
 }
 
@@ -155,6 +149,7 @@ const salesRavenue = async(req,res)=>{
   }
   catch(err){
     console.error(err);
+    res.status(404).render('admin/404page');
   }
 }
 
@@ -340,7 +335,6 @@ const excelDownload = async(req, res) => {
   //-------------------------------
   const weeklyOrdersSheet = workbook.addWorksheet('Orders');
 
-  // Add weekly order data as before
   const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   weeklyOrdersSheet.addRow(['Weekly Order Summary']);
   weeklyOrdersSheet.addRow(['Day of Week', 'Total Sales', 'Count']);
@@ -350,8 +344,8 @@ const excelDownload = async(req, res) => {
     weeklyOrdersSheet.addRow([day, matchingItem ? matchingItem.totalSales : 0, matchingItem ? matchingItem.count : 0]);
   });
   //---------------------
-  weeklyOrdersSheet.addRow([]); // Add an empty row for spacing
-  weeklyOrdersSheet.addRow([]); // Add another empty row for spacing
+  weeklyOrdersSheet.addRow([]); 
+  weeklyOrdersSheet.addRow([]); 
 
   weeklyOrdersSheet.addRow(['Monthly Order Summary']);
   weeklyOrdersSheet.addRow(['Month', 'Count']);
