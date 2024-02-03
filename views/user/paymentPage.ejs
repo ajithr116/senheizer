@@ -270,9 +270,9 @@
                               "description": "Order Description",
                               "order_id": orderId,
                               "handler": function(response) {
-                                alert(response.razorpay_payment_id);
-                                alert(response.razorpay_order_id);
-                                alert(response.razorpay_signature); 
+                                // alert(response.razorpay_payment_id);
+                                // alert(response.razorpay_order_id);
+                                // alert(response.razorpay_signature); 
                                 
                                 $.ajax({
                                     url: '/verifypaymentR',
@@ -288,7 +288,7 @@
                                 }).done(function(serverResponse) {
 
                                     if (serverResponse.success) {
-                                        alert("Payment verified successfully!");
+                                        // alert("Payment verified successfully!");
                                         // alert("orderID "+serverResponse.orderID);
                                         window.location.href = '/ordersuccess'; 
                                     } else {

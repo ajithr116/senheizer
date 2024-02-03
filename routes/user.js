@@ -6,8 +6,8 @@ const userPasswordSettingsController = require('../controller/userPasswordSettin
 const functionController = require('../userFunctions/usersFun');
 const userProfileController = require('../controller/userProfile');
 const addToCartController = require('../controller/cartAndOrders');
-const userFiltering = require('../controller/filtering');
-const wishlistController = require('../controller/wishlist');
+// const userFiltering = require('../controller/filtering');
+// const wishlistController = require('../controller/wishlist');
 const downloadInvoice = require('../controller/downloadInvoice')
 
 const checkUserBlocked = async (req,res,next)=>{
@@ -69,10 +69,6 @@ router.get('/deleteorder',addToCartController.userDeleteOrder);
 router.get('/ordersuccess',checkUserBlocked,addToCartController.orderSuccessPage);
 router.get('/downloadinvoice',downloadInvoice.userDownloadInvoice);
 // router.get('/products/filter',userFiltering.userFiltering)
-
-//wishlist 
-router.post("/addToWishlist",wishlistController.userAddToWishlist);
-router.post("/removeFromWishlist",wishlistController.userRemoveFromWishlist);
 
 //wallet
 router.get('/wallet',checkUserBlocked,userProfileController.userWallet);
