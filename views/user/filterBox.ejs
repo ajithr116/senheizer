@@ -22,10 +22,10 @@
                 </div>
             </form>
               <form action="/products?color&min&max&brand&category2" method="get">
-                <h5>Category</h5>
+                <!-- <h5>Category</h5> -->
                 <select class="form-control" name="category2">
                   <option value="">Select a category</option> <% category.forEach(category => { %>
-                    <option value="<%= category.name %>"><%= category.name %></option>
+                    <option value="<%= category._id %>"><%= category.name %></option>
                   <% }) %>
                 </select>
                 
@@ -39,7 +39,6 @@
             <h6 class="title">Colors</h6>
           </a>
         </header>
-<!--    -->
           <% const uniqueColors = []; %>
           <% product2.forEach(product => {
             const colorTags = product.tags.split(',');

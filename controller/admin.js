@@ -1,24 +1,14 @@
-const express = require("express");
-const sharp = require('sharp');
-const path = require('path');
-const os = require('os'); 
-const fs = require('fs'); 
-const bcrypt = require('bcrypt');
-const saltRounds = 10;
 
 const User = require('../models/user'); 
 const Product = require('../models/products'); 
 const Category = require('../models/category');
 const multer  = require('multer');
 
-
-
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, 'C:\\Users\\ASUS\\OneDrive\\Desktop\\week 8.1\\public\\uploads\\');
     },
     filename: function (req, file, cb) {
-        // Generattind unique file name
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
         const filename = file.fieldname + '-' + uniqueSuffix + '.' + file.originalname.split('.').pop();
         cb(null, filename);
@@ -77,59 +67,52 @@ const adminSubmit = async (req, res) => {
     }
     else{
         try {
-            // password = await bcrypt.hash(password, saltRounds);
-
             if (!reEmail.test(email)) {
-
                 req.session.error = 1; // Email format error
                 res.redirect('/admin/login');
             } else if (!rePassword.test(password)) {
-
                 req.session.error = 3; // Password format error
                 res.redirect('/admin/login');
             } 
             else {
-                    const user = await User.findOne({email});
-                    if(user && user.isAdmin){
-
-                        if(user && user.password==password){
-                            
-                            const user1 = await User.findOne({email});
-
-                            req.session.aid = user._id;
-                            req.session.name = user.name;
-                            console.log("email and password match");
-                            res.redirect('/admin/loginSuccess'); // Redirect to success page
-                        }
-                        else{
-                            req.session.error = 4; // Authentication failed
-                            res.redirect('/admin/login');
-                        }
+                const user = await User.findOne({email});
+                if(user && user.isAdmin){
+                    if(user && user.password==password){
+                        const user1 = await User.findOne({email});
+                        req.session.aid = user._id;
+                        req.session.name = user.name;
+                        res.redirect('/admin/loginSuccess'); // Redirect to success page
                     }
                     else{
-                        req.session.error = 2; // Authentication failed
+                        req.session.error = 4; // Authentication failed
                         res.redirect('/admin/login');
                     }
+                }
+                else{
+                    req.session.error = 2; // Authentication failed
+                    res.redirect('/admin/login');
+                }
             }
         }
         catch(err){
             console.error(err);
-            res.status(500).send('Internal Server Error');
+            res.status(500).render('admin/404page');
         }
     }
 };
 
 const adminViewProducts = async (req, res) => {
     try {
-      if (req.session.aid) {
-        const products2 = await Product.find({}).populate('category')
-        res.render('admin/viewProduct', { products: products2 });
-      } 
-      else {
-        res.redirect('/admin/login');
-      }
+        if (req.session.aid) {
+            const products2 = await Product.find({}).populate('category')
+            res.render('admin/viewProduct', { products: products2 });
+        } 
+        else {
+            res.redirect('/admin/login');
+        }
     } catch (err) {
-      console.log(err); 
+        console.error(err); 
+        res.status(500).render('admin/404page');
     }
 };
   
@@ -202,7 +185,7 @@ const adminSubmitProduct = async (req, res) => {
     }
     catch(err){
         console.log(err);
-        res.status(404).render('user/404page');
+        res.status(500).render('admin/404page');
     }
 }
 
@@ -263,6 +246,7 @@ const adminDeleteProduct = async (req,res)=>{
     }
     catch(err){
         console.log(err);
+        res.status(500).render('admin/404page');
     }
 }
 const adminBlockUser = async (req,res)=>{
@@ -279,7 +263,7 @@ const adminBlockUser = async (req,res)=>{
     }
     catch(err){
         console.log(err);
-        res.status(404).render('admin/404page');
+        res.status(500).render('admin/404page');
     }
 }
 
@@ -299,6 +283,7 @@ const adminUnblockUser = async (req,res)=>{
     }
     catch(err){
         console.log(err);
+        res.status(500).render('admin/404page');
     }
 }
 
@@ -306,17 +291,11 @@ const adminUnblockUser = async (req,res)=>{
 const adminDetailProduct = async (req,res)=>{
     try{
         if(req.session.aid){
-
             const productID = req.query.product;
-            // const product = await adminDB.getProductDetails(productID);
-
             const product = await Product.findById({_id:productID})
             const product2 = await Product.findById({_id:productID}).populate('category');
             const categories = await Category.find(); // Fetch all categories
-
-            // console.log("---",product);
             res.render('admin/productDetails', { product ,proID:productID,product2,categories});
-            // await res.render('admin/productDetails');
         }
         else {
             res.redirect('/admin/login');
@@ -339,7 +318,6 @@ const adminLogout  = async (req,res)=>{
 
 const adminUpdateProduct = async (req,res)=>{
     try {
-        console.log("reached ");
         upload.array('pImages')
         (req,res,(err)=>{
             if(err){
@@ -379,7 +357,7 @@ const adminUpdateProduct = async (req,res)=>{
           });
       } catch (err) {
         console.log(err);
-        res.status(500).render('user/404page');
+        res.status(500).render('admin/404page');
     }
 }
 
@@ -406,10 +384,10 @@ const adminUserDetails = async (req, res) => {
     }
 };
 
-
 const adminDefault = async (req,res)=>{
     res.redirect('/admin/login');
 }
+
 module.exports = {
     adminLogin,adminSubmit,
     adminIndex,adminLogout,
@@ -425,7 +403,4 @@ module.exports = {
     adminUnblockUser,
     adminUserDetails,
 };
-
-
-
 

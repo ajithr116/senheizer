@@ -114,7 +114,7 @@
                         </div>
                     </div> -->
                     <a href="/orders" class="nav-item nav-link">Orders</a>
-                    <a href="https://www.google.com" class="nav-item nav-link">Wishlist</a>
+                    <!-- <a href="https://www.google.com" class="nav-item nav-link">Wishlist</a> -->
                     <!-- <a href="https://www.google.com" class="nav-item nav-link">Contact Us</a> -->
                     <a href="/profile" class="nav-item nav-link rounded " >Profile</a>
                 </div>
@@ -153,7 +153,7 @@
                       <p><%= item.product.brand %></p>
                     </div>
                     <div>
-                      <p><b>Price</b>: $ <%= item.product.price %></p>
+                      <p><b>Price</b>: ₹ <%= item.product.price %></p>
                       <!-- <button class="quantity-btn btn-primary" data-action="decrease" style="border:none">-</button>
                       <input type="number" value="<%= item.quantity %>" readonly style="width:40px;border:none">
                       <button class="quantity-btn btn-primary" data-action="increase" style="border:none">+</button> -->
@@ -232,13 +232,13 @@
             <div class="summary " style="border-radius: 30px;background-color: rgb(223, 219, 219);">
               <h3>Grand total</h3>
               <hr style="background-color: black;">
-              <p>Subtotal: $ <b id="subTotal"><%= subtotal.toFixed(2) %></b></p>
-              <p>Tax: $ <b id="tax"><%= tax.toFixed(2) %></b></p>
-              <p>Shipping: $ <b style="background-color: rgb(105, 255, 105);"> FREE SHIPPING</b></p>
+              <p>Subtotal: ₹ <b id="subTotal"><%= subtotal.toFixed(2) %></b></p>
+              <p>Tax: ₹ <b id="tax"><%= tax.toFixed(2) %></b></p>
+              <p>Shipping: ₹ <b style="background-color: rgb(105, 255, 105);"> FREE SHIPPING</b></p>
               <!-- <input type="text" style='border-radius: 10px; border:none;' placeholder=" COUPON CODE"> -->
               <hr style="background-color: black;">
 
-              <p>Total: $ <b><%= total.toFixed(2) %></b></p>
+              <p>Total: ₹ <b><%= total.toFixed(2) %></b></p>
               
               <% if(total.toFixed(2)!=0) {%>
                 <a href="/checkout"><button class="btn btn-dark" >Checkout</button></a>
@@ -259,11 +259,11 @@
         <div class="footer-content">
           <div class="footer-section about">
             <h2>About Us</h2>
-            <p>Your company description goes here.</p>
+            <p>SENHEIZER.</p>
           </div>
           <div class="footer-section contact">
             <h2>Contact Us</h2>
-            <p>Email: example@example.com<br>Phone: +123 456 7890</p>
+            <p>Email: ajith8593935904@gamil.com<br>Phone: 8593935903</p>
             <!-- Add two textboxes and one button -->
             <div class="contact-form">
               <input type="text" placeholder="Your Name">
@@ -278,7 +278,7 @@
           </div>
         </div>
         <div class="footer-bottom">
-          <p>&copy; 2023 Your Website. All rights reserved.</p>
+          <p>&copy; 2023 SENHEIZER. All rights reserved.</p>
         </div>
       </footer>
     <!-- Footer End -->

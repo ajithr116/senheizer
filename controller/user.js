@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const nodemailer = require('nodemailer');
-require('dotenv').config();
-
+const bcrypt = require('bcrypt');
 const User = require('../models/user'); 
 const Product = require('../models/products');
 const Address = require('../models/address'); 
@@ -9,21 +8,22 @@ const Category = require("../models/category");
 const userController = require('../userFunctions/usersFun');
 const Wishlist = require('../models/wishlist');
 const Banner = require('../models/banner');
+const saltRounds = 10;
 
 
-// mongoose.connect(process.env.MONGODB_ADDRESS)
-//   .then(() => console.log('Connected to MongoDB'))
-//   .catch(err => console.error('Error connecting to MongoDB:', err));
+require('dotenv').config();
 
 const userLogin =  async (req, res, next) => {
   if (req.session.uid) {
-      res.redirect('/index'); 
+    res.redirect('/index'); 
   } 
   else {
-      const error = req.session.error;
-      req.session.error = null;
-      res.render('user/login', {error:error});
-  }
+  const error = req.session.error;
+  req.session.error = null;
+  req.session.step='';
+  req.session.StepLogin=1;
+  res.render('user/login', {error:error});
+}
 };
 
 const userSubmit = async(req,res,next)=>{
@@ -32,61 +32,67 @@ const userSubmit = async(req,res,next)=>{
   var rePassword = /^(?=.*[A-Z])(?=.*\W).{8,}$/;
     
   if(req.session.uid){
-      res.redirect('/home'); 
+    res.redirect('/home'); 
   }
   else{
     try{
-        if(true){
-            const exists = await userController.checkEmailExist(email);     //function to find email exists or not
-                if (exists) {
-                    const isBlocked = await userController.isUserDeleted(email);
-                    if(isBlocked==true){
-                      req.session.error = 5 // email blocked
-                      res.redirect('/login');
-                    }else{
-                        if(rePassword.test(password)){
-                            req.session.email=email;
-                            const user = await userController.authenticateUser(email,password);
-                            if(user){
-                                req.session.uid=user._id;
-                                req.session.email=email;
-                                console.log("successfully logged in");
-                                res.redirect('./index');
-                            }
-                            else{
-                                req.session.error = 4 // email and password not match
-                                res.redirect('/login');
-                            }
-                        }
-                        else{
-                          req.session.error = 3 // password 3 not the match the format
-                          res.redirect('/login');
-                        }
-                    }
-                } 
-                else {
-                  req.session.error = 2 // Error code 3 email does not exists
-                  res.redirect('/login');
-                }
+      if(true){
+        const exists = await userController.checkEmailExist(email);     //function to find email exists or not
+        if (exists) {
+          const isBlocked = await userController.isUserDeleted(email);
+          if(isBlocked==true){
+            req.session.error = 5 // email blocked
+            res.redirect('/login');
+          }else{
+            if(rePassword.test(password)){
+              req.session.email=email;
+              const user = await userController.authenticateUser(email,password);
+              if(user){
+                req.session.uid=user._id;
+                req.session.email=email;
+                console.log("successfully logged in");
+                res.redirect('./index');
+              }
+              else{
+                req.session.error = 4 // email and password not match
+                res.redirect('/login');
+              }
             }
             else{
-              req.session.error = 1 // Error code 3 regular expression not mathch
+              req.session.error = 3 // password 3 not the match the format
               res.redirect('/login');
             }
+          }
+        } 
+        else {
+          req.session.error = 2 // Error code 3 email does not exists
+          res.redirect('/login');
         }
-        catch(err){
-          next(err);
-        }
+      }
+      else{
+        req.session.error = 1 // Error code 3 regular expression not mathch
+        res.redirect('/login');
+      }
     }
+    catch(err){
+      next(err);
+    }
+  }
 };
 
 const userSignup = async (req,res)=>{
   if (req.session.uid) {
     res.redirect('/index'); 
   } else {
-    const error = req.session.error;
-    req.session.error = null;
-    res.render('./user/signup',{ error: error });
+    if(req.session.StepLogin==1){
+      req.session.step='';
+      const error = req.session.error;
+      req.session.error = null;
+      res.render('./user/signup',{ error: error });
+    }
+    else{
+      res.redirect('/login'); 
+    }
   }
 };
 
@@ -95,7 +101,6 @@ const userSubmitForm = async(req,res,next)=>{
   const nameRegex = /^[a-zA-Z]{1,30}$/;    //only alphabet and upto 30 
   var rePassword = /^(?=.*[A-Z])(?=.*\W).{8,}$/;
   const reEmail = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
-
   const {uFirstName: firstName,uLastName: lastName,uEmail: email,uPassword: password,uConfirmPassword: confirmPassword,uPhoneNo:phoneNumber} = req.body;
     
   try{
@@ -103,79 +108,82 @@ const userSubmitForm = async(req,res,next)=>{
         res.redirect('/index'); 
       }
       else{
-          if(nameRegex.test(firstName) && nameRegex.test(lastName)|| req.session.check){
-              if(true || req.session.check){
-                const exists2 = await userController.checkEmailExist(email);     //function to find email exists or not
-                if(exists2){
-                    req.session.error=3;    //email exists
-                    res.redirect('/signup');
-                }
-                else{
-                    if(rePassword.test(password) || req.session.check){
-                        if(password==confirmPassword){
-                            req.session.rFirstName = firstName;
-                            req.session.rLastName = lastName;
-                            req.session.rEmail = email;
-                            req.session.rPassword = password;
-                            req.session.rPhoneNumber = phoneNumber;
-                            req.session.oneTimeAccess = 1;
-                            req.session.check=true;
-
-                            var val = Math.floor(1000 + Math.random() * 9000);
-                            req.session.randomNumber=val;
-
-                            console.log("all good");
-
-                            const transporter = nodemailer.createTransport({
-                                service: 'gmail',
-                                auth: {
-                                    user: process.env.EMAIL_ADDRESS,
-                                    pass: process.env.PASS
-                                }
-                            });
-                            
-                            console.log('rEmail' , req.session.rEmail);
-                            const mailOptions = {
-                                from: 'ajith8593935904@gmail.com',
-                                to: req.session.rEmail,
-                                subject: 'Your OTP Verification Code',
-                                text: `Your OTP is: ${val}`
-                            };
-                            console.log("sended");
-
-                            transporter.sendMail(mailOptions, (error, info) => {
-                                if (error) {
-                                    console.error(error);
-                                } else {
-                                    console.log('Email sent:', info.response);
-                                }
-                            });
-                            res.render('user/otp',{email:req.session.rEmail});
-                        }
-                        else{
-                            req.session.error=5;    //password confirm fail
-                            res.redirect('/signup');
-                        }
-                    }
-                    else{
-                        req.session.error=4;    //password format
-                        res.redirect('/signup');
-                    }
-                }
+        if(nameRegex.test(firstName) && nameRegex.test(lastName)|| req.session.check){
+          if(true || req.session.check){
+            const exists2 = await userController.checkEmailExist(email);     //function to find email exists or not
+            if(exists2){
+              req.session.error=3;    //email exists
+              res.redirect('/signup');
             }
             else{
-                req.session.error=2;    //emial format
+              if(rePassword.test(password) || req.session.check){
+                if(password==confirmPassword){
+
+                  const hashedPassword = await bcrypt.hash(password, saltRounds);
+                  req.session.rFirstName = firstName;
+                  req.session.rLastName = lastName;
+                  req.session.rEmail = email;
+                  req.session.rPassword = hashedPassword;
+                  req.session.rPhoneNumber = phoneNumber;
+                  req.session.oneTimeAccess = 1;
+                  req.session.check=true;
+
+                  var val = Math.floor(1000 + Math.random() * 9000);
+                  req.session.randomNumber=val;
+
+                  console.log("all good");
+
+                  const transporter = nodemailer.createTransport({
+                    service: 'gmail',
+                    auth: {
+                      user: process.env.EMAIL_ADDRESS,
+                      pass: process.env.PASS
+                    }
+                  });
+                    
+                  console.log('rEmail' , req.session.rEmail);
+                  const mailOptions = {
+                    from: 'ajith8593935904@gmail.com',
+                    to: req.session.rEmail,
+                    subject: 'Your OTP Verification Code',
+                    text: `Your OTP is: ${val}`
+                  };
+                  console.log("sended");
+
+                  transporter.sendMail(mailOptions, (error, info) => {
+                    if (error) {
+                      console.error(error);
+                    } else {
+                      console.log('Email sent:', info.response);
+                    }
+                  });
+                  res.render('user/otp',{email:req.session.rEmail});
+                }
+                else{
+                  req.session.error=5;    //password confirm fail
+                  res.redirect('/signup');
+                }
+              }
+              else{
+                req.session.error=4;    //password format
                 res.redirect('/signup');
+              }
             }
           }
-        else{
-            req.session.error=1;    //first name and last name need alphabet
+          else{
+            req.session.error=2;    //emial format
             res.redirect('/signup');
+          }
         }
+      else{
+        req.session.error=1;    //first name and last name need alphabet
+        res.redirect('/signup');
+      }
     }
   }
   catch(err){
     next(err);
+    res.status(404).render('user/404page');
   }
 };
 
@@ -186,28 +194,28 @@ const userSubmitForm2 = async (req,res,next)=>{
     console.log("--resended with otp ",req.session.randomNumber);
   
     const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: process.env.EMAIL_ADDRESS,
-            pass: process.env.PASS
-        }
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_ADDRESS,
+        pass: process.env.PASS
+      }
     });
       
     console.log('rEmail' , req.session.rEmail);
     const mailOptions = {
-        from: process.env.EMAIL_ADDRESS,
-        to: req.session.rEmail,
-        subject: 'Your OTP Verification Code',
-        text: `Your OTP is: ${val}`
+      from: process.env.EMAIL_ADDRESS,
+      to: req.session.rEmail,
+      subject: 'Your OTP Verification Code',
+      text: `Your OTP is: ${val}`
     };
     console.log("sended");
   
     transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            console.error(error);
-        } else {
-            console.log('Email sent:', info.response);
-        }
+      if (error) {
+          console.error(error);
+      } else {
+          console.log('Email sent:', info.response);
+      }
     });
     res.render('user/otp',{email:req.session.rEmail});
   }
@@ -219,20 +227,19 @@ const userOtpVerify = async(req,res)=>{
     console.log("--resended-- with otp ",req.session.randomNumber);
     console.log("otp" , d1)
     if(d1==req.session.randomNumber){
-        const rFirstName = req.session.rFirstName;
-        const rLastName = req.session.rLastName;
-        const rEmail = req.session.rEmail;
-        const rPassword =  req.session.rPassword;
-        const rPhoneNumber =  req.session.rPhoneNumber;
+      const rFirstName = req.session.rFirstName;
+      const rLastName = req.session.rLastName;
+      const rEmail = req.session.rEmail;
+      const rPassword =  req.session.rPassword;
+      const rPhoneNumber =  req.session.rPhoneNumber;
 
-        const upload = await userController.insertUserData(rFirstName,rLastName,rEmail,rPassword,rPhoneNumber)
-        console.log("upload = ",upload);
+      const upload = await userController.insertUserData(rFirstName,rLastName,rEmail,rPassword,rPhoneNumber)
 
-        req.session.destroy((err) => {
-            console.log("---otp successfull");
-        })
-        res.render('user/otp',{otpWrong:true,email:rEmail});
-    }
+      req.session.destroy((err) => {
+          console.log("---otp successfull");
+      })
+      res.render('user/otp',{otpWrong:true,email:rEmail});
+  }
     else{
         console.log("wrong otp");
         res.render('user/otp',{otpWrong:false,email:req.session.rEmail});
@@ -252,54 +259,52 @@ const userIndex = async(req,res)=>{
   } 
   else {
     res.redirect('/login');
-  }
+  } 
 };
 
 const userProducts = async (req, res) => {
+  try{
     if (req.session.uid) {
     let product = await userController.getAllProductPage();
     let product2 = await userController.getAllProductPage();
     const category = await Category.find({ isDeleted: false });
-  
     const { brand, maxPrice, color, category2 } = req.query;
-    // const searchQuery = req.body.search;
     const searchQuery = req.query.search; 
-    console.log("--",brand,"--",maxPrice,"--",color,"--",category2,"--",searchQuery);
-
+    
     if (brand) {
-        product = product.filter(product => brand.includes(product.brand));
+      product = product.filter(product => brand.includes(product.brand));
     }
     
     if (maxPrice) {
-        product = product.filter(product => product.price <= maxPrice);
+      product = product.filter(product => product.price <= maxPrice);
     }
     
     if (color) {
-        let colorArray;
-        if (typeof color === 'string') {
-            colorArray = color.split(',').map(c => c.trim().toLowerCase());
-        } else if (Array.isArray(color)) {
-            colorArray = color.map(c => c.trim().toLowerCase());
-        }
-        product = product.filter(product => {
-            const productColors = product.tags.split(',').map(tag => tag.trim().toLowerCase());
-            return colorArray.some(c => productColors.includes(c));
-        });
+      let colorArray;
+      if (typeof color === 'string') {
+          colorArray = color.split(',').map(c => c.trim().toLowerCase());
+      } else if (Array.isArray(color)) {
+          colorArray = color.map(c => c.trim().toLowerCase());
+      }
+      product = product.filter(product => {
+          const productColors = product.tags.split(',').map(tag => tag.trim().toLowerCase());
+          return colorArray.some(c => productColors.includes(c));
+      });
     }
     
     if (category2) {
-        const populatedProducts = await Product.find({}).populate('category');
-        product = populatedProducts.filter(product => product.category.name === category2);
+      product = await Product.find({ category: category2 });
     }
+    
     if (searchQuery) {
-        product = product.filter(product => {
-        return (
-            product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            product.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            product.tags.toLowerCase().includes(searchQuery.toLowerCase())||
-            product.brand.toLowerCase().includes(searchQuery.toLowerCase())
-            );
-        });
+      product = product.filter(product => {
+      return (
+        product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        product.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        product.tags.toLowerCase().includes(searchQuery.toLowerCase())||
+        product.brand.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+      }); 
     }
 
     const today = new Date();
@@ -307,58 +312,59 @@ const userProducts = async (req, res) => {
 
     res.render('user/products', { products: product, category,product2:product2,banners});
     } else {
-      res.redirect('/login');
+      res.redirect('/login'); 
     }
+  }
+  catch(err){
+    console.error(err.message);
+    res.status(404).render('user/404page');
+  }
 };
 
 const userProductPage = async(req,res)=>{
   if (req.session.uid) {
-
-      const productId = req.query.productId;
-      const product1 = await userController.getProductDetails(productId);
-      const banner = await Banner.findOne({link:productId});
-      console.log(banner,"--")
-      res.render('user/productPage',{ product:product1 ,proID:productId,banner});
-      
+    const productId = req.query.productId;
+    const product1 = await userController.getProductDetails(productId);
+    const banner = await Banner.findOne({link:productId});
+    res.render('user/productPage',{ product:product1 ,proID:productId,banner});
   } 
   else {
-      res.redirect('/login');
+    res.redirect('/login');
   }
 };
 
-const userLogout = async (req,res,next)=>{
+const userLogout = async (req,res,next)=>{ 
   try{
-    req.sesion.uid='';
+    req.session.uid='';
     res.redirect('./login');
   }
   catch(err){
     next(err);
+    res.status(404).render('user/404page');
   }
 };
 
 const discount = async(req,res,next)=>{
-    const productId = req.query.productId;
-    const categoryId = req.query.categoryId;
-    var products;
-    console.log(categoryId,"+",productId,"+");
-    try {
-        const discounts = await Banner.find({});
-        let productDiscount = 0;
-        let categoryDiscount = 0;
-        discounts.forEach(async discount => {
-            if (discount.linkType === 'product' && discount.link == productId) {
-                productDiscount = discount.discountAmt;
-            }
-            if (discount.linkType === 'category') {
-                products = await Product.findOne({ category: categoryId });
-            }
-        });
-        console.log(products);
-        res.json({ productDiscount, categoryDiscount });
-    } catch (error) {
-        console.error(error);
-        res.status(404).render('user/404page');
-    }
+  const productId = req.query.productId;
+  const categoryId = req.query.categoryId;
+  var products;
+  try {
+    const discounts = await Banner.find({});
+    let productDiscount = 0;
+    let categoryDiscount = 0;
+    discounts.forEach(async discount => {
+      if (discount.linkType === 'product' && discount.link == productId) {
+        productDiscount = discount.discountAmt;
+      }
+      if (discount.linkType === 'category') {
+        products = await Product.findOne({ category: categoryId });
+      }
+    });
+    res.json({ productDiscount, categoryDiscount });
+  } catch (error) {
+    console.error(error);
+    res.status(404).render('user/404page');
+  }
 }
 
 module.exports = {

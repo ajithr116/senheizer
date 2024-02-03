@@ -72,8 +72,6 @@ app.use((req,res)=>{
     res.redirect('./login');
 });
 
-//---------------------------------------------- route over --------------------------------------------------------------
-
 app.listen( process.env.PORT || 3000 , () => {
     console.log( "Server started successfully" );
 }) 

@@ -1,10 +1,11 @@
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
+
 const userController = require('../userFunctions/usersFun');
 const User = require('../models/user');
 
 const userForgotpassword  = async(req,res)=>{
-
-    // req.session.randomNumber=null;
-
+    req.session.randomNumber=null;
     res.render('user/forgotpassword');
 }
 
@@ -13,7 +14,6 @@ const userForgetPasswordEmail = async(req,res)=>{
     const {email:userEmail} = req.body;
     req.session.email = userEmail;
     const user = await userController.checkEmailExist(userEmail);
-    // console.log("--",user);
     if(!user){
         req.flash('error', 'Email does not exist');
         return res.redirect('/forgotpassword');
@@ -32,7 +32,7 @@ const userPasswordOtp = async (req,res)=>{
         req.session.wrongotp=null;
 
         console.log('wrongtp ', wrongotp);
-        res.render('user/passwordotp',{email,wrongotp});
+        res.render('user/passwordotp',{email,wrongotp}); 
     }
     else{
         res.redirect('/forgotpassword');
@@ -51,6 +51,7 @@ const userOtp = async (req,res)=>{
     }
     else{
         req.session.wrongotp=2;
+        req.session.step=1;
         console.log("fail");
         res.redirect('/passwordotp')
     }
@@ -59,9 +60,8 @@ const userOtp = async (req,res)=>{
 const userResentOtp = async (req,res)=>{
     if(req.session.step==1){
         req.session.step=1;
-        // console.log("----",req.session.emil)
         userController.sendMail(req,res,req.session.email);
-        res.redirect('/passwordotp');
+        res.redirect('./passwordotp');
     }
     else{
         res.redirect('/login');
@@ -70,10 +70,8 @@ const userResentOtp = async (req,res)=>{
 
 const userResetPassword = async (req,res)=>{
     if(req.session.step==2){
-        
         const notMatch = req.session.notMatch;
         req.session.notMatch = null;
-
         res.render('user/resetpassword',{notMatch});
     }
     else{
@@ -82,39 +80,31 @@ const userResetPassword = async (req,res)=>{
 }
 
 const userSubmitResetPassword = async(req,res)=>{
-    // console.log("reached");
     const{password:password,verifyPassword:verifyPassword}=req.body;
     const specialCharacterRegex = /^(?=.*[A-Z])(?=.*\W).{8,}$/;
-
-    console.log("--",password,"--",verifyPassword);
-
     const email = req.session.email;
-
     if(specialCharacterRegex.test(password)){
         if(password==verifyPassword){
             const user = await User.findOne({ email });
-
-            console.log("--",user)
-
-            const updatedUser = await User.findByIdAndUpdate(user._id, {password: password}, { new: true });
-            
-            // console.log("--",password,"--",verifyPassword);
+            const hashedPassword = await bcrypt.hash(password, saltRounds);
+            const updatedUser = await User.findByIdAndUpdate(user._id, {password: hashedPassword}, { new: true });
             req.session.notMatch=3;
+            req.session.step=2;
             res.redirect('/resetPassword');
-
-            // res.redirect('/login');
         }
         else{
             req.session.notMatch=2;
+            req.session.step=2;
             res.redirect('/resetPassword');
         }
     }
     else{
+        console.log("reached 1");
         req.session.notMatch=1;
+        req.session.step=2;
         res.redirect('/resetPassword');
     }
 }
-
 
 module.exports={
     userSubmitResetPassword,

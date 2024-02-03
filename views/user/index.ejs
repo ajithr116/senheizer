@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Login</title>
+    <title>HOME</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -283,11 +283,14 @@
                                     <div class="ratings">
                                     </div>
                                     <br>
-                                    <p class="card-text fw-bolder h5" style="color:white;">$<%= product.price %></p><br>
+                                    <div class="d-flex justify-content-between " >
+                                        <p class="card-text fw-bolder h5" style="color:white;">₹ <%= product.price %></p><br>
+                                        <p class="card-text fw-bolder h5" style="font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">Brand <%= product.brand %></p><br>
+                                    </div><br>
                                     <!-- <p class="card-text"><%= product.description %></p> -->
                                     <div class="d-flex flex-column justify-content-between align-items-center">
-                                        <a href="/addtocart?productId=<%= product._id %>" class="btn btn-cart btn-outline-light mb-2" style="background-color: white;color:black;">Add to Cart</a>
-                                        <button class="btn btn-buy btn-primary mb-2">Buy Now</button>
+                                        <a href="/addtocart?productId=<%= product._id %>" class="btn btn-cart btn-primary mb-2" >Add to Cart</a>
+                                        <!-- <button class="btn btn-buy btn-primary mb-2">Buy Now</button> -->
                                     </div>
                                 </div>
                             </div></a>
@@ -307,7 +310,7 @@
         <div class="footer-content">
           <div class="footer-section about">
             <h2>About Us</h2>
-            <p>Your company description goes here.</p>
+            <p>SENHEIZER the sound speaks</p>
           </div>
           <div class="footer-section contact">
             <h2>Contact Us</h2>
@@ -326,7 +329,7 @@
           </div>
         </div>
         <div class="footer-bottom">
-          <p>&copy; 2023 Your Website. All rights reserved.</p>
+          <p>&copy; 2023 SENHEIZER. All rights reserved.</p>
         </div>
       </footer>
       <script>

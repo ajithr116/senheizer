@@ -134,8 +134,7 @@ const adminUpdateStatus = async(req,res)=>{
 }
 
 module.exports = {
-    adminOrders,
-    adminOrderDetails,
-    adminUpdateStatus,
-    
+  adminOrders,
+  adminOrderDetails,
+  adminUpdateStatus,
 };

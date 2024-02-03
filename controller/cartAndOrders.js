@@ -1,5 +1,4 @@
-const mongoose = require('mongoose');
-const nodemailer = require('nodemailer');
+
 require('dotenv').config();
 const User = require('../models/user'); 
 const Product = require('../models/products');
@@ -87,7 +86,6 @@ const userRemoveProductFromCart = async (req, res) => {
     const productID = req.query.cartProductId;
     const user = await User.findById(userId);
 
-    // Find the item in the user's cart
     const cartItemIndex = user.cart.findIndex(item => item.productID.toString() === productID);
 
     if (cartItemIndex === -1) {
@@ -121,7 +119,6 @@ const userUpdateCart = async (req, res) => {
   const { productID, quantity } = req.body;
 
   try {
-    // Find the user
     const user = await User.findById(userId);
     const item = user.cart.find(item => item.productID.toString() === productID);
 
@@ -130,11 +127,8 @@ const userUpdateCart = async (req, res) => {
     }
 
     const product = await Product.findById(productID);
-    
     const oldQuantity = item.quantity; // Get the old quantity
     item.quantity = quantity;  // Updating the quantity
-
-    // Adjust the product quantity
     product.quantity = product.quantity + oldQuantity - quantity;
     await product.save(); // Save the updated product
 
@@ -155,7 +149,6 @@ const userUpdateCart = async (req, res) => {
     res.status(500).json({ success: false, error: error.message });
   }
 };
-
 
 const userCheckout = async(req,res)=>{
   if (req.session.uid) {
@@ -195,7 +188,6 @@ const userCheckout = async(req,res)=>{
   }
 }
 
-
 const userPaymentPage = async(req,res)=>{
   if(req.session.uid){
     if(req.session.step==2){
@@ -208,7 +200,6 @@ const userPaymentPage = async(req,res)=>{
         const user = await User.findById(userId);
         
         if(couponId){
-          // console.log("working",couponId);
           const coupon = await Coupon.findById(couponId);
           reducingAmount = coupon.reducingAmount
         }
@@ -239,8 +230,6 @@ const userPaymentPage = async(req,res)=>{
             res.render("user/paymentPage",{subtotal, tax, total,addressId});
           }
           const userAddress = await User.findById(req.session.uid).populate('address');
-
-          // console.log("--",addressId);
         }
         catch(err){
           console.log("error " , err);
@@ -344,7 +333,6 @@ const orderSuccessPage = async(req,res)=>{
 const userOrders = async(req,res)=>{
   if(req.session.uid){
     const orders = await Order.find({ userID: req.session.uid }).populate('items.productID').populate('shippingAddressID').sort({ date: -1 });
-    // console.log("orders=",orders);  
     res.render('user/orders', { orders: orders });
   }
   else{
@@ -386,7 +374,6 @@ const userDeleteOrder = async (req, res) => {
             user.wallet += parsedAmount;
           } else {
             console.error("Error parsing order total price:", order.totalPrice);
-            // Handle invalid amount appropriately
           }
 
           user.walletHistory.push(transaction);
@@ -421,26 +408,15 @@ const userVerifyCoupon = async(req,res)=>{
     if (coupon.expireDate < Date.now()) {
         return res.status(400).json({ success: false, message: "expire" });
     }
-    // if (cartTotal >= coupon.minimumPrice) {
-    //   const discount = coupon.reducingAmount;
-    //   // console.log("discounts ",discount);
-    //   return res.json({ success: true, message: 'Coupon code is valid', discount: coupon.reducingAmount, couponId:coupon._id });
-      
-    // } else {
-    //   return res.status(400).json({success: false,message:"less"});
-    // }
-
     if(coupon.isDeleted==true){
       return res.status(400).json({success:false,message:"deleted"})
     }
 
     if(coupon.minimumPrice)
 
-    // const discount = coupon.reducingAmount;
-    // console.log("discounts ",discount);
     return res.json({ success: true, message: 'Coupon code is valid', discount: coupon.reducingAmount, couponId:coupon._id });
   } catch (err) {
-      return res.status(500).json({ success: false, message: 'An error occurred while verifying the coupon code' });
+    return res.status(500).json({ success: false, message: 'An error occurred while verifying the coupon code' });
   }
 }
 
@@ -459,11 +435,6 @@ const userPaymentR =async (req, res) => {
     const name =  user.firstName + " " + user.lastName;
     const email =  user.email;
     const contact =  user.phoneNumber
-    
-    // const notesData = {
-    //   address: (await Address.findById(addressId)).address,
-    //   order_id: `order_rcptid_${Date.now()}`
-    // };
 
     const options = {
       amount: amount * 100, 
@@ -486,10 +457,6 @@ const userPaymentVerifiyR = async(req,res)=>{
   try{
     const {razorpay_payment_id,razorpay_order_id,razorpay_signature,amount,addressId} = req.body;
     const userId = req.session.uid;
-
-    
-    // console.log("order Id ", razorpay_order_id,"--",addressId,"--",amount,"--");
-
     const generatedSignature = crypto.createHmac('sha256',process.env.SECRET_KEY)
     .update(`${razorpay_order_id}|${razorpay_payment_id}`)
     .digest('hex');
@@ -539,7 +506,6 @@ const userPaymentVerifiyR = async(req,res)=>{
       res.json({success:true,message:"payment verifies"});
     }
     else{
-      // console.log("reached 3");
       res.json({success:false,error:"ivalid payment signerature "});
     }
   }
@@ -551,7 +517,6 @@ const userPaymentVerifiyR = async(req,res)=>{
 const userOrderDetails = async(req,res)=>{
   if(req.session.uid){
     const orders = await Order.find({ userID: req.session.uid }).populate('items.productID').populate('shippingAddressID').sort({ date: -1 });;
-    // console.log("orders=",orders);  
     res.render('user/orderhistory', { orders: orders });
   }
   else{
@@ -561,18 +526,18 @@ const userOrderDetails = async(req,res)=>{
 
 
 module.exports = {
-    addToCart,
-    userCartDetails,
-    userRemoveProductFromCart,
-    userUpdateCart,
-    userCheckout,
-    userPayment,
-    userPaymentPage,
-    userOrders,
-    userDeleteOrder,
-    userVerifyCoupon,
-    userPaymentR,
-    userPaymentVerifiyR,
-    orderSuccessPage,
-    userOrderDetails,
+  addToCart,
+  userCartDetails,
+  userRemoveProductFromCart,
+  userUpdateCart,
+  userCheckout,
+  userPayment,
+  userPaymentPage,
+  userOrders,
+  userDeleteOrder,
+  userVerifyCoupon,
+  userPaymentR,
+  userPaymentVerifiyR,
+  orderSuccessPage,
+  userOrderDetails,
 }

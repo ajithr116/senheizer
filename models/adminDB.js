@@ -1,33 +1,28 @@
 const { MongoClient } = require('mongodb');
-
 const url = 'mongodb://127.0.0.1:27017'; // Add the missing "mongodb://" prefix
-
 const dbName = 'senheizer';
 
-
-// checking email exist or not
 async function checkEmailExist(email){
-    const client = new MongoClient(url);
+  const client = new MongoClient(url);
 
-    try{
-        await client.connect();
-        console.log('connected to mongodb(adminDB) --email exist-- ');
+  try{
+    await client.connect();
+    console.log('connected to mongodb(adminDB) --email exist-- ');
 
-        const db = client.db(dbName);
-        const collection = db.collection('admin');
+    const db = client.db(dbName);
+    const collection = db.collection('admin');
 
-        // Use findOne to check if the document exists
-        const document = await collection.findOne({email});
+    const document = await collection.findOne({email});
 
-        return !!document;  // Return true if the document exists, false if not
+    return !!document;  // Return true if the document exists, false if not
 
-    }
-    catch(err){
-        console.log('error',err);
-    }
-    finally{
-        client.close();
-    }
+  }
+  catch(err){
+      console.log('error',err);
+  }
+  finally{
+      client.close();
+  }
 }
 
 //email an password match

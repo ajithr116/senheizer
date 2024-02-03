@@ -58,18 +58,11 @@ const userDownloadInvoice = async (req, res) => {
             
             "bottomNotice": "Kindly pay your invoice within 15 days."
         };
-    
-
         const result = await easyinvoice.createInvoice(invoiceData); 
-
-        // Convert the base64 string to a Buffer
         const pdfData = Buffer.from(result.pdf, 'base64');
-
-        // Set the headers and send the PDF data
         res.setHeader('Content-Type', 'application/pdf');
         res.setHeader('Content-Disposition', 'attachment; filename="invoice.pdf"');
         res.send(pdfData);
-
 
       } catch (error) {
         console.error("error ",error );

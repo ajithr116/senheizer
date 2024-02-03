@@ -206,13 +206,12 @@
                               <i class="fa fa-star"></i>
                               <i class="fa fa-star"></i>
                               <i class="fa fa-star"></i>
-                              <i class="fa fa-star"></i>
                               <i class="fa fa-star-half-o"></i>
-                              <span class="rating-count">150+</span>
+                              <span class="rating-count">150+ </span>
                             </div>
                             <div class="price-wishlist">
                               <div class="price-wrap">
-                                <span class="price" data-product-id="<%= product._id %>" data-category-id="<%= product.category %>">$<%= product.price %></span>
+                                <span class="price" data-product-id="<%= product._id %>" data-category-id="<%= product.category %>">₹ <%= product.price %></span>
                                 <del class="price-old" data-product-id="<%= product._id %>" data-category-id="<%= product.category %>"></del>
 
                                 <!-- <a  href="#" class="wishlist-icon btn" style="border:none;background-color: transparent;">
@@ -234,9 +233,9 @@
                           <%if(product.quantity==0){%>
                             <button  class="btn btn-outline-light " style="color:black;border: 1px solid black;" disabled>Add to cart</button>
                           <%}else{%>
-                            <a href="/addtocart?productId=<%= product._id %>" class="btn btn-outline-light " style="color:black;border: 1px solid black;">Add to cart</a>
+                            <a href="/addtocart?productId=<%= product._id %>" class="btn btn-dark " style="border: 1px solid black;">Add to cart</a>
                           <%}%>
-                          <a href="" class="btn btn-dark">Buy now</a>
+                          <!-- <a href="" class="btn btn-dark">Buy now</a> -->
                         </div>
                       </figcaption>
                     </figure>
@@ -247,24 +246,24 @@
             <script>
               const prices = document.querySelectorAll('.price');
               prices.forEach(price => {
-                  const productId = price.getAttribute('data-product-id');
-                  const oldprice = document.querySelector(`.price-old[data-product-id="${productId}"]`);
-                  const categoryId = price.getAttribute('data-category-id');
-          
-                  $.ajax({
-                      type: 'GET',
-                      url: './checkDiscount?productId=' + productId + '&categoryId=' + categoryId,
-                      success: function(response) {
-                          const maxDiscount = Math.max(response.productDiscount, response.categoryDiscount);
-                          if (maxDiscount > 0) {
-                              const originalPrice = parseFloat(price.textContent.slice(1));
-                              const total = originalPrice + maxDiscount;
-                              oldprice.textContent = '$' + total;
-                              oldprice.style.textDecoration = 'line-through'; 
-                          }
-                      }
-                  });
+              const productId = price.getAttribute('data-product-id');
+              const oldprice = document.querySelector(`.price-old[data-product-id="${productId}"]`);
+              const categoryId = price.getAttribute('data-category-id');
+      
+              $.ajax({
+                type: 'GET',
+                url: './checkDiscount?productId=' + productId + '&categoryId=' + categoryId,
+                success: function(response) {
+                  const maxDiscount = Math.max(response.productDiscount, response.categoryDiscount);
+                  if (maxDiscount > 0) {
+                    const originalPrice = parseFloat(price.textContent.slice(1));
+                    const total = originalPrice + maxDiscount;
+                    oldprice.textContent = '$' + total;
+                    oldprice.style.textDecoration = 'line-through'; 
+                  }
+                }
               });
+            });
           </script>
           
             <nav class="mt-4" aria-label="Page navigation sample">
@@ -319,31 +318,31 @@
       
       <!-- Footer Start -->
       <footer>
-          <div class="footer-content">
-            <div class="footer-section about">
-              <h2>About Us</h2>
-              <p>Your company description goes here.</p>
-            </div>
-            <div class="footer-section contact">
-              <h2>Contact Us</h2>
-              <p>Email: example@example.com<br>Phone: +123 456 7890</p>
-              <!-- Add two textboxes and one button -->
-              <div class="contact-form">
-                <input type="text" placeholder="Your Name">
-                <input type="text" placeholder="Your Email">
-                <button>Contact</button>
-              </div>
-            </div>
-            <div class="footer-section social">
-              <h2>Follow Us</h2>
-              <p>Stay connected on social media:</p>
-              <!-- Add your social media icons or links here -->
+        <div class="footer-content">
+          <div class="footer-section about">
+            <h2>About Us</h2>
+            <p>SENHEIZER.</p>
+          </div>
+          <div class="footer-section contact">
+            <h2>Contact Us</h2>
+            <p>Email: ajith8593935904@gamil.com<br>Phone: 8593935903</p>
+            <!-- Add two textboxes and one button -->
+            <div class="contact-form">
+              <input type="text" placeholder="Your Name">
+              <input type="text" placeholder="Your Email">
+              <button>Contact</button>
             </div>
           </div>
-          <div class="footer-bottom">
-            <p>&copy; 2023 Your Website. All rights reserved.</p>
+          <div class="footer-section social">
+            <h2>Follow Us</h2>
+            <p>Stay connected on social media:</p>
+            <!-- Add your social media icons or links here -->
           </div>
-        </footer>
+        </div>
+        <div class="footer-bottom">
+          <p>&copy; 2023 SENHEIZER. All rights reserved.</p>
+        </div>
+      </footer>
       <!-- Footer End -->
   </body>
 

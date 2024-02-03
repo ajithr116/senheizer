@@ -168,7 +168,7 @@
                                     <label for="category" class="form-label">Category</label>
                                     <select style="width:50%" name="category" class="form-control" id="category" >
                                         <% category.forEach(category=>{ %>
-                                            <option value="<%= category.name %>"><%= category.name %></option>
+                                            <option value="<%= category._id %>"><%= category.name %></option>
                                         <% }) %>
                                     </select>
                                   </div>

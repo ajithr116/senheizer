@@ -76,7 +76,7 @@ const adminSubmitCategory = async (req,res)=>{
             });
     
             const savedCategory = await newUploadCategory.save();
-            await res.render('admin/index');
+            await res.redirect('/admin/categoryManage'); 
         }
         else {
             res.redirect('/admin/login');

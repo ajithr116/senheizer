@@ -164,8 +164,8 @@ const weeklySalesState = async(req,res)=>{
     const now = new Date();
 
     // Calculate the start and end dates of the current week
-    const startOfWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay());
-    const endOfWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay() + 6);
+    const startOfWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay() + 1);
+    const endOfWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay() + 7);
 
     const report = await Order.aggregate([
         {
@@ -178,7 +178,7 @@ const weeklySalesState = async(req,res)=>{
         },
         {
             $group: {
-                _id: { $dayOfWeek: "$date" },
+                _id: { $subtract: [{ $dayOfWeek: "$date" }, 1] },
                 totalSales: { $sum: "$totalPrice" },
                 count: { $sum: 1 }
             }
@@ -188,7 +188,7 @@ const weeklySalesState = async(req,res)=>{
                 dayOfWeek: {
                     $let: {
                         vars: {
-                            days: [ "", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" ]
+                            days: [ "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" ]
                         },
                         in: { $arrayElemAt: [ "$$days", "$_id" ] }
                     }
@@ -201,7 +201,7 @@ const weeklySalesState = async(req,res)=>{
     ]);
 
     return report;
-}
+};
 
 const monthlySalesState = async(req,res)=>{
     const report = await Order.aggregate([

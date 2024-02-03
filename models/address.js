@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 
 const addressSchema = new mongoose.Schema({
-    //   _id: String, // _id will be generated automatically
     district: {
       type: String,
       required: true,

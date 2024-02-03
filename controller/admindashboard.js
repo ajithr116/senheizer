@@ -54,6 +54,7 @@ const adminIndex = async (req, res) => {
         },(err, html) => {
           if (err) {
             console.error(err);
+            
           } else {
             res.send(html);
           }
@@ -321,7 +322,6 @@ const excelDownload = async(req, res) => {
   const report2 = await getOrderStats.monthlySalesState();
   const report3 = await getOrderStats.yearlySalesState();
 
-  console.log(report2);
 
   const workbook = new ExcelJS.Workbook();
   const worksheet = workbook.addWorksheet('User Statistics');
