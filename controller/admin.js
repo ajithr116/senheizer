@@ -158,7 +158,7 @@ const adminSubmitProduct = async (req, res) => {
                 return res.status(400).send("error uploading images" + err);
             }
 
-
+            console.log(req.body);
             const {pName: productName,pCategory: productCategory,pBrand: productBrand,pPrice: productPrice,pQuantity: productQuantity,pColors: productTags,pDesc: productDesc} = req.body;
             const images = req.files.map((file) => file.filename);
               

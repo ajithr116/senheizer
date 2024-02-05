@@ -14,55 +14,56 @@ const add = require('moments/lib/add');
 
   
 const adminIndex = async (req, res) => {
-    if(req.session.aid){
-      const product = Product.find();
-      const totalProducts = await Product.countDocuments();
-      const totalRevenue = await Order.aggregate([{ $group: { _id: null, totalRevenue: { $sum: '$totalPrice' } } }]).then(result => result[0].totalRevenue); //then is usgin to handle async operations 
-      const totalSales = await Order.countDocuments();
+  if(req.session.aid){
+    const product = Product.find();
+    const totalProducts = await Product.countDocuments();
+    const totalRevenue = await Order.aggregate([{ $group: { _id: null, totalRevenue: { $sum: '$totalPrice' } } }])
+    .then(result => result.length > 0 ? result[0].totalRevenue : 0);
+        const totalSales = await Order.countDocuments();
 
-      //WEeekly stats
-      const totalUsersCount = await User.countDocuments({});
-      const userStats = await getUserStats();
+    //WEeekly stats
+    const totalUsersCount = await User.countDocuments({});
+    const userStats = await getUserStats();
 
-      const districtWiseOrderCounts = await Order.aggregate([
+    const districtWiseOrderCounts = await Order.aggregate([
+      {
+        $lookup:{
+          from:'addresses',
+          localField:'shippingAddressID',
+          foreignField:'_id',
+          as:'address'
+        }
+      },
         {
-          $lookup:{
-            from:'addresses',
-            localField:'shippingAddressID',
-            foreignField:'_id',
-            as:'address'
-          }
+          $unwind:'$address'
         },
-          {
-            $unwind:'$address'
-          },
-          {
-            $group:{
-              _id:'$address.state',
-              totalDistrictOrder:{$sum:1}
-            }
+        {
+          $group:{
+            _id:'$address.state',
+            totalDistrictOrder:{$sum:1}
           }
-        ]).sort({totalDistrictOrder:-1})
-        var totalOrders = districtWiseOrderCounts.reduce((total, item) => total + item.totalDistrictOrder, 0);
-        res.render('admin/index',{
-          totalProducts,
-          totalRevenue,
-          totalSales,
-          ...userStats,
-          districtWiseOrderCounts,
-          totalOrders
-        },(err, html) => {
-          if (err) {
-            console.error(err);
-            
-          } else {
-            res.send(html);
-          }
-        }); 
-    }
-    else{
-      res.redirect('/admin/login');
-    }
+        }
+      ]).sort({totalDistrictOrder:-1})
+      var totalOrders = districtWiseOrderCounts.reduce((total, item) => total + item.totalDistrictOrder, 0);
+      res.render('admin/index',{
+        totalProducts,
+        totalRevenue,
+        totalSales,
+        ...userStats,
+        districtWiseOrderCounts,
+        totalOrders
+      },(err, html) => {
+        if (err) {
+          console.error(err);
+          
+        } else {
+          res.send(html);
+        }
+      }); 
+  }
+  else{
+    res.redirect('/admin/login');
+  }
 };
   
 const userStats = async(req,res)=>{
@@ -176,9 +177,9 @@ const downloadSalesReport = async(req,res)=>{
   //--
 
   let doc = new PDFDocument;
-  let pdfPath = 'sales_report.pdf';
-  let writeStream = fs.createWriteStream(pdfPath);
-  doc.pipe(writeStream);
+  const fileName = 'sales_report.pdf';
+  // let writeStream = fs.createWriteStream(pdfPath);
+  // doc.pipe(writeStream);
 
   doc.fontSize(18)
     .text(`Total Users Count: ${userStats2.totalUsersCount}`, { underline: true });
@@ -301,11 +302,18 @@ const downloadSalesReport = async(req,res)=>{
   doc.text(`Order Count: ${report3[0].count}`);
   //----
 
-  writeStream.on('finish', function() {
-    res.download(pdfPath);
+  res.setHeader('Content-Type', 'application/pdf');
+  res.setHeader('Content-Disposition', 'attachment; filename=' + fileName);
+
+  doc.on('data', (chunk) => {
+    res.write(chunk); // Write PDF data chunks to the response
   });
 
-  doc.end();
+  doc.on('end', () => {
+    res.end(); // Finalize the response
+  });
+
+  doc.end(); // Close the PDF document and trigger data generation
 }
 
 const excelDownload = async(req, res) => {
@@ -430,16 +438,18 @@ const excelDownload = async(req, res) => {
     weeklySalesStateSheet.addRow([item.year, item.totalSales, item.count]);
   });
 
-  const fileName = 'output.xlsx';
-  await workbook.xlsx.writeFile(fileName);
 
+  const fileName = 'output.xlsx';
+
+  // Stream the Excel file data directly to the response
   res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
   res.setHeader('Content-Disposition', 'attachment; filename=' + fileName);
 
-  res.download(path.resolve(fileName), (err) => {
-    if (err) {
-      console.log(err);
-    }
+  workbook.xlsx.writeBuffer().then((buffer) => {
+    res.send(buffer); // Send the Excel file data as a buffer
+  }).catch((err) => {
+    console.log(err);
+    res.status(500).send('Error generating Excel file'); // Send error response
   });
 }
 
