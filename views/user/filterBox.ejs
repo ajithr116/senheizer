@@ -1,15 +1,32 @@
+
+<style>
+  /* CSS to decrease size and arrange in a column-wise layout on smaller screens */
+@media (max-width: 767.98px) {
+  .filter-group {
+    margin-bottom: 10px;
+  }
+  
+  .card-body {
+    padding: 8px;
+  }
+  
+  .title {
+    font-size: 14px;
+  }
+}
+
+</style>
 <aside class="col-md-3">          
   <div class="card">
     <article class="filter-group">
       <header class="card-header">
         <a href="#" data-toggle="collapse" data-target="#collapse_1" aria-expanded="true" class="">
           <i class="icon-control fa fa-chevron-down">
-
           </i>
             <h6 class="title">Product type</h6>
         </a>
       </header>
-        <div class="filter-content collapse show" id="collapse_1" >
+        <div class="filter-content collapse " id="collapse_1" >
           <div class="card-body">
             <form class="pb-3" action="/products?searchQuery=search" method="GET">
               <div class="input-group">
@@ -47,7 +64,7 @@
           <% const uniqueColorsSet = new Set(uniqueColors);%>
           <% const uniqueColorsArray = Array.from(uniqueColorsSet);%>
           
-          <div class="filter-content collapse show" id="collapse_5" style="">
+          <div class="filter-content collapse " id="collapse_5" style="">
             <div class="card-body">
               <% uniqueColorsArray.forEach(color => { %>
                 <label class="checkbox-btn">
@@ -65,7 +82,7 @@
               <h6 class="title">Brands </h6>
           </a>
         </header>
-          <div class="filter-content collapse show" id="collapse_2" style="">
+          <div class="filter-content collapse " id="collapse_2" style="">
             <div class="card-body">
               <% const uniqueBrands = new Set(); %>
               <% const brandCounts = {}; %>
@@ -94,7 +111,7 @@
                   <h6 class="title">Price range </h6>
               </a>
           </header>
-          <div class="filter-content collapse show" id="collapse_3" style="">
+          <div class="filter-content collapse" id="collapse_3" style="">
               <div class="card-body">
                   <!-- <input type="range" class="custom-range" min="0" max="100" name="">-->
                   <div class="form-row">
