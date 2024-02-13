@@ -29,9 +29,33 @@
         <label for="email">Email</label>
         <input type="email" name="uEmail" placeholder="Email" id="email"required>
 
+        <label for="referral">Referral Link</label>
+        <input type="text" name="uReferral" placeholder="optional " id="referral">
+        
+        <!-- <script>
+            $(document).ready(function() {
+                $('#referral').on('keyup', function() {
+                    const referralCode = $(this).val();
+                    if (referralCode.length >= 6) { // Check if referralCode has reached 6 characters
+                        $.get('/checkReferral/' + referralCode, function(data) {
+                            if (data.referralExists) {
+                                // Referral code exists, change border color to green
+                                $('#referral').css('border', '1px solid green');
+                            } else {
+                                // Referral code does not exist, change border color to red
+                                $('#referral').css('border', '1px solid red');
+                            }
+                        });
+                    } else {
+                        // Referral code is less than 6 characters, reset border color
+                        $('#referral').css('border', '');
+                    }
+                });
+            });
+        </script> -->
+
         <label for="password">Password</label>
         <input type="password"name="uPassword" placeholder="Password" id="password" required>
-        
 
         <label for="confirmPassword">Confirm Password</label>
         <input type="password" name="uConfirmPassword" placeholder="Confirm Password" id="confirmPassword">
@@ -77,6 +101,12 @@
                 password.placeholder="Passwords not match";
                 confirmPassword.style.background = "rgba(255, 0, 0, 0.5)";
                 confirmPassword.placeholder="password not match";
+            </script>
+        <%}else if(error===6){%>
+            <script>
+                const referral = document.getElementById('referral');
+                referral.style.background = "rgba(255, 0, 0, 0.5)";
+                referral.placeholder="referal not exist";
             </script>
         <%}%>
     <% } %>
