@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+const crypto = require('crypto')
 
 //--------unique value------------------
 const forAddress = Math.floor(10000000 + Math.random() * 90000000).toString();
@@ -96,7 +96,7 @@ const userSchema = new mongoose.Schema({
     },
     type: {
       type: String,
-      enum: ['credit', 'debit', 'refund'],
+      enum: ['credit', 'debit', 'refund','refer'],
       required: true
     },
     date: {
@@ -106,6 +106,16 @@ const userSchema = new mongoose.Schema({
   }],
   wishlist:{
     type:Array
+  },
+  referralCode: {
+    type: String,
+    default: function() {
+      return crypto.randomBytes(3).toString('hex'); // Generate a random referral code
+    }
+  },
+  referralCount: {
+    type: Number,
+    default: 0
   }
 });
 
