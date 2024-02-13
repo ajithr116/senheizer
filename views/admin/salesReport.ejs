@@ -123,11 +123,52 @@
                                         <option value="monthly">Monthly</option>
                                         <option value="yearly">Yearly</option>
                                     </select>
+                                    <input type="date" id="startDate">
+                                    <input type="date" id="endDate" max="" value="">
+                                    <input type="button" onclick="updateChart()" value="Submit" class="bg-primary">
+                                    <script>
+                                        // Get current date and set it as the max attribute for end date input
+                                        const today = new Date().toISOString().split('T')[0];
+                                        document.getElementById('endDate').setAttribute('max', today);
+                                        document.getElementById('endDate').value = today; // Set default value to current date
+                                    
+                                        // Check for changes in the start date
+                                        document.getElementById('startDate').addEventListener('change', function() {
+                                            var endDateInput = document.getElementById('endDate');
+                                            var startDate = new Date(this.value);
+                                            var endDate = new Date(endDateInput.value);
+                                    
+                                            // Check if start date is greater than end date
+                                            if (startDate > endDate) {
+                                                alert('Start date should be less than or equal to End date');
+                                                this.value = endDateInput.value; // Reset start date to end date
+                                            }
+                                        });
+                                    
+                                        // Check for changes in the end date
+                                        document.getElementById('endDate').addEventListener('change', function() {
+                                            var startDate = new Date(document.getElementById('startDate').value);
+                                            var endDate = new Date(this.value);
+                                            var today = new Date();
+                                    
+                                            // Check if end date is greater than today's date
+                                            if (endDate > today) {
+                                                alert('End date cannot be a future date');
+                                                this.value = today.toISOString().split('T')[0]; // Reset end date to today's date
+                                            }
+                                    
+                                            // Check if start date is greater than end date
+                                            if (endDate < startDate) {
+                                                alert('End date should be greater than or equal to Start date');
+                                                this.value = startDate.toISOString().split('T')[0]; // Reset end date to start date
+                                            }
+                                        });
+                                    </script>
+                                    
                                 </div>
                             </div>
                             <canvas id="chart"></canvas>
                             <script>
-                                // Define your chart outside the event listener so it can be updated later
                                 var ctx = document.getElementById('chart').getContext('2d');
                                 var chart = new Chart(ctx, {
                                     type: 'bar', // or 'line'
@@ -174,12 +215,27 @@
                                 });
 
                                 function updateChart(filter) {
+
+                                    var startDate = document.getElementById('startDate').value;
+                                    var endDate = document.getElementById('endDate').value;
+
+                                    if (!startDate && !endDate) {
+                                            filter = 'weekly';
+                                        }
+
+                                    if (startDate && !endDate) {
+                                        endDate = new Date(new Date(startDate).getTime() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+                                    } else if (!startDate && endDate) {
+                                        startDate = new Date(new Date(endDate).getTime() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+                                    }
+
+
                                     fetch('./salesReport2', {
                                         method: 'POST',
                                         headers: {
                                             'Content-Type': 'application/json'
                                         },
-                                        body: JSON.stringify({ filter: filter })
+                                        body: JSON.stringify({ filter: filter, startDate: startDate, endDate: endDate })
                                     })
                                     .then(response => response.json())
                                     .then(data => {
@@ -193,7 +249,7 @@
                                             chart.data.datasets[0].data = [0, 0, 0, 0, 0, 0, 0];
                                             chart.data.datasets[1].data = [0, 0, 0, 0, 0, 0, 0];
                                             data.data.forEach(item => {
-                                                chart.data.datasets[0].data[item._id - 1] = item.totalSales;
+                                                chart.data.datasets[0].data[item._id - 1] = item.count;
                                                 chart.data.datasets[1].data[item._id - 1] = item.count;
                                             });
                                         } else if (data.choice === 'monthly') {
@@ -208,7 +264,15 @@
                                                 chart.data.datasets[1].data.push(item.count); 
                                                 chart.data.datasets[0].data.push(item.count);
                                             });
+                                        } else if (data.choice === 'custom') {
+                                            data.data.forEach(item => {
+                                                // Update the labels and datasets with the new data
+                                                chart.data.labels.push(item.date);
+                                                chart.data.datasets[0].data.push(item.count);
+                                                chart.data.datasets[1].data.push(item.count);
+                                            });
                                         }
+
                                         chart.update();
                                     })
                                     .catch(err => {
@@ -413,8 +477,57 @@
                                         <option value="monthly">Monthly</option>
                                         <option value="yearly">Yearly</option>
                                     </select>
+                                    <input type="date" id="startDate2">
+                                    <input type="date" id="endDate2">
+                                    <script>
+                                        // Get the filter and date inputs
+                                        var filter2 = document.getElementById('time-filter2');
+                                        var startDate2 = document.getElementById('startDate2');
+                                        var endDate2 = document.getElementById('endDate2');
+                                        var today2 = new Date().toISOString().split('T')[0];
+                                        
+
+                                        // Add event listener to the filter
+                                        filter2.addEventListener('change', function() {
+                                            // Clear the date inputs when the filter is changed
+                                            startDate2.value = '';
+                                            endDate2.value = '';
+                                        });
+                                    
+                                        // Add event listeners to the date inputs
+                                        startDate2.addEventListener('change', function() {
+                                        // Clear the filter when a date input is changed
+                                        filter2.value = '';
+
+                                        // Validate the dates
+                                        if (startDate2.value > endDate2.value) {
+                                            alert('Start date should not be greater than end date');
+                                            startDate2.value = endDate2.value;
+                                        }
+                                    });
+
+                                    endDate2.addEventListener('change', function() {
+                                        // Clear the filter when a date input is changed
+                                        filter2.value = '';
+
+                                        // Validate the dates
+                                        if (endDate2.value < startDate2.value) {
+                                            alert('End date should not be less than start date');
+                                            endDate2.value = startDate2.value;
+                                        }
+                                    });
+                                                                    
+                                        function clearFilter() {
+                                            // Clear the filter when a date input is changed
+                                            filter2.value = '';
+                                        }
+                                    
+                                    </script>
+                                    <button onclick="fetchSalesReport()">Submit</button>
                                 </div>
                             </div>
+
+                            
                             <canvas id="chart5"></canvas>
                             <script>
                                 var ctx6 = document.getElementById('chart5').getContext('2d');
@@ -463,14 +576,24 @@
                                 });
 
                                 function fetchSalesReport() {
-                                    var filter2 = document.getElementById('time-filter2').value;
+                                        var filter2 = document.getElementById('time-filter2').value;
+                                        var startDate2 = document.getElementById('startDate2').value;
+                                        var endDate2 = document.getElementById('endDate2').value;
 
+                                        // If both dates are empty, default to the selected filter
+                                        if (!startDate2 && !endDate2) {
+                                            filter2 = document.getElementById('time-filter2').value;
+                                        } else {
+                                            filter2 = 'custom';
+                                        }
+
+    
                                     fetch('./salesRevenue', {
                                         method: 'POST',
                                         headers: {
                                             'Content-Type': 'application/json'
                                         },
-                                        body: JSON.stringify({ filter: filter2 })
+                                        body: JSON.stringify({ filter: filter2, startDate: startDate2, endDate: endDate2 })
                                     })
                                     .then(response => response.json())
                                     .then(data => {
@@ -490,11 +613,15 @@
                                             chart6.data.labels = labels;
                                             chart6.data.datasets[0].data = data.report.map(item => item.totalSales); // Extract totalSales for chart
                                             chart6.update();
+                                                }else if(data.choice==='custom'){
+                                            chart6.data.labels = data.report.map(item => item.date); // Extract dates for labels
+                                            chart6.data.datasets[0].data = data.report.map(item => item.totalSales); // Extract totalSales for chart
+                                            chart6.update();
                                         }
                                     })                            
                                 }
                             document.getElementById('time-filter2').addEventListener('change', function() {
-                                fetchSalesReport(this.value);
+                                fetchSalesReport(); // Call fetchSalesReport without any arguments
                             });
                             fetchSalesReport('Weekly');
 
