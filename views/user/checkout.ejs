@@ -21,7 +21,7 @@
 
 
       <!-- Bootstrap JS (required for the Bootstrap components to work) -->
-      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+      <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> -->
       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -145,36 +145,42 @@
         <div class="row">
           <!-- Product details -->
           <div class="col-md-8 ">
-            <div class="cart-container my-3" >
-              <% if (userAddress.address.length > 0) { %>
-                <% for (let i = 0; i < userAddress.address.length; i++) { %>
-                  <div class="container p-3" style="border-radius:10px;border:1px solid black">
-                    <div class="container-fluid d-flex">
-                      <h5 style="font-weight: 100;" class=""><%= userAddress.address[i].name %></h5><h5 style="font-weight: 100;"  class="px-3"><%= userAddress.address[i].phone %></h5>
-
-                      <p><%= userAddress.address[i].address.substring(0, 50) + (userAddress.address[i].address.length > 20 ? '...' : '') %></p>
-                    </div>
-                    <div class="container-fluid d-flex justify-content-between">
-                      <a class="px-3 mx-1 btn btn-primary" href="/editaddress?addressid=<%= userAddress.address[i]._id %>">Edit</a>
-                      <% if(total!=0){%>
-                        <a class="btn btn-warning" href="/payment?addressid=<%= userAddress.address[i]._id %>&couponId=">Use this address</a>
-                      <%}else{%>
-                        <button class="btn btn-warning" disabled>Cart is empty</button>
-                        <%}%>
-                      <!-- <a class="px-3" onclick="return alert('are you sure ?')" href="/deleteaddress?addressid=<%= userAddress.address[i]._id %>">Delete</a> -->
-                    </div>
-                  </div><br>
-                <% } %>
-              <% } else { %>
-                <div class="container p-3 d-flex align-items center justify-content-center" style="border-radius:10px;border:1px solid black">
-                    <p>No addresses saved yet</p>
-                    <a class="btn btn-warning mx-3" href="/addaddress">Add address</a>
-                </div>
-              <% } %>
-              <div class="container d-flex justify-content-center">
-                <a class="btn btn-outline-dark" href="/addaddress?checkoutPage=1">New address</a>
+            <div class="cart-container my-3">
+              <div class="row">
+                  <% if (userAddress.address.length > 0) { %>
+                      <% for (let i = 0; i < userAddress.address.length; i++) { %>
+                          <div class="col-lg-6 col-md-6 col-sm-12">
+                              <div class="container p-3 mb-3" style="border-radius:10px;border:1px solid black">
+                                  <div class="container-fluid d-flex">
+                                      <h5 style="font-weight: 100;" class=""><%= userAddress.address[i].name %></h5>
+                                      <h5 style="font-weight: 100;" class="px-3"><%= userAddress.address[i].phone %></h5>
+                                  </div>
+                                  <p><%= userAddress.address[i].address.substring(0, 50) + (userAddress.address[i].address.length > 20 ? '...' : '') %></p>
+                                  <div class="container-fluid d-flex justify-content-between">
+                                      <a class="px-3 mx-1 btn btn-primary" href="/editaddress?addressid=<%= userAddress.address[i]._id %>">Edit</a>
+                                      <% if(total!=0) { %>
+                                          <a class="btn btn-warning" href="/payment?addressid=<%= userAddress.address[i]._id %>&couponId=">Use this address</a>
+                                      <% } else { %>
+                                          <button class="btn btn-warning" disabled>Cart is empty</button>
+                                      <% } %>
+                                  </div>
+                              </div>
+                          </div>
+                      <% } %>
+                  <% } else { %>
+                      <div class="col-12">
+                          <div class="container p-3 d-flex align-items-center justify-content-center" style="border-radius:10px;border:1px solid black">
+                              <p>No addresses saved yet</p>
+                              <a class="btn btn-warning mx-3" href="/addaddress">Add address</a>
+                          </div>
+                      </div>
+                  <% } %>
               </div>
-            </div>
+              <div class="container d-flex justify-content-center">
+                  <a class="btn btn-outline-dark" href="/addaddress?checkoutPage=1">New address</a>
+              </div>
+          </div>
+          
             
             
             <!-- <script>
