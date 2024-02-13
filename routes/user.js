@@ -19,6 +19,7 @@ const checkUserBlocked = async (req,res,next)=>{
 }
 
 router.get('/login',userController.userLogin);
+router.get('/',userController.userLogin);
 router.post('/submit',userController.userSubmit);
 router.get('/signup',userController.userSignup);
 router.post('/submitForm',userController.userSubmitForm);
@@ -75,6 +76,9 @@ router.get('/wallet',checkUserBlocked,userProfileController.userWallet);
 
 //discount
 router.get('/checkDiscount',userController.discount);
+
+//referal
+router.get('/checkReferral/:referralCode',checkUserBlocked,userController.checkReferral);
 
 router.get('/logout',userController.userLogout);
 
