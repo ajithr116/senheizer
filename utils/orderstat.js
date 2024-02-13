@@ -88,6 +88,37 @@ const yearlyOrderStat = async(req,res)=>{
     return result;
 }
 
+const customDateOrderStat = async (startDate, endDate) => {
+    startDate = new Date(new Date(startDate).setHours(0, 0, 0, 0));
+    endDate = new Date(new Date(endDate).setHours(23, 59, 59, 999));
+
+    const result = await Order.aggregate([
+        {
+            $match: {
+                date: {
+                    $gte: startDate,
+                    $lte: endDate
+                }
+            }
+        },
+        {
+            $group: {
+                _id: { $dateToString: { format: "%Y-%m-%d", date: "$date" } },
+                count: { $sum: 1 }
+            }
+        },
+        {
+            $project: {
+                date: '$_id',
+                count: 1,
+                _id: 0
+            }
+        }
+    ]);
+    return result;
+}
+
+
 const orderStatus = async(req,res)=>{
     const result = await Order.aggregate([
         {
@@ -252,6 +283,37 @@ const yearlySalesState = async(req,res)=>{
     return report;
 }
 
+const customDateRevenueStat = async (startDate, endDate) => {
+    startDate = new Date(new Date(startDate).setHours(0, 0, 0, 0));
+    endDate = new Date(new Date(endDate).setHours(23, 59, 59, 999));
+
+    const result = await Order.aggregate([
+        {
+            $match: {
+                date: {
+                    $gte: startDate,
+                    $lte: endDate
+                }
+            }
+        },
+        {
+            $group: {
+                _id: { $dateToString: { format: "%Y-%m-%d", date: "$date" } },
+                totalSales: { $sum: "$totalPrice" }
+            }
+        },
+        {
+            $project: {
+                date: '$_id',
+                totalSales: 1,
+                _id: 0
+            }
+        }
+    ]);
+    return result;
+}
+
+
 module.exports={
     weeklyOrderStat,
     monthlyOrderStat,
@@ -262,4 +324,6 @@ module.exports={
     weeklySalesState,
     monthlySalesState,
     yearlySalesState,
+    customDateOrderStat,
+    customDateRevenueStat
 }
