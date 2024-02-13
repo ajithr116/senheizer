@@ -307,16 +307,33 @@ footer {
     margin-bottom: 40px;
   }
   
-  /* Description placement */
-  .product-description {
-    position: absolute;
-    bottom: 0;
-    left: 0;
+  .container {
+    width: 80%;
+    max-width: 1200px; /* or whatever maximum width you want */
+    margin: 0 auto;
+}
+
+.product-description {
     width: 100%;
     padding: 20px;
     background-color: #fff;
     border-radius: 0 0 10px 10px;
-  }
+    box-sizing: border-box; /* to include padding and border in the element's total width and height */
+    resize: none;
+    line-height: 2;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+    .container {
+        width: 100%;
+    }
+
+    .product-description {
+        font-size: 14px; /* decrease font size for smaller screens */
+    }
+}
+
   .col-md-6 {
     display: flex;
     flex-direction: column;
@@ -337,43 +354,56 @@ footer {
     cursor: pointer;
   }
   
-  .swatch.active {
-    border-color: #000;
-  }
-  
-  /* Add styles for your new color variants here, e.g.: */
-  .swatch[data-color="gold"] {
-    background-color: #ffd700;
-  }
-  .swatch[data-color="teal"] {
-    background-color: #008080;
-  }
-  .swatch.active {
-    border-color: #000; /* Stronger border to highlight the selected swatch */
-  }
-  /* Quantity input */
-  .quantity {
-    margin-bottom: 20px;
-  }
-  
-  .quantity label {
-    font-weight: bold;
-    margin-right: 10px;
-  }
-  
-  .quantity input {
-    width: 50px;
-    text-align: center;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 5px;
-  }
-  .zoom-in-out {
-    cursor: zoom-in; /* Change cursor to indicate zoom functionality */
-    transition: transform 0.3s ease-in-out; /* Smooth zoom transition */
-  }
-  
-  .zoom-in-out:hover {
-    transform: scale(1.2); /* Zoom in on hover */
-  }
-  
+.swatch.active {
+  border-color: #000;
+}
+
+/* Add styles for your new color variants here, e.g.: */
+.swatch[data-color="gold"] {
+  background-color: #ffd700;
+}
+.swatch[data-color="teal"] {
+  background-color: #008080;
+}
+.swatch.active {
+  border-color: #000; /* Stronger border to highlight the selected swatch */
+}
+/* Quantity input */
+.quantity {
+  margin-bottom: 20px;
+}
+
+.quantity label {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.quantity input {
+  width: 50px;
+  text-align: center;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 5px;
+}
+.zoom-in-out {
+  cursor: zoom-in; /* Change cursor to indicate zoom functionality */
+  transition: transform 0.3s ease-in-out; /* Smooth zoom transition */
+}
+
+.zoom-in-out:hover {
+  transform: scale(1.2); /* Zoom in on hover */
+}
+/* Default styles for desktop and larger devices */
+.container { width: 80%; }
+
+/* Styles for tablets and medium-sized devices */
+@media (max-width: 992px) {
+  .container { width: 90%; }
+}
+
+/* Styles for mobile and small devices */
+@media (max-width: 768px) {
+  .container { width: 100%; }
+  .footer-section { width: 100%; }
+  .product-images, .product-details { width: 100%; }
+}
