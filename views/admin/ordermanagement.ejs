@@ -145,6 +145,7 @@
                                     <tr>
                                       <th scope="col">ID</th>
                                       <th scope="col">Name</th>
+                                      <th scope="col">Date</th>
                                       <th scope="col">Total items</th>
                                       <th scope="col">Total</th>
                                       <th scope="col">Status</th>
@@ -156,6 +157,7 @@
                                       <tr>
                                         <td scope="col"><%= order.orderID %></td>
                                         <td scope="col"><%= order.userID.firstName %> <%= order.userID.lastName %></td>
+                                        <td scope="col"><%= order.date.toLocaleString() %></td>
                                         <td scope="col"><%= order.items.length %></td>
                                         <td scope="col">$<%= order.totalPrice %></td>
                                         <% if(order.orderStatus=="pending"){%>
