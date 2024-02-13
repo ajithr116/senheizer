@@ -101,7 +101,7 @@ const userSubmitForm = async(req,res,next)=>{
   const nameRegex = /^[a-zA-Z]{1,30}$/;    //only alphabet and upto 30 
   var rePassword = /^(?=.*[A-Z])(?=.*\W).{8,}$/;
   const reEmail = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
-  const {uFirstName: firstName,uLastName: lastName,uEmail: email,uPassword: password,uConfirmPassword: confirmPassword,uPhoneNo:phoneNumber} = req.body;
+  const {uFirstName: firstName, uLastName: lastName, uEmail: email, uPassword: password, uConfirmPassword: confirmPassword, uPhoneNo:phoneNumber, uReferral: referralCode} = req.body;
     
   try{
       if(req.session.uid){
@@ -116,6 +116,19 @@ const userSubmitForm = async(req,res,next)=>{
               res.redirect('/signup');
             }
             else{
+              req.session.referal = false;
+
+              if (referralCode) {
+                const user = await User.findOne({ referralCode: referralCode });
+                if (!user) {
+                  req.session.error = 6; // Referral code does not exist
+                  return res.redirect('/signup');
+                } else {
+                  req.session.referal = true;
+                  req.session.referalCode = referralCode;
+                }
+              }
+
               if(rePassword.test(password) || req.session.check){
                 if(password==confirmPassword){
 
@@ -233,7 +246,30 @@ const userOtpVerify = async(req,res)=>{
       const rPassword =  req.session.rPassword;
       const rPhoneNumber =  req.session.rPhoneNumber;
 
-      const upload = await userController.insertUserData(rFirstName,rLastName,rEmail,rPassword,rPhoneNumber)
+      let newUser = await userController.insertUserData(rFirstName,rLastName,rEmail,rPassword,rPhoneNumber);
+      if(req.session.referal){
+
+        const newUser2 = await User.findOne({email:req.session.rEmail});
+      
+        newUser2.wallet = 50;
+        newUser2.walletHistory.push({
+          amount: 50,
+          type: 'refer',
+          date: Date.now()
+        });
+        await newUser2.save();
+
+        const referrer = await User.findOne({ referralCode: req.session.referalCode });
+        console.log("refer",req.session.referalCode);
+        referrer.referralCount += 1;
+        referrer.wallet += 50; // Add 50 to the referrer's wallet 
+        referrer.walletHistory.push({
+          amount: 50, 
+          type: 'refer',
+          date: Date.now()
+        });
+        await referrer.save();
+      }
 
       req.session.destroy((err) => {
           console.log("---otp successfull");
@@ -310,6 +346,7 @@ const userProducts = async (req, res) => {
     const today = new Date();
     const banners = await Banner.find({isDeleted: false,isBlocked: false,startDate: { $lte: today },endDate: { $gte: today }});
 
+    
     res.render('user/products', { products: product, category,product2:product2,banners});
     } else {
       res.redirect('/login'); 
@@ -367,6 +404,21 @@ const discount = async(req,res,next)=>{
   }
 }
 
+const checkReferral = async (req, res) => {
+  try {
+    const referralCode = req.params.referralCode;
+    const referralExists = await User.findOne({ referralCode: referralCode });
+    if (referralExists) {
+      res.json({ referralExists: true });
+    } else {
+      res.json({ referralExists: false });
+    }
+  } catch (error) {
+    console.error('Error checking referral:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
 module.exports = {
   userLogin,
   userSubmit,
@@ -378,5 +430,6 @@ module.exports = {
   userProducts,
   userProductPage,
   userLogout,
-  discount
+  discount,
+  checkReferral
 };
