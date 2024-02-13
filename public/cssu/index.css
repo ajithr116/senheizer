@@ -1,57 +1,57 @@
+/* For carousel */
 .carousel-item img {
-    height: 600px; /* Set the desired height */
-    object-fit: cover; /* Ensure the image covers the entire container */
+    height: auto; /* Set auto height for responsive behavior */
+    object-fit: contain; /* Ensure the image fits inside the container */
 }
 
-/*for second section */
+/* For second section */
 /* Reset CSS */
 .second-section {
-	margin: 0;
-	padding: 0;
-	box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 img {
-	max-width: 100%;
-	height: auto;
-	vertical-align: middle;
-	display: inline-block;
+    max-width: 100%;
+    height: auto;
+    vertical-align: middle;
+    display: inline-block;
 }
 
 /* Main CSS */
 .grid-wrapper > div {
-	display: flex;
-	justify-content: center;
-	align-items: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .grid-wrapper > div > img {
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
-	border-radius: 5px;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 5px;
 }
 
 .grid-wrapper {
-	display: grid;
-	grid-gap: 10px;
-	grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-	grid-auto-rows: 200px;
-	grid-auto-flow: dense;
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-auto-rows: 200px;
+    grid-auto-flow: dense;
 }
 .grid-wrapper .wide {
-	grid-column: span 2;
+    grid-column: span 2;
 }
 .grid-wrapper .tall {
-	grid-row: span 2;
+    grid-row: span 2;
 }
 .grid-wrapper .big {
-	grid-column: span 2;
-	grid-row: span 2;
+    grid-column: span 2;
+    grid-row: span 2;
 }
-/*for second section */
+/* For second section */
 
-/* footer */
-
+/* Footer */
 footer {
     background-color: #333;
     color: #fff;
@@ -87,6 +87,7 @@ footer {
         margin-bottom: 20px;
     }
 }
+
 .contact-form {
     display: inline-block;
 }
@@ -95,7 +96,6 @@ footer {
     margin-bottom: 10px;
     padding: 5px;
     border-radius: 10px 1px 1px 10px;
-
 }
 
 .contact-form button {
@@ -107,9 +107,8 @@ footer {
     cursor: pointer;
     font-size: 14px;
 }
-/* footer */
 
-/* home product */
+/* Home product */
 .product-cards {
     padding: 50px 0;
 }
@@ -118,7 +117,7 @@ footer {
     background-color: #333;
     color: #fff;
     transition: transform 0.3s;
-    height: 100%;
+    height: auto; /* Set auto height for responsive behavior */
 }
 
 .card:hover {
@@ -143,5 +142,3 @@ footer {
 .btn-primary:hover {
     background-color: #cc4400;
 }
-
-  /* home product  */
