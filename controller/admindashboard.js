@@ -99,6 +99,9 @@ const adminSalesReports = async(req,res)=>{
 const salesReport2 = async (req, res) => {
   try {
     const timeframe = req.body.filter;
+    const startDate = req.body.startDate;
+    const endDate = req.body.endDate;
+
     if (timeframe === 'weekly') {
       const result1 = await getOrderStats.weeklyOrderStat();
       res.status(200).json({ choice: 'week', data: result1 });
@@ -111,6 +114,10 @@ const salesReport2 = async (req, res) => {
       const result3 = await getOrderStats.yearlyOrderStat();
       res.status(200).json({ choice: 'yearly', data: result3 });
     }
+    else if (startDate && endDate) {
+      const result = await getOrderStats.customDateOrderStat(startDate, endDate);
+      res.status(200).json({ choice: 'custom', data: result });
+    } 
   }
   catch(err){
     console.error(err);
@@ -136,6 +143,9 @@ const paymentMethodPreferences = async (req, res) => {
 const salesRavenue = async(req,res)=>{
   try {
     const timeframe = req.body.filter;
+    const startDate = req.body.startDate;
+    const endDate = req.body.endDate;
+
     if (timeframe === "weekly") {
       const report = await getOrderStats.weeklySalesState();
       res.status(200).json({report, choice: "weekly" });
@@ -148,6 +158,11 @@ const salesRavenue = async(req,res)=>{
       const report = await getOrderStats.yearlySalesState();
       res.status(200).json({report, choice: "yearly" });
     }
+    else if (startDate && endDate) {
+      const report = await getOrderStats.customDateRevenueStat(startDate, endDate);
+      res.status(200).json({report, choice: "custom" });
+    }
+    
   }
   catch(err){
     console.error(err);
