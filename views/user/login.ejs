@@ -19,6 +19,86 @@
             right: 10px;
             cursor: pointer;
         }
+              /* Your existing styles here */
+
+          body {
+            background-color: #080710;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+          }
+
+          .background {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+          }
+
+          .shape:first-child {
+            left: -10%;
+            top: -10%;
+          }
+
+          .shape:last-child {
+            right: -20%;
+            bottom: -10%;
+          }
+          form {
+        width: 80%;
+        max-width: 500px; /* Adjust this value to make the form wider on larger screens */
+        background-color: rgba(255, 255, 255, 0.13);
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border-radius: 10px;
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 0 40px rgba(8, 7, 16, 0.6);
+        padding: 5%;
+    }
+
+    form h3 {
+        font-size: 32px;
+        font-weight: 500;
+        line-height: 12px;
+        text-align: center;
+        margin-bottom: 20px; /* Adjust margin bottom to move the text up */
+    }
+
+    label {
+        display: block;
+        margin-top: 20px; /* Adjust margin top to move the input boxes up */
+        font-size: 16px;
+        font-weight: 500;
+    }
+
+    input {
+        display: block;
+        height: 50px;
+        width: 100%;
+        background-color: rgba(255, 255, 255, 0.07);
+        border-radius: 10px;
+        padding: 0 10px;
+        margin-top: 8px; /* Adjust margin top to move the input boxes up */
+        font-size: 14px;
+        font-weight: 300;
+    }
+
+      /* Add more styles for responsiveness here */
+
+      @media (max-width: 768px) {
+        .background {
+          display: none;
+        }
+
+        form {
+          width: 90%;
+        }
+      }
+
     </style>
 </head>
   <body>
