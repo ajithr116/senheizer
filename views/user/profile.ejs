@@ -1,6 +1,3 @@
-
-
-
 </DOCTYPE html>
 <html lang="en">
 
@@ -21,13 +18,18 @@
 
 
 <!-- Bootstrap JS (required for the Bootstrap components to work) -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
   <style>
- 
+ @media screen and (max-width: 576px) {
+  .d-flex {
+    flex-direction: column;
+  }
+}
+
   </style>
 
 <link rel="stylesheet" href="cssu/products.css">
@@ -95,57 +97,83 @@
         </div> 
     <div class="container">
 
- 
-        <div class="d-flex justify-content-between">
+        <div class="d-flex justify-content-between align-items-center flex-column flex-md-row">
             <h3>Profile settings</h3>
-            <a href="/wallet" class="btn btn-primary" style="width:500px;"><i class="fas fa-wallet"></i> Wallet & Payments</a>
-        </div><br>
-        <form action="/profile?userId=<%= userDetails._id %>" method="POST">
-            <div class="form-row">
-                <input type="hidden" name="userId" value="<%= userDetails._id %>">
-
-                <div class="col">
-                    <label>First name</label>
-                    <input type="text" name="updateFirstName" value="<%= userDetails.firstName%>" class="form-control" style="height:50px;border-radius: 10px;border:1px solid black;" placeholder="First name" readonly>
-                    <a href="#" class="edit-link">Edit</a>
+            <div class="d-flex align-items-center mt-3 mt-md-0">
+                <a href="/wallet" class="btn btn-primary mr-2 d-flex align-items-center justify-content-center" style="height: 30px;">
+                    <i class="fas fa-wallet"></i>
+                    <span class="ml-1 d-none d-sm-inline">Wallet </span>
+                </a>
+                <div class="input-group mr-2">
+                    <input type="text" id="referralLink" class="form-control" value="<%= userDetails.referralCode %>" readonly>
+                    <div class="input-group-append">
+                        <button id="copyReferralLink" class="btn btn-primary d-flex align-items-center justify-content-center" style="height: 30px;">
+                            <i class="fas fa-copy"></i>
+                            <span class="ml-1 d-none d-sm-inline">Copy Link</span>
+                        </button>
+                    </div>
                 </div>
-                <div class="col">
-                    <label>Last name</label>
-                    <input type="text" name="updateLastName" value="<%= userDetails.lastName %>" class="form-control" style="height:50px;border-radius: 10px;border:1px solid black;" placeholder="Last name" readonly>
-                    <a href="#" class="edit-link">Edit</a>
-                </div>  
+                <span id="referralCount" class="ms-3"><%= userDetails.referralCount%></span>
             </div>
-            
-            <br>
-            <div class="form-row">
-                <div class="col">
-                    <label>Email</label>
-                    <input type="email" name="updateEmail" value="<%= userDetails.email %>" class="form-control" style="height:50px;border-radius: 10px;border:1px solid black;" placeholder="Email" readonly>
-                    <!-- <a href="#" class="edit-link">Edit</a> -->
-                </div>
-                <div class="col">
-                    <label>Phone number</label>
-                    <input type="text" name="updatePhoneNo" value="<%= userDetails.phoneNumber %>" class="form-control" style="height:50px;border-radius: 10px;border:1px solid black;" placeholder="Phone number" readonly>
-                    <a href="#" class="edit-link">Edit</a>
-                </div>
-                <br>
-            </div>
-            <br>
-            <br>
-            <div class="container">
-                <div class="col">
-                    <input type="submit" class="btn btn-success" value="Update Profile" style="width:500px;">
-                </div>
-            </div>
-            <script>
-                document.querySelectorAll('.edit-link').forEach(link => {
-                link.addEventListener('click', (event) => {
-                event.preventDefault(); 
-                const inputField = link.previousElementSibling;
-                inputField.readOnly = false;
-                })
+        </div>
+        
+        
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                // Copy referral link functionality
+                const copyReferralLinkBtn = document.getElementById('copyReferralLink');
+                const referralLink = document.getElementById('referralLink');
+        
+                copyReferralLinkBtn.addEventListener('click', function () {
+                    referralLink.select();
+                    document.execCommand('copy');
+                    alert('Referral link copied to clipboard!');
+                });
+        
+                // Fetch and display referral count
+                fetch('getReferralCountApiEndpoint')
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('referralCount').textContent = `Referral Count: ${data.count}`;
+                    })
+                    .catch(error => console.error('Error fetching referral count:', error));
             });
-            </script>
+        </script>
+        
+        
+        <br>
+        <form action="/profile?userId=<%= userDetails._id %>" method="POST">
+            <input type="hidden" name="userId" value="<%= userDetails._id %>">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label>First name</label>
+                    <input type="text" name="updateFirstName" value="<%= userDetails.firstName%>" class="form-control" placeholder="First name" readonly>
+                    <a href="#" class="edit-link">Edit</a>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label>Last name</label>
+                    <input type="text" name="updateLastName" value="<%= userDetails.lastName %>" class="form-control" placeholder="Last name" readonly>
+                    <a href="#" class="edit-link">Edit</a>
+                </div>
+            </div>
+    
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label>Email</label>
+                    <input type="email" name="updateEmail" value="<%= userDetails.email %>" class="form-control" placeholder="Email" readonly>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label>Phone number</label>
+                    <input type="text" name="updatePhoneNo" value="<%= userDetails.phoneNumber %>" class="form-control" placeholder="Phone number" readonly>
+                    <a href="#" class="edit-link">Edit</a>
+                </div>
+            </div>
+    
+            <div class="row">
+                <div class="col-md-6">
+                    <input type="submit" class="btn btn-success" value="Update Profile">
+                </div>
+            </div>
         </form>
         <% if (typeof error !== 'undefined') { %>   
             <% if(error==1){%>
@@ -163,7 +191,15 @@
             <%}%>
         <%}%>
     </div><br>
-    
+    <script>
+        document.querySelectorAll('.edit-link').forEach(link => {
+        link.addEventListener('click', (event) => {
+        event.preventDefault(); 
+        const inputField = link.previousElementSibling;
+        inputField.readOnly = false;
+        })
+    });
+    </script>
     <hr style="height: 1px;background-color: black;">
 
     <div class="container d-flex ">
