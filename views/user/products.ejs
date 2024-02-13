@@ -32,7 +32,7 @@
       .fa-heart.wishlisted {
         color: red; 
     }
-    
+
       </style>
 
     <link rel="stylesheet" href="cssu/products.css">
@@ -95,23 +95,23 @@
                 <% var discountMap = new Map(); %>
                 <% if(banners.length>0){%>
                   <% banners.forEach((banner,index)=>{%>  
-                    <div class="carousel-item <%= index === 0 ? 'active' : '' %> px-5">
+                    <div class="carousel-item <%= index === 0 ? 'active' : '' %> px-5"> 
                       <div class="row">
-                            <div class="col-2">
-                                <img src="/banners/<%= banner.imageName %>" class="d-block w-10" alt="First slide" style="height: 100px;">
-                            </div>
-                            <div class="col-10 d-flex align-items-center justify-content-center">
-                                <div>
-                                    <h5 style="color:white"><%= banner.description %></h5>
-                                    <% if(banner.linkType=='category'){%>
-                                      <a href="/products?color&min&max&brand&category2=<%= banner.link %>" class="btn btn-primary"> Find up all</a>
-                                    <%}else{%>
-                                      <% discountMap.set(banner.link,banner.discountAmt) %>
-                                      <a href="/productPage?productId=<%= banner.link %>" class="btn btn-warning">Go and explore</a>
-                                    <%}%>                                
-                                  </div>
-                            </div>
+                        <div class="col-2">
+                          <img src="/banners/<%= banner.imageName %>" class="d-block w-10" alt="First slide" style="height: 100px;">
                         </div>
+                        <div class="col-10 d-flex align-items-center justify-content-center">
+                          <div>
+                            <h5 style="color:white"><%= banner.description %></h5>
+                            <% if(banner.linkType=='category'){%>
+                              <a href="/products?color&min&max&brand&category2=<%= banner.link %>" class="btn btn-primary"> Find up all</a>
+                            <%}else{%>
+                              <% discountMap.set(banner.link,banner.discountAmt) %>
+                              <a href="/productPage?productId=<%= banner.link %>" class="btn btn-warning">Go and explore</a>
+                            <%}%>                                
+                          </div>
+                        </div>
+                      </div>
                     </div>
                     <!-- <div class="carousel-item">
                       <div class="row">
@@ -194,7 +194,7 @@
                         <%}else{%>
                           <span class="badge badge-success stock-badge">In Stock <span class="badge-light px-1"><%= product.quantity %></span></span>
                         <%}%>
-                        <img src="/uploads/<%= product.images[0] %>" class="img-fluid" style="border-radius: 10px; width: 200px; height: 200px;">                
+                        <img src="/uploads/<%= product.images[0] %>" class="img-fluid" style="border-radius: 10px; max-width: 100%;" alt="Product Image">
                         <a class="btn-overlay" href="/productPage?productId=<%= product._id %>"><i class="fa fa-search-plus"></i> Quick view</a>
                       </div>
                       <figcaption class="info-wrap">
@@ -230,13 +230,14 @@
                           </div>
                         </div>
                         <div class="actions">
-                          <%if(product.quantity==0){%>
-                            <button  class="btn btn-outline-light " style="color:black;border: 1px solid black;" disabled>Add to cart</button>
-                          <%}else{%>
-                            <a href="/addtocart?productId=<%= product._id %>" class="btn btn-dark " style="border: 1px solid black;">Add to cart</a>
-                          <%}%>
+                          <% if (product.quantity == 0) { %>
+                            <button class="btn btn-outline-light" style="color:black;border: 1px solid black; width: 100%;" disabled>Add to cart</button>
+                          <% } else { %>
+                            <a href="/addtocart?productId=<%= product._id %>" class="btn btn-dark" style="border: 1px solid black; width: 100%;">Add to cart</a>
+                          <% } %>
                           <!-- <a href="" class="btn btn-dark">Buy now</a> -->
                         </div>
+                        
                       </figcaption>
                     </figure>
                 </div>
@@ -313,7 +314,6 @@
       </script>
       <!-- PRODUCTS -->
       <!-- Bootstrap JS (required for the Bootstrap components to work) -->
-      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
       <br><br><br>
       
       <!-- Footer Start -->
