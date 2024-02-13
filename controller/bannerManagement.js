@@ -19,7 +19,11 @@ const Banner = require('../models/banner');
 
 const adminBanner = async(req,res)=>{
   if(req.session.aid){
-    const banner = await Banner.find({});
+    const currentDate = new Date();
+    const banner = await Banner.find({
+      isDeleted: false,
+      endDate: { $gte: currentDate } // only include banners with an endDate in the future
+    });
 
     res.render('admin/banner',{banner})
   }
@@ -27,6 +31,7 @@ const adminBanner = async(req,res)=>{
     res.redirect('/login');
   }
 }
+
 
 const adminAddBanner = async(req,res)=>{
   if(req.session.aid){
