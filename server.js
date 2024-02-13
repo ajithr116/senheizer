@@ -59,19 +59,24 @@ app.use('/admin', adminRouter);
 
 app.use('/', userRoutes);
 
+// app.get('*',(req,res)=>{
+//     if (req.session.uname) {
+//         res.redirect('/home'); 
+//     } 
+//     else {
+//         res.redirect('./login');
+//     }
+// });
+
 app.get('*',(req,res)=>{
-    if (req.session.uname) {
-        res.redirect('/home'); 
-    } 
-    else {
-        res.redirect('./login');
-    }
+    res.render('user/404page')
 });
+
 
 app.use((req,res)=>{
     res.redirect('./login');
 });
 
-app.listen( process.env.PORT || 3000 , () => {
+app.listen( process.env.PORT || 4000 , () => {
     console.log( "Server started successfully" );
 }) 
