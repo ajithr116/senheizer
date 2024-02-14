@@ -374,12 +374,12 @@ const userProducts = async (req, res) => {
 const userProductPage = async(req, res) => {   
   if (req.session.uid) {
     const productId = req.query.productId;
-
-    if (productId.length !== 24 || productId.length<24) {
+ 
+    if ((productId && productId.length !== 24) || (productId && productId.length<24) ) {
       res.status(404).render('user/invalidIds'); 
       return;
     }
-
+    
     const product1 = await userController.getProductDetails(productId); 
     const banner = await Banner.findOne({link: productId});
 
