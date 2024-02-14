@@ -26,6 +26,19 @@ const userLogin =  async (req, res, next) => {
 }
 };
 
+
+const loadingPage = async(req,res)=>{
+  if(req.session.uid){
+    res.redirect('/index'); 
+  }
+  else{
+    const product = await userController.getAllProduct(7);
+    const today = new Date();
+    const banners = await Banner.find({isDeleted: false,isBlocked: false,startDate: { $lte: today },endDate: { $gte: today }});
+    res.render('user/loadingPage',{products:product,banners});
+  }
+}
+
 const userSubmit = async(req,res,next)=>{
   const {uName:email,uPassword:password} = req.body;
   const reEmail = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
@@ -358,14 +371,24 @@ const userProducts = async (req, res) => {
   }
 };
 
-const userProductPage = async(req,res)=>{
+const userProductPage = async(req, res) => {   
   if (req.session.uid) {
     const productId = req.query.productId;
-    const product1 = await userController.getProductDetails(productId);
-    const banner = await Banner.findOne({link:productId});
-    res.render('user/productPage',{ product:product1 ,proID:productId,banner});
-  } 
-  else {
+
+    if (productId.length !== 24 || productId.length<24) {
+      res.status(404).render('user/invalidIds'); 
+      return;
+    }
+
+    const product1 = await userController.getProductDetails(productId); 
+    const banner = await Banner.findOne({link: productId});
+
+    if (product1) {
+      res.render('user/productPage', { product: product1, proID: productId, banner });
+    } else {
+      res.status(404).render('user/404page'); 
+    }
+  } else {
     res.redirect('/login');
   }
 };
@@ -373,7 +396,7 @@ const userProductPage = async(req,res)=>{
 const userLogout = async (req,res,next)=>{ 
   try{
     req.session.uid='';
-    res.redirect('./login');
+    res.redirect('./');
   }
   catch(err){
     next(err);
@@ -431,5 +454,6 @@ module.exports = {
   userProductPage,
   userLogout,
   discount,
-  checkReferral
+  checkReferral,
+  loadingPage,
 };
