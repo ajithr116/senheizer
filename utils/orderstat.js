@@ -1,21 +1,20 @@
 
 const Order = require('../models/orders');
 
-const weeklyOrderStat= async(req,res)=>{
-
+const weeklyOrderStat = async(req,res)=>{
     const now = new Date();
-    const startOfWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay());
-    const endOfWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay() + 6, 23, 59, 59);
-    
-    // rest of your code...
-    
+
+    // Calculate the start and end dates of the past, current, and future weeks
+    const startOfLastWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay() + (now.getDay() === 0 ? -6 : 1));
+    const endOfNextWeek = new Date(startOfLastWeek);
+    endOfNextWeek.setDate(startOfLastWeek.getDate() + 13);
 
     const result = await Order.aggregate([
         {
             $match: {
                 date: {
-                    $gte: new Date(startOfWeek),
-                    $lte: new Date(endOfWeek)
+                    $gte: startOfLastWeek,
+                    $lte: endOfNextWeek
                 }
             }
         },
@@ -26,7 +25,7 @@ const weeklyOrderStat= async(req,res)=>{
             $group: {
                 _id: { $dayOfWeek: "$date" },
                 totalSales: { $sum: { $multiply: [ "$items.price", "$items.quantity" ] } },
-                count: { $sum: 1 }
+                count: { $sum: "$items.quantity" }
             }
         },
         {
@@ -45,9 +44,17 @@ const weeklyOrderStat= async(req,res)=>{
         },
         { $sort: { _id: 1 } }
     ]);
-    // console.log("==",result);
-    return result;
-}
+
+    // Ensure that the result includes entries for all three weeks
+    for (let i = now.getDay() - 6; i <= now.getDay() + 13; i += 7) {
+        const week = Math.floor((new Date(now.getFullYear(), now.getMonth(), i) - new Date(now.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24 * 7));
+        if (!result.find(r => r.week === week)) {
+            result.push({ week, totalSales: 0, count: 0 });
+        }
+    }
+
+    return result.sort((a, b) => a.week - b.week);
+};
 
 const monthlyOrderStat = async(req,res)=>{
 
@@ -195,8 +202,9 @@ const weeklySalesState = async(req,res)=>{
     const now = new Date();
 
     // Calculate the start and end dates of the current week
-    const startOfWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay() + 1);
-    const endOfWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay() + 7);
+    const startOfWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay() + (now.getDay() === 0 ? -6 : 1));
+    const endOfWeek = new Date(startOfWeek);
+    endOfWeek.setDate(startOfWeek.getDate() + 6);
 
     const report = await Order.aggregate([
         {
@@ -219,7 +227,7 @@ const weeklySalesState = async(req,res)=>{
                 dayOfWeek: {
                     $let: {
                         vars: {
-                            days: [ "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" ]
+                            days: [ "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" ]
                         },
                         in: { $arrayElemAt: [ "$$days", "$_id" ] }
                     }
@@ -230,7 +238,7 @@ const weeklySalesState = async(req,res)=>{
         },
         { $sort: { _id: 1 } }
     ]);
-
+    
     return report;
 };
 
