@@ -69,7 +69,14 @@
         margin: 20px 2px;
         cursor: pointer;
       }
+      .nav-item {
+        transition: all 0.3s ease;
+    }
 
+    .nav-item:hover {
+        transform: scale(1.1);
+        color: #ff5e62;
+    }
     </style>
       <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
   
@@ -96,35 +103,32 @@
         </div>
 
         <nav class="navbar navbar-expand-lg navbar-light bg-light py-lg-0 px-lg-5">
-            <a href="/index" class="navbar-brand ms-4 ms-lg-0">
-                <h1 class="fw-bold text-black m-0">SENHEIZER</h1>
-            </a>
-            <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarCollapse">
-                <div class="navbar-nav mx-auto">
-                    <a href="/index" class="nav-item nav-link ">Home</a>
-                    <a href="/products" class="nav-item nav-link ">Products</a>
-                    <a href="/cart" class="nav-item nav-link active">Cart</a>
-                    <!-- <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Pages</a>
-                        <div class="dropdown-menu m-0">
-                            <a href="https://www.google.com" class="dropdown-item">Seller's Camp</a>
-                            <a href="https://www.google.com" class="dropdown-item">Craftsmen</a>
-                        </div>
-                    </div> -->
-                    <a href="/orders" class="nav-item nav-link">Orders</a>
-                    <a href="https://www.google.com" class="nav-item nav-link">Wishlist</a>
-                    <!-- <a href="https://www.google.com" class="nav-item nav-link">Contact Us</a> -->
-                    <a href="/profile" class="nav-item nav-link rounded " >Profile</a>
-                </div>
-                <div class="d-none d-lg-flex ms-2">
-                    <a class="btn btn-outline-danger" href="/logout">Logout</a>
-                </div>
-            </div>
-            
-        </nav>
+          <a href="/index" class="navbar-brand ms-4 ms-lg-0">
+              <h1 class="fw-bold text-black m-0">SENHEIZER</h1>
+          </a>
+          <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+              <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+              <div class="navbar-nav mx-auto">
+                <a href="/index" class="nav-item nav-link "><i class="fas fa-home"></i> Home</a>
+                <a href="/products" class="nav-item nav-link" ><i class="fas fa-box-open"></i> Products</a>
+                <a href="/cart" class="nav-item nav-link " style="color: #ff5e62;border-bottom: 1px solid #ff5e62;"><i class="fas fa-shopping-cart"></i> Cart</a>
+                <a href="/orders" class="nav-item nav-link"><i class="fas fa-list"></i> Orders</a>
+                <a href="/profile" class="nav-item nav-link"><i class="fas fa-user"></i> Profile</a>
+                  <!-- <div class="nav-item dropdown">
+                      <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Pages</a>
+                      <div class="dropdown-menu m-0">
+                          <a href="https://www.google.com" class="dropdown-item">Seller's Camp</a>
+                          <a href="https://www.google.com" class="dropdown-item">Craftsmen</a>
+                      </div>
+                  </div> -->
+              </div>
+              <div class="d-lg-flex ms-2">
+                  <a class="btn btn-outline-danger" href="/logout">Logout</a>
+              </div>
+          </div>
+      </nav>
     </div>
     <br><br><br>
 
