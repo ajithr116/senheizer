@@ -33,6 +33,15 @@
       footer {
         margin-top: auto;
       }
+      .nav-item {
+        transition: all 0.3s ease;
+    }
+
+    .nav-item:hover {
+        transform: scale(1.1);
+        color: #ff5e62;
+    }
+
     </style>
 
   <link rel="stylesheet" href="cssu/products.css">
@@ -66,9 +75,11 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <div class="navbar-nav mx-auto">
-                    <a href="/index" class="nav-item nav-link ">Home</a>
-                    <a href="/products" class="nav-item nav-link ">Products</a>
-                    <a href="/cart" class="nav-item nav-link ">Cart</a>
+                    <a href="/index" class="nav-item nav-link "><i class="fas fa-home"></i> Home</a>
+                    <a href="/products" class="nav-item nav-link" ><i class="fas fa-box-open"></i> Products</a>
+                    <a href="/cart" class="nav-item nav-link " ><i class="fas fa-shopping-cart"></i> Cart</a>
+                    <a href="/orders" class="nav-item nav-link" style="color: #ff5e62;border-bottom: 1px solid #ff5e62;"><i class="fas fa-list"></i> Orders</a>
+                    <a href="/profile" class="nav-item nav-link"><i class="fas fa-user"></i> Profile</a>
                     <!-- <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Pages</a>
                         <div class="dropdown-menu m-0">
@@ -76,16 +87,11 @@
                             <a href="https://www.google.com" class="dropdown-item">Craftsmen</a>
                         </div>
                     </div> -->
-                    <a href="/orders" class="nav-item nav-link active">Orders</a>
-                    <!-- <a href="https://www.google.com" class="nav-item nav-link">Wishlist</a> -->
-                    <!-- <a href="https://www.google.com" class="nav-item nav-link">Contact Us</a> -->
-                    <a href="/profile" class="nav-item nav-link rounded  " >Profile</a>
                 </div>
-                <div class="d-none d-lg-flex ms-2">
+                <div class="d-lg-flex ms-2">
                     <a class="btn btn-outline-danger" href="/logout">Logout</a>
                 </div>
             </div>
-            
         </nav>
     </div>
     <br>      
@@ -157,7 +163,7 @@
                             <h5>Grand Total</h5>
                             <p >Total : <b><%= order.totalPrice %></b><% if(order.paymentMethod=="RAZORPAY"){%> <span class="badge badge-info">RAZORPAY</span><%}else{%>  <span class="badge badge-info">COD</span><%}%></p>
                             <%if(order.orderStatus=="pending"){%>
-                                <a class="btn btn-danger" href="/deleteorder?orderId=<%= order._id %>" onclick="alert('Are you sure you want to delete ?')">Delete Order</a> <!-- Display the status of the order -->
+                                <a class="btn btn-danger" href="/deleteorder?orderId=<%= order._id %>" onclick="alert('Are you sure you want to delete ?')">Cancel Order</a> <!-- Display the status of the order -->
                             <%}else if(order.orderStatus=="delivered"){%>
                                 <a class="btn btn-primary "> Share your experience</a>
                             <%}%>
