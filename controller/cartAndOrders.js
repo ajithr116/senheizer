@@ -45,7 +45,7 @@ const addToCart = async (req, res) => {
     }
   } catch (error) {
     console.error(error);
-    // return res.status(500).send('An error occurred');
+    res.status(404).render('user/404page');
   }
 };
 
@@ -72,7 +72,8 @@ const addToCart = async (req, res) => {
         res.render('user/cart', { cartItems: populatedCartItems, subtotal, tax, total });
     } catch (error) {
         console.error(error);
-        res.status(500).send('Error fetching cart details');
+        res.status(500).render('user/404page');
+
       }
     } else {
       res.redirect('/login');
@@ -391,7 +392,7 @@ const userDeleteOrder = async (req, res) => {
     res.redirect('/orders'); // Redirect to orders page to show the canceled order
   } catch (err) {
     console.error(err);
-    res.status(500).send('Server Error'); // Handle general errors
+    res.status(404).render('user/404page');
   }
 };
 
