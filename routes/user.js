@@ -21,6 +21,8 @@ const checkUserBlocked = async (req,res,next)=>{
 router.get('/login',userController.userLogin);
 // router.get('/',userController.userLogin);
 router.get('/',userController.loadingPage);
+router.get('/loadProducts',userController.loadPageProducts);
+router.get('/loadingProductsPage',userController.loadingProductPage)
 router.post('/submit',userController.userSubmit);
 router.get('/signup',userController.userSignup);
 router.post('/submitForm',userController.userSubmitForm);
