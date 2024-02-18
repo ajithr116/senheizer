@@ -111,18 +111,18 @@ const userSignup = async (req,res)=>{
 
 const userSubmitForm = async(req,res,next)=>{
 
-  const nameRegex = /^[a-zA-Z]{1,30}$/;    //only alphabet and upto 30 
+  const nameRegex = /^[a-zA-Z]{1,20}$/;    
   var rePassword = /^(?=.*[A-Z])(?=.*\W).{8,}$/;
-  const reEmail = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+  const reEmail = /^[a-zA-Z0-9._%+-]+@(gmail|yopmail)\.com$/;
   const {uFirstName: firstName, uLastName: lastName, uEmail: email, uPassword: password, uConfirmPassword: confirmPassword, uPhoneNo:phoneNumber, uReferral: referralCode} = req.body;
     
   try{
-      if(req.session.uid){
+      if(req.session.uid){ 
         res.redirect('/index'); 
       }
       else{
         if(nameRegex.test(firstName) && nameRegex.test(lastName)|| req.session.check){
-          if(true || req.session.check){
+          if(reEmail.test(email) || req.session.check){
             const exists2 = await userController.checkEmailExist(email);     //function to find email exists or not
             if(exists2){
               req.session.error=3;    //email exists
@@ -311,6 +311,80 @@ const userIndex = async(req,res)=>{
   } 
 };
 
+const loadingProductPage = async(req,res)=>{
+  const productId = req.query.productId;
+
+  if (!productId || (productId && productId.length !== 24) || (productId && productId.length<24) ) {
+    res.status(404).render('user/invalidIds'); 
+    return; 
+  }
+
+  const product1 = await userController.getProductDetails(productId); 
+  const banner = await Banner.findOne({link: productId});
+
+  if (product1) {
+    res.render('user/loadingProductpage', { product: product1, proID: productId, banner });
+  } else {
+    res.status(404).render('user/404page'); 
+  }
+}
+
+const loadPageProducts = async(req,res)=>{
+  try{
+    let product = await userController.getAllProductPage();
+    let product2 = await userController.getAllProductPage();
+    const category = await Category.find({ isDeleted: false });
+    const { brand, maxPrice, color, category2 } = req.query;
+    const searchQuery = req.query.search; 
+    
+    if (brand) {
+      product = product.filter(product => brand.includes(product.brand));
+    }
+    
+    if (maxPrice) {
+      product = product.filter(product => product.price <= maxPrice);
+    }
+    
+    if (color) {
+      let colorArray;
+      if (typeof color === 'string') {
+          colorArray = color.split(',').map(c => c.trim().toLowerCase());
+      } else if (Array.isArray(color)) {
+          colorArray = color.map(c => c.trim().toLowerCase());
+      }
+      product = product.filter(product => {
+          const productColors = product.tags.split(',').map(tag => tag.trim().toLowerCase());
+          return colorArray.some(c => productColors.includes(c));
+      });
+    }
+    
+    if (category2) {
+      product = await Product.find({ category: category2 });
+    }
+    
+    if (searchQuery) {
+      product = product.filter(product => {
+      return (
+        product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        product.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        product.tags.toLowerCase().includes(searchQuery.toLowerCase())||
+        product.brand.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+      }); 
+    }
+
+    const today = new Date();
+    const banners = await Banner.find({isDeleted: false,isBlocked: false,startDate: { $lte: today },endDate: { $gte: today }});
+
+    
+    res.render('user/loadProducts', { products: product, category,product2:product2,banners});
+  }
+  catch(err){
+    console.error(err.message);
+    res.status(404).render('user/404page');
+  }
+}
+
 const userProducts = async (req, res) => {
   try{
     if (req.session.uid) {
@@ -375,11 +449,11 @@ const userProductPage = async(req, res) => {
   if (req.session.uid) {
     const productId = req.query.productId;
  
-    if ((productId && productId.length !== 24) || (productId && productId.length<24) ) {
+    if (!productId || (productId && productId.length !== 24) || (productId && productId.length<24) ) {
       res.status(404).render('user/invalidIds'); 
-      return;
+      return; 
     }
-    
+
     const product1 = await userController.getProductDetails(productId); 
     const banner = await Banner.findOne({link: productId});
 
@@ -456,4 +530,6 @@ module.exports = {
   discount,
   checkReferral,
   loadingPage,
+  loadPageProducts,
+  loadingProductPage,
 };
