@@ -69,34 +69,42 @@
         margin: 20px 2px;
         cursor: pointer;
       }
-/* Default styles */
-.container-fluid {
-  padding: 0 15px; /* Add some padding to prevent content from touching the edges */
-}
+      /* Default styles */
+      .container-fluid {
+        padding: 0 15px; /* Add some padding to prevent content from touching the edges */
+      }
 
-.cart-item {
-  flex-wrap: wrap; /* Allow the flex items to wrap onto multiple lines on small screens */
-}
+      .cart-item {
+        flex-wrap: wrap; /* Allow the flex items to wrap onto multiple lines on small screens */
+      }
 
-.summary-container {
-  margin-top: 50px;
-}
+      .summary-container {
+        margin-top: 50px;
+      }
 
-/* Responsive styles */
-@media (max-width: 992px) {
-  .summary-container {
-    position: static; /* Disable sticky positioning on medium screens and below */
-    margin-top: 20px;
-  }
+      /* Responsive styles */
+      @media (max-width: 992px) {
+        .summary-container {
+          position: static; /* Disable sticky positioning on medium screens and below */
+          margin-top: 20px;
+        }
 
-  .order-1 {
-    order: 1; /* Make the summary appear first on small screens */
-  }
+        .order-1 {
+          order: 1; /* Make the summary appear first on small screens */
+        }
 
-  .order-2 {
-    order: 2; /* Make the cart appear second on small screens */
-  }
-}
+        .order-2 {
+          order: 2; /* Make the cart appear second on small screens */
+        }
+      }
+    .nav-item {
+        transition: all 0.3s ease;
+    }
+
+    .nav-item:hover {
+        transform: scale(1.1);
+        color: #ff5e62;
+    }
 
     </style>
 
@@ -123,35 +131,32 @@
         </div>
 
         <nav class="navbar navbar-expand-lg navbar-light bg-light py-lg-0 px-lg-5">
-            <a href="/index" class="navbar-brand ms-4 ms-lg-0">
-                <h1 class="fw-bold text-black m-0">SENHEIZER</h1>
-            </a>
-            <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarCollapse">
-                <div class="navbar-nav mx-auto">
-                    <a href="/index" class="nav-item nav-link ">Home</a>
-                    <a href="/products" class="nav-item nav-link ">Products</a>
-                    <a href="/cart" class="nav-item nav-link  active">Cart</a>
-                    <!-- <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Pages</a>
-                        <div class="dropdown-menu m-0">
-                            <a href="https://www.google.com" class="dropdown-item">Seller's Camp</a>
-                            <a href="https://www.google.com" class="dropdown-item">Craftsmen</a>
-                        </div>
-                    </div> -->
-                    <a href="/orders" class="nav-item nav-link">Orders</a>
-                    <!-- <a href="https://www.google.com" class="nav-item nav-link">Wishlist</a> -->
-                    <!-- <a href="https://www.google.com" class="nav-item nav-link">Contact Us</a> -->
-                    <a href="/profile" class="nav-item nav-link rounded " >Profile</a>
-                </div>
-                <div class="d-none d-lg-flex ms-2">
-                    <a class="btn btn-outline-danger" href="/logout">Logout</a>
-                </div>
-            </div>
-            
-        </nav>
+          <a href="/index" class="navbar-brand ms-4 ms-lg-0">
+              <h1 class="fw-bold text-black m-0">SENHEIZER</h1>
+          </a>
+          <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+              <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+              <div class="navbar-nav mx-auto">
+                <a href="/index" class="nav-item nav-link "><i class="fas fa-home"></i> Home</a>
+                <a href="/products" class="nav-item nav-link" ><i class="fas fa-box-open"></i> Products</a>
+                <a href="/cart" class="nav-item nav-link " style="color: #ff5e62;border-bottom: 1px solid #ff5e62;"><i class="fas fa-shopping-cart"></i> Cart</a>
+                <a href="/orders" class="nav-item nav-link"><i class="fas fa-list"></i> Orders</a>
+                <a href="/profile" class="nav-item nav-link"><i class="fas fa-user"></i> Profile</a>
+                  <!-- <div class="nav-item dropdown">
+                      <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Pages</a>
+                      <div class="dropdown-menu m-0">
+                          <a href="https://www.google.com" class="dropdown-item">Seller's Camp</a>
+                          <a href="https://www.google.com" class="dropdown-item">Craftsmen</a>
+                      </div>
+                  </div> -->
+              </div>
+              <div class="d-lg-flex ms-2">
+                  <a class="btn btn-outline-danger" href="/logout">Logout</a>
+              </div>
+          </div>
+      </nav>
     </div>
     <br><br><br>
 
@@ -182,45 +187,13 @@
                     </div>
                     <div>
                       <p><b>Price</b>: ₹ <%= item.product.price %></p>
-                      <!-- <button class="quantity-btn btn-primary" data-action="decrease" style="border:none">-</button>
-                      <input type="number" value="<%= item.quantity %>" readonly style="width:40px;border:none">
-                      <button class="quantity-btn btn-primary" data-action="increase" style="border:none">+</button> -->
-                      <input type="range" min="1" max="100" oninput="updateRangeInput(this)" value="<%= item.quantity %>" data-product-id="<%= item.product._id %>">
-                      <input type="text" value="<%= item.quantity %>" style="width:40px;border:none" data-product-id="<%= item.product._id %>">
-                      
-                      <script>
-                        function updateRangeInput(elem) {
-                          $(elem).next().val($(elem).val());
-                        }
-                        
-                        $('input[type="range"], input[type="text"]').on('input', function() {
-                        const value = $(this).val();
-                        const productId = $(this).data('product-id');
-                        
-                        fetch('/updatecart', {
-                          method: 'POST',
-                          headers: { 'Content-Type': 'application/json' },
-                          body: JSON.stringify({
-                            productID: productId,
-                            quantity: value
-                          })
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                          if (data.success) {
-                            // Update the subtotal, tax, and total values in the HTML
-                            document.getElementById('subTotal').textContent = data.subtotal.toFixed(2);
-                            document.getElementById('tax').textContent = data.tax.toFixed(2);
-                            document.getElementById('total').textContent = data.total.toFixed(2);
-                          } else {
-                            console.log("Error updating cart");
-                          }
-                        });
-                      });
-                      </script>
+                      <div>
+                        <button class="quantity-btn btn-primary" data-action="decrease" onclick="updateQuantity(this, -1)" style="border:none">-</button>
+                        <input type="text" value="<%= item.quantity %>" style="width:40px;border:none;text-align:center;" readonly data-product-id="<%= item.product._id %>">
+                        <button class="quantity-btn btn-primary" data-action="increase" onclick="updateQuantity(this, 1)" style="border:none">+</button>
+                      </div>
                     </div>
                     <div>
-                      
                       <a class="btn btn-danger" href="/removeproduct?cartProductId=<%= item.product._id %>">Remove</a>
                     </div>
                   </div>
@@ -231,6 +204,49 @@
                 <a href="/products">Shop now</a>
               <% } %>
             </div>
+            
+            <script>
+              function updateQuantity(elem, change) {
+                const input = $(elem).siblings('input[type="text"]');
+                let newValue = parseInt(input.val()) + change;
+                
+                // Define your quantity limit here
+                const quantityLimit = 5;
+                
+                // Check if newValue exceeds the limit, if so, set it to the limit
+                if (newValue > quantityLimit) {
+                  newValue = quantityLimit;
+                } else if (newValue < 1) {
+                  newValue = 1;
+                }
+            
+                input.val(newValue);
+            
+                const productId = input.data('product-id');
+            
+                fetch('/updatecart', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    productID: productId,
+                    quantity: newValue
+                  })
+                })
+                .then(response => response.json())
+                .then(data => {
+                  if (data.success) {
+                    // Update the subtotal, tax, and total values in the HTML
+                    document.getElementById('subTotal').textContent = data.subtotal.toFixed(2);
+                    document.getElementById('tax').textContent = data.tax.toFixed(2);
+                    document.getElementById('total').textContent = data.total.toFixed(2);
+                  } else {
+                    console.log("Error updating cart");
+                  }
+                });
+              }
+            </script>
+            
+            
             
             
             <!-- <script>
