@@ -1,0 +1,366 @@
+
+</DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Products</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Favicon -->
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+
+      <!-- Bootstrap JS (required for the Bootstrap components to work) -->
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+      <style>
+      .stock-badge {
+          position: absolute;
+          top: 10px;
+          left: 10px;
+          z-index: 100;
+      }
+      .fa-heart.wishlisted {
+        color: red; 
+    }
+    #brand-name {
+    text-align: center;
+    margin-top: 50px;
+    font-size: 40px;
+    background-image: linear-gradient(to right, #ff416c, #ff4b2b, #ff9f00, #07e74a, #001aff,#ff00ea, rgb(255, 0, 149));
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: animateTextGradient 5s linear infinite;
+    }
+
+    @keyframes animateTextGradient {
+    0% {
+        background-position: 0 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0 50%;
+    }
+    }
+    .nav-item {
+        transition: all 0.3s ease;
+    }
+
+    .nav-item:hover {
+        transform: scale(1.1);
+        color: #ff5e62;
+    }
+      </style>
+
+    <link rel="stylesheet" href="cssu/products.css">
+
+  </head>
+
+  <body >
+      <div class="container-fluid fixed-top bg-light px-0">
+          <div class="top-bar row gx-0 align-items-center d-none d-lg-flex">
+              <!-- Uncomment the following lines if you want to display additional information in the top bar -->
+              <!-- <div class="col-lg-6 px-5 text-start">
+                  <small><i class="fa fa-map-marker-alt me-2"></i>123 Street, Manglore, India</small>
+                  <small class="ms-4"><i class="fa fa-envelope me-2"></i>info@Craftycorner.com</small>
+              </div> -->
+              <!-- Uncomment the following lines if you want to display social media icons in the top bar -->
+              <!-- <div class="col-lg-6 px-5 text-end">
+                  <small>Follow us:</small>
+                  <a class="text-body ms-3" href=""><i class="fab fa-facebook-f"></i></a>
+                  <a class="text-body ms-3" href=""><i class="fab fa-twitter"></i></a>
+                  <a class="text-body ms-3" href=""><i class="fab fa-linkedin-in"></i></a>
+                  <a class="text-body ms-3" href=""><i class="fab fa-instagram"></i></a>
+              </div> -->
+          </div>
+
+          <nav class="navbar navbar-expand-lg navbar-light bg-light py-lg-0 px-lg-5">
+            <a href="/index" class="navbar-brand ms-4 ms-lg-0">
+              <h1 class="fw-bold text-black m-0" id="brand-name">SENHEIZER</h1>
+            </a>
+            <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <div class="navbar-nav mx-auto">
+                  <a href="/" class="nav-item nav-link " ><i class="fas fa-home"></i> Home</a>
+                  <a href="/loadProducts" class="nav-item nav-link " style="color: #ff5e62;border-bottom: 1px solid #ff5e62;"> <i class="fas fa-box-open"></i> Products</a>                
+                </div>
+                <div class="d-lg-flex ms-2">
+                    <a class="btn btn-success" href="/login">Login</a>
+                </div>
+            </div>
+        </nav>
+        
+      </div>
+          <br><br><br><br>
+          <div class="container bg-dark">
+            <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel" data-bs-interval="2000">
+                <div class="carousel-inner">
+                <% var discountMap = new Map(); %>
+                <% if(banners.length>0){%>
+                  <% banners.forEach((banner,index)=>{%>  
+                    <div class="carousel-item <%= index === 0 ? 'active' : '' %> px-5"> 
+                      <div class="row">
+                        <div class="col-2">
+                          <img src="/banners/<%= banner.imageName %>" class="d-block w-10" alt="First slide" style="height: 100px;">
+                        </div>
+                        <div class="col-10 d-flex align-items-center justify-content-center">
+                          <div>
+                            <h5 style="color:white"><%= banner.description %></h5>
+                            <% if(banner.linkType=='category'){%>
+                              <a href="/loadProducts?color&min&max&brand&category2=<%= banner.link %>" class="btn btn-primary"> Find up all</a>
+                            <%}else{%>
+                              <% discountMap.set(banner.link,banner.discountAmt) %>
+                              <a href="/loadingProductsPage?productId=<%= banner.link %>" class="btn btn-warning">Go and explore</a>
+                            <%}%>                                
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- <div class="carousel-item">
+                      <div class="row">
+                          <div class="col-2">
+                              <img src="images/img5.jpg" class="d-block w-10" alt="First slide" style="height: 100px;">
+                          </div>
+                          <div class="col-10 d-flex align-items-center justify-content-center">
+                              <div>
+                                  <h5>Lorem, ipsum dolor sit amet consectetur dam commodi eligendi corporis id quos voluptates nobis a placeat, aliquam fugit sit iste, similique fugiat animi natus?</h5>
+                                  <button type="button" class="btn btn-primary"> Button</button>
+                              </div>
+                          </div>
+                      </div>
+                    </div> -->  
+                <%})%>
+              <%}else{%>
+                      <div class="carousel-item active">
+                        <div class="row">
+                            <div class="col-2">
+                                <img src="images/contact us.jpg" class="d-block w-10" alt="First slide" style="height: 100px;">
+                            </div>
+                            <div class="col-10 d-flex align-items-center justify-content-center">
+                                <div>
+                                    <h5 style="color:white;">Contact us to add banner</h5>
+                                    <button type="button" class="btn btn-primary" disabled> contact</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+              <%}%>
+            </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon " aria-hidden="true"></span>
+                    <span class="visually-hidden" >Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+        
+          <br>
+      <!-- PRODUCTS -->
+      <!-- <div class="position-fixed" style="width:390px;height:500;border:1px solid black;margin-top: -60;">
+        <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel" data-bs-interval="2000">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="images/img5.jpg" class="d-block w-100" alt="First slide">
+                </div>
+                <div class="carousel-item">
+                    <img src="images/about.jpg" class="d-block w-100" alt="Second slide">
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+        <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque ut aliquam provident minima accusamus beatae alias sed error? Sapiente, doloribus? Magnam odio cumque aliquam ex ducimus natus maxime eligendi voluptatibus?</p>
+    </div> -->
+    
+      <div class="container">
+        <div class="row">
+          <%- include('loadingFilter') %>
+          <main class="col-md-9">
+            <div class="row"> 
+                <% products.forEach(product => { %>
+                  <% if (product.isDeleted !== true) { %>
+                  <div class="col-md-4">
+                    <figure class="card card-product-grid">
+                      <div class="img-wrap">
+                        <!-- <span class="badge badge-danger"> NEW </span> -->
+                        <% if(product.quantity==0){ %>
+                          <span class="badge badge-danger stock-badge">In Stock <span class="badge-light px-1"><%= product.quantity %></span></span>
+                        <%}else{%>
+                          <span class="badge badge-success stock-badge">In Stock <span class="badge-light px-1"><%= product.quantity %></span></span>
+                        <%}%>
+                        <img src="/uploads/<%= product.images[0] %>" class="img-fluid" style="border-radius: 10px; max-width: 100%;" alt="Product Image">
+                        <a class="btn-overlay" href="/loadingProductsPage?productId=<%= product._id %>"><i class="fa fa-search-plus"></i> Quick view</a>
+                      </div>
+                      <figcaption class="info-wrap">
+                        <div class="fix-height">
+                          <a href="/loadingProductsPage?productId=<%= product._id %>" class="title"><%= product.name.substring(0, 20) + (product.name.length > 20 ? '...' : '') %></a>
+                          <div class="rating-price-wishlist">
+                            <div class="rating">
+                              <i class="fa fa-star"></i>
+                              <i class="fa fa-star"></i>
+                              <i class="fa fa-star"></i>
+                              <i class="fa fa-star"></i>
+                              <i class="fa fa-star-half-o"></i>
+                              <span class="rating-count">150+ </span>
+                            </div>
+                            <div class="price-wishlist">
+                              <div class="price-wrap">
+                                <span class="price" data-product-id="<%= product._id %>" data-category-id="<%= product.category %>">₹ <%= product.price %></span>
+                                <del class="price-old" data-product-id="<%= product._id %>" data-category-id="<%= product.category %>"></del>
+
+                                <!-- <a  href="#" class="wishlist-icon btn" style="border:none;background-color: transparent;">
+                                  <i class="fa fa-heart"></i>
+                                </a>-->
+                                <script>
+                                  const wishlistButtons = document.querySelectorAll('.wishlist-icon');
+                                  wishlistButtons.forEach(button => {
+                                    button.addEventListener('click', () => {
+                                      button.classList.toggle('active');
+                                    });
+                                  });
+                                </script>                            
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="actions">
+                          <% if (product.quantity == 0) { %>
+                            <button class="btn btn-outline-light" style="color:black;border: 1px solid black; width: 100%;" disabled>Add to cart</button>
+                          <% } else { %>
+                            <a href="/login" class="btn btn-dark" style="border: 1px solid black; width: 100%;">Add to cart</a>
+                          <% } %>
+                          <!-- <a href="" class="btn btn-dark">Buy now</a> -->
+                        </div>
+                        
+                      </figcaption>
+                    </figure>
+                </div>
+                <%}%>
+              <%})%> 
+            </div>
+            <script>
+              const prices = document.querySelectorAll('.price');
+              prices.forEach(price => {
+              const productId = price.getAttribute('data-product-id');
+              const oldprice = document.querySelector(`.price-old[data-product-id="${productId}"]`);
+              const categoryId = price.getAttribute('data-category-id');
+      
+              $.ajax({
+                type: 'GET',
+                url: './checkDiscount?productId=' + productId + '&categoryId=' + categoryId,
+                success: function(response) {
+                  const maxDiscount = Math.max(response.productDiscount, response.categoryDiscount);
+                  if (maxDiscount > 0) {
+                    const originalPrice = parseFloat(price.textContent.slice(1));
+                    const total = originalPrice + maxDiscount;
+                    oldprice.textContent = '$' + total;
+                    oldprice.style.textDecoration = 'line-through'; 
+                  }
+                }
+              });
+            });
+          </script>
+          
+            <nav class="mt-4" aria-label="Page navigation sample">
+              <ul class="pagination">
+                <li class="page-item "><a  id="prevButton" class="page-link" href="#">Previous</a></li>
+                <li class="page-item"><a id="nextButton" class="page-link" href="#">Next</a></li>
+              </ul>
+            </nav>
+          </main>
+        </div>
+      </div>
+      <script>
+        let currentPage = 1;
+        const itemsPerPage = 9; 
+        const items = Array.from(document.querySelectorAll('.col-md-4'));
+        const totalPages = Math.ceil(items.length / itemsPerPage);
+
+        function showPage() {
+          items.forEach(item => item.style.display = 'none');
+          let start = (currentPage - 1) * itemsPerPage;
+          let end = start + itemsPerPage;
+          items.slice(start, end).forEach(item => item.style.display = '');
+          
+          document.querySelector('#prevButton').disabled = currentPage === 1;
+          document.querySelector('#nextButton').disabled = currentPage === totalPages;
+        }
+
+        function nextPage() {
+          if (currentPage < totalPages) {
+            currentPage++;
+            showPage();
+          }
+        }
+
+        function previousPage() {
+          if (currentPage > 1) {
+            currentPage--;
+            showPage();
+          }
+        }
+
+        document.querySelector('#nextButton').addEventListener('click', nextPage);
+        document.querySelector('#prevButton').addEventListener('click', previousPage);
+
+        showPage();
+
+      </script>
+      <!-- PRODUCTS -->
+      <!-- Bootstrap JS (required for the Bootstrap components to work) -->
+      <br><br><br>
+      
+      <!-- Footer Start -->
+      <footer>
+        <div class="footer-content">
+          <div class="footer-section about">
+            <h2>About Us</h2>
+            <p>SENHEIZER.</p>
+          </div>
+          <div class="footer-section contact">
+            <h2>Contact Us</h2>
+            <p>Email: ajith8593935904@gamil.com<br>Phone: 8593935903</p>
+            <!-- Add two textboxes and one button -->
+            <div class="contact-form">
+              <input type="text" placeholder="Your Name">
+              <input type="text" placeholder="Your Email">
+              <button>Contact</button>
+            </div>
+          </div>
+          <div class="footer-section social">
+            <h2>Follow Us</h2>
+            <p>Stay connected on social media:</p>
+            <!-- Add your social media icons or links here -->
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>&copy; 2023 SENHEIZER. All rights reserved.</p>
+        </div>
+      </footer>
+      <!-- Footer End -->
+  </body>
+
+</html>
