@@ -34,9 +34,39 @@
     .carousel-inner {
         max-height: 200px; /* Adjust the max-height for smaller screens */
     }
-}
+    }
+    #brand-name {
+    text-align: center;
+    margin-top: 50px;
+    font-size: 40px;
+    background-image: linear-gradient(to right, #ff416c, #ff4b2b, #ff9f00, #07e74a, #001aff,#ff00ea, rgb(255, 0, 149));
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: animateTextGradient 5s linear infinite;
+    }
 
-</style>
+    @keyframes animateTextGradient {
+    0% {
+        background-position: 0 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0 50%;
+    }
+    }
+    .nav-item {
+        transition: all 0.3s ease;
+    }
+
+    .nav-item:hover {
+        transform: scale(1.1);
+        color: #ff5e62;
+    }
+    </style>
 
 <link rel="stylesheet" href="cssu/index.css">
 
@@ -59,37 +89,25 @@
                 <a class="text-body ms-3" href=""><i class="fab fa-instagram"></i></a>
             </div> -->
         </div>
-
         <nav class="navbar navbar-expand-lg navbar-light bg-light py-lg-0 px-lg-5">
             <a href="/index" class="navbar-brand ms-4 ms-lg-0">
-                <h1 class="fw-bold text-black m-0">SENHEIZER</h1>
+                <h1 class="fw-bold text-black m-0" id="brand-name">SENHEIZER</h1>
             </a>
             <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <div class="navbar-nav mx-auto">
-                    <!-- <a href="/index" class="nav-item nav-link active">Home</a>
-                    <a href="/products" class="nav-item nav-link">Products</a>
-                    <a href="/cart" class="nav-item nav-link ">Cart</a> -->
-                    <!-- <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Pages</a>
-                        <div class="dropdown-menu m-0">
-                            <a href="https://www.google.com" class="dropdown-item">Seller's Camp</a>
-                            <a href="https://www.google.com" class="dropdown-item">Craftsmen</a>
-                        </div>
-                    </div> -->
-                    <!-- <a href="/orders" class="nav-item nav-link">Orders</a> -->
-                    <!-- <a href="https://www.google.com" class="nav-item nav-link">Wishlist</a> -->
-                    <!-- <a href="https://www.google.com" class="nav-item nav-link">Contact Us</a> -->
-                    <!-- <a href="/profile" class="nav-item nav-link">Profile</a> -->
+                    <a href="/" class="nav-item nav-link " style="color: #ff5e62;border-bottom: 1px solid #ff5e62;"><i class="fas fa-home"></i> Home</a>
+                    <a href="/loadProducts" class="nav-item nav-link " > <i class="fas fa-box-open"></i> Products</a>
+
                 </div>
-                <div class="d-none d-lg-flex ms-2">
+                <div class="d-flex ms-2">
                     <a class="btn btn-success" href="./login">login</a>
                 </div>
             </div>
-            
         </nav>
+        
     </div>
         <!-- Carousel Start --><br><br>
         <div class="container-fluid p-0 mb-0 wow fadeIn"  data-wow-delay="0.2s">
@@ -108,9 +126,9 @@
                                                 <div>
                                                     <h5 ><%= banner.description %></h5>
                                                     <% if(banner.linkType=='category'){%>
-                                                        <a href="/products?color&min&max&brand&category2=<%= banner.link %>" class="btn btn-primary"> Find up all</a>
+                                                        <a href="/loadProducts?color&min&max&brand&category2=<%= banner.link %>" class="btn btn-primary"> Find up all</a>
                                                     <%}else{%>
-                                                        <a href="/productPage?productId=<%= banner.link %>" class="btn btn-warning">Go and explore</a>
+                                                        <a href="/loadingProductsPage?productId=<%= banner.link %>" class="btn btn-warning">Go and explore</a>
                                                     <%}%>  
                                                 </div>
                                             </div>
@@ -279,11 +297,11 @@
                     <div class="row">
                         <% let count=0; %>
                         <% products.forEach(product => { %>
-                            <% count++;%>
-                            <% if(count==3 || count==2 || count==1 ){%>
-                        <div class="col-lg-4 mb-4">
-                            <a href="/productPage?productId=<%= product._id %>" style="text-decoration: none;">
-                            <div class="card">
+                            <% count++; %>
+                            <% if(count <= 6 ){ %>
+                                <div class="col-lg-4 col-md-6 mb-4">
+                                    <a href="/loadingProductsPage?productId=<%= product._id %>" style="text-decoration: none;">
+                                        <div class="card">
                                 
                                 <img src="/uploads/<%= product.images[0] %>" class="card-img-top" alt="Product Image">
                                 <div class="card-body" href="https://www.google.com">
