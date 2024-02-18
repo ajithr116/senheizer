@@ -10,7 +10,7 @@ const Wishlist = require('../models/wishlist');
 const Banner = require('../models/banner');
 const saltRounds = 10;
 
-
+//for server 
 require('dotenv').config();
 
 const userLogin =  async (req, res, next) => {
