@@ -61,6 +61,14 @@ const orderSchema = new mongoose.Schema({
   date:{
     type:Date,
     default: Date.now,
+  },
+  cancellationReason: {
+    type: String,
+    default: null
+  },
+  additionalInfo: {
+    type: String,
+    default: null
   }
 });
 
