@@ -340,10 +340,12 @@ const userOrders = async(req,res)=>{
     res.redirect('/login');
   }
 }
-
 const userDeleteOrder = async (req, res) => {
   try {
     const orderId = req.query.orderId;
+    const cancellationReason = req.body.cancellationReason;
+    const additionalInfo = req.body.additionalInfo;
+
     const order = await Order.findById(orderId);
 
     await Promise.all(
@@ -360,45 +362,47 @@ const userDeleteOrder = async (req, res) => {
         key_secret: process.env.SECRET_KEY,
       });
 
-      await instance.payments.refund(order.paymentId)
-        .then(async (refund) => {
-          console.log("user canceled product refunded", refund);
-          const user = await User.findById(req.session.uid);
+      try {
+        const refund = await instance.payments.refund(order.paymentId);
+        console.log("user canceled product refunded", refund);
+        const user = await User.findById(req.session.uid);
 
-          const transaction = {
-            amount: order.totalPrice,
-            type: 'refund',
-          };
+        const transaction = {
+          amount: order.totalPrice,
+          type: 'refund',
+        };
 
-          const parsedAmount = parseFloat(order.totalPrice);
-          if (!isNaN(parsedAmount)) {
-            user.wallet += parsedAmount;
-          } else {
-            console.error("Error parsing order total price:", order.totalPrice);
-          }
+        const parsedAmount = parseFloat(order.totalPrice);
+        if (!isNaN(parsedAmount)) {
+          user.wallet += parsedAmount;
+        } else {
+          console.error("Error parsing order total price:", order.totalPrice);
+        }
 
-          user.walletHistory.push(transaction);
-          await user.save();
-        })
-        .catch((err) => {
-          console.error("Refund failed:", err);
-          // Handle refund failure gracefully, e.g., notify user or retry
-        });
+        user.walletHistory.push(transaction);
+        await user.save();
+      } catch (err) {
+        console.error("Refund failed:", err);
+        return res.status(500).render('user/500page');
+      }
     }
 
     order.orderStatus = 'canceled'; // Mark the order as canceled
+    order.cancellationReason = cancellationReason;
+    order.additionalInfo = additionalInfo;
+
     await order.save();
 
-    res.redirect('/orders'); // Redirect to orders page to show the canceled order
+    return res.redirect('/orders'); // Redirect to orders page to show the canceled order
   } catch (err) {
     console.error(err);
-    res.status(404).render('user/404page');
+    return res.status(404).render('user/404page');
   }
 };
 
 
 const userVerifyCoupon = async(req,res)=>{
-  const { couponCode } = req.body;
+  const { couponCode,total } = req.body;
   try {
     const coupon = await Coupon.findOne({ couponCode: couponCode });
 
@@ -413,7 +417,9 @@ const userVerifyCoupon = async(req,res)=>{
       return res.status(400).json({success:false,message:"deleted"})
     }
 
-    if(coupon.minimumPrice)
+    if(total <= coupon.minimumPrice){
+      return res.status(400).json({success:false,message:"minimum"})
+    }    
 
     return res.json({ success: true, message: 'Coupon code is valid', discount: coupon.reducingAmount, couponId:coupon._id });
   } catch (err) {
