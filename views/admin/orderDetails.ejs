@@ -85,7 +85,7 @@
                     <a href="./userManagement" class="nav-item nav-link"><i class="fa fa-th me-2"></i>User manage</a>
                     <a href="./categoryManage" class="nav-item nav-link "><i class="fa fa-keyboard me-2"></i>Category manage</a>
                     <a href="./ordermanagement" class="nav-item nav-link active"><i class="fa fa-box me-2"></i>Order manage</a>
-                    <a href="./couponManage" class="nav-item nav-link"><i class="fa fa-keyboard me-2"></i>Category manage</a>
+                    <a href="./couponManage" class="nav-item nav-link"><i class="fa fa-money-bill me-2"></i>Coupon manage</a>
                     <a href="./salesReport" class="nav-item nav-link"><i class= "fa fa-chart-bar me-2"></i>Sales reports </a>
                     <a href="./banner" class="nav-item nav-link"><i class= "fa fa-print me-2"></i>Banner manage</a>
                     <!-- <a href="table.html" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Tables</a> -->
@@ -194,40 +194,87 @@
                             <div>
                                 <p>Tax rate : <b><%= taxRate.toFixed(2) %></b></p>
                                 <p>Grand total (including tax): <b><%= order.totalPrice %></b></p>
-                                <div class="container">
-                                    <form action="./status?orderId=<%= order._id %>&paymentId=<%= order.paymentId %>" method="POST">
-                                        <% if (order.shippingAddressID) { %>
-                                            <select name="status" value="<%= order.orderStatus %>" class="" onchange="selected()" id="statusControl" style="width:150px;height:40px;border-radius: 10px;">
-                                                <option value="<%= order.orderStatus %>"><%= order.orderStatus %></option>
-                                                <option value="pending">pending</option>
-                                                <option value="delivered">delivered</option>
-                                                <option value="canceled">canceled</option>
-                                            </select>
-                                            <% } else { %>
-                                            <b>not available.</b>
-                                          <% } %>
-                                          </b>
-                                        
-                                        <input type="number" value="<%= order.totalPrice %>" id="paymentBox" style="height:40px;border-radius:10px;border:1px solid black;visibility:hidden;" disabled>
-                                        <% if (order.shippingAddressID) { %>
-                                            <input type="submit" class="btn btn-success" value="Proceed">
-                                            <% } else { %>
-                                            <b>not available.</b>
-                                          <% } %>
-                                        <input type="hidden" name="refundableAmount" value="<%= order.totalPrice %>">
-                                        <input type="hidden" name="userID" value="<%= order.userID._id  %>">
-                                    </form>
-                                    <script>
-                                    function selected(){
-                                        const status = document.getElementById('statusControl').value;
-                                        if(status=="canceled"){
-                                            const paymentBox = document.getElementById('paymentBox');
-                                            paymentBox.style.visibility="visible";
-                                        }else {
-                                            paymentBox.style.visibility = "hidden";
-                                        }
+                            
+                                <% if (order.cancellationReason && order.cancellationReason.trim() !== '') { %>
+                                    <p><%= order.cancellationReason %></p>
+                                  <% } %>
+                                  <% if (order.additionalInfo && order.additionalInfo.trim() !== '') { %>
+                                    <p><%= order.additionalInfo %></p>
+                                  <% } %>
+                                  
+                                <!-- <% if (typeof order.cancellationReason !== 'undefined') { %>
+                                    <p>sad</p>
+                                <% }%> -->
+
+                                <form action="./status?orderId=<%= order._id %>&paymentId=<%= order.paymentId %>" method="POST">
+                                    <% if (order.shippingAddressID && order.orderStatus !== 'canceled') { %>
+                                      <select name="status" value="<%= order.orderStatus %>" class="" onchange="selected()" id="statusControl" style="width:150px;height:40px;border-radius: 10px;">
+                                        <option value="<%= order.orderStatus %>"><%= order.orderStatus %></option>
+                                        <option value="pending">pending</option>
+                                        <option value="delivered">delivered</option>
+                                        <option value="canceled">canceled</option>
+                                      </select>
+                                      <input type="submit" class="btn btn-success" value="Proceed">
+                                    <% } else if (order.shippingAddressID && order.orderStatus === 'canceled') { %>
+                                      <p>Order is already canceled.</p>
+                                    <% } else { %>
+                                      <b>Not available.</b>
+                                    <% } %>
+                                    <input type="number" value="<%= order.totalPrice %>" id="paymentBox" style="height:40px;border-radius:10px;border:1px solid black;visibility:hidden;" disabled>
+                                    <input type="hidden" name="refundableAmount" value="<%= order.totalPrice %>">
+                                    <input type="hidden" name="userID" value="<%= order.userID._id  %>">
+                                    <!-- Add the cancellation reason and additional info fields -->
+                                    <input type="hidden" name="cancellationReason" id="cancellationReasonInput">
+                                    <input type="hidden" name="additionalInfo" id="additionalInfoInput">
+                                  </form>
+                                  
+                                  <!-- Cancel Order Modal -->
+                                  <div class="modal fade" id="cancelOrderModal" tabindex="-1" aria-labelledby="cancelOrderModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                      <div class="modal-content">
+                                        <div class="modal-header">
+                                          <h5 class="modal-title" id="cancelOrderModalLabel">Cancel Order</h5>
+                                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                          <p>Please select a reason for cancellation:</p>
+                                          <select class="form-select mb-3" id="cancelReason">
+                                            <option selected>Choose...</option>
+                                            <option value="outOfStock">out of stock</option>
+                                            <option value="locationIsNotDeliverable">location is not delieverable</option>
+                                            <option value="other">Other</option>
+                                          </select>
+                                          <p>Additional information:</p>
+                                          <textarea class="form-control mb-3" id="additionalInfo" rows="3"></textarea>
+                                          <button type="button" class="btn btn-danger" onclick="confirmCancellation()">Confirm Cancellation</button>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  
+                                  <script>
+                                  function selected(){
+                                    const status = document.getElementById('statusControl').value;
+                                    if(status=="canceled"){
+                                      // Trigger the modal
+                                      var myModal = new bootstrap.Modal(document.getElementById('cancelOrderModal'));
+                                      myModal.show();
                                     }
-                                    </script>
+                                  }
+                                  
+                                  function confirmCancellation() {
+                                    // Get the cancellation reason and additional info
+                                    const cancelReason = document.getElementById('cancelReason').value;
+                                    const additionalInfo = document.getElementById('additionalInfo').value;
+                                  
+                                    // Set the cancellation reason and additional info in the form
+                                    document.getElementById('cancellationReasonInput').value = cancelReason;
+                                    document.getElementById('additionalInfoInput').value = additionalInfo;
+                                  
+                                    // Submit the form
+                                    document.querySelector('form').submit();
+                                  }
+                                  </script>
                                 </div>
                             </div>                            
                         </div>
