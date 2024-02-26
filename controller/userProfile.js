@@ -26,9 +26,9 @@ const userProfile = async (req,res)=>{
 
 const userUpdateProfile = async (req,res)=>{
   const{updateFirstName:firstName,updateLastName:lastName,updateEmail:email,updatePhoneNo:phoneNo} = req.body;
-  if (!phoneNo || !/^\d{10}$/.test(phoneNo)) {
-    req.session.error = 1;
-  }
+  // if (!phoneNo || !/^\d{10}$/.test(phoneNo)) {
+  //   req.session.error = 1;
+  // }
   const userId = req.query.userId;
   try {
     const user = await User.findByIdAndUpdate({_id:userId}, {$set:{firstName:firstName,lastName:lastName,email:email,phoneNumber:phoneNo}});
@@ -60,20 +60,20 @@ const userAddAddress = async(req,res)=>{
 const userAddAddressDetails = async(req,res)=>{
   const{newAddressName:addressName,newPhoneNo:phoneNo,newZip:zipCode,newState:state,newDistrict:distrct,newFullAddress:fullAddress}=req.body;
   const userId = req.query.userId;
-  if (phoneNo.length !== 10 && zipCode.length !== 6) {
-    req.session.error = 3;
-    res.redirect('/addaddress');
-  }else{
-    if (phoneNo.length !== 10) {
-      req.session.error = 1;
-      res.redirect('/addaddress');
-    }
-    else{
-      if (zipCode.length !== 6) {
-        req.session.error = 2;
-        res.redirect('/addaddress');
-      }   
-      else{
+  // if (phoneNo.length !== 10 && zipCode.length !== 6) {
+  //   req.session.error = 3;
+  //   res.redirect('/addaddress');
+  // }else{
+  //   if (phoneNo.length !== 10) {
+  //     req.session.error = 1;
+  //     res.redirect('/addaddress');
+  //   }
+  //   else{
+  //     if (zipCode.length !== 6) {
+  //       req.session.error = 2;
+  //       res.redirect('/addaddress');
+  //     }   
+  //     else{
         const newAddress = new Address({
         district: distrct,
         state: state,
@@ -88,7 +88,7 @@ const userAddAddressDetails = async(req,res)=>{
         .catch(error => {
         console.error("Error saving address:", error);
         });
-        
+         
         try {
           const user = await User.findById(userId);
           user.address.push(address._id);
@@ -105,14 +105,20 @@ const userAddAddressDetails = async(req,res)=>{
         else{
           res.redirect('/profile');
         }
-      }     
-    }
-  }
+      // }     
+  //   }
+  // }
 }
 
 const userEditAddress = async(req,res)=>{
   if (req.session.uid) {
     const addressId = req.query.addressid;
+
+    if (!addressId || (addressId && addressId.length !== 24) || (addressId && addressId.length<24) ) {
+      res.status(404).render('user/404page'); 
+      return; 
+    }
+
     const address = await Address.findById(addressId);
     const error = req.session.error;
     const id = req.session.uid;
