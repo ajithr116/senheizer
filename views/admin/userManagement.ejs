@@ -122,7 +122,19 @@
                         <div class="bg-light rounded h-100 p-4">
                             <h6 class="mb-4">Responsive Table</h6>
                             <div class="table-responsive">
-                                
+                                <form method="GET" action="./userdetails?searchcontent=searchInput">
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <div class="input-group">
+                                                <input type="email" class="form-control" placeholder="Search by Username" name="searchInput" id="searchInput">
+                                                <div class="input-group-append">
+                                                    <input type="submit" class="btn btn-primary" type="button" id="searchButton">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                    
                                 <table class="table">
                                     <thead>
                                         <tr>
