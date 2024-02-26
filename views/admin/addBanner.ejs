@@ -29,6 +29,7 @@
     <!-- Libraries Stylesheet -->
     <link href="/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
     <link href="/lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- Customized Bootstrap Stylesheet -->
     <link href="/css/bootstrap.min.css" rel="stylesheet">
@@ -203,7 +204,7 @@
                                   
                                   <div class="mb-3">
                                     <label for="description" class="form-label">Amount to decrease</label>
-                                    <input style="width:50%" type="text" name="discountAmt" class="form-control" id="description" required autocomplete="off" >
+                                    <input style="width:50%" type="number" name="discountAmt" max="50" class="form-control" id="description" required autocomplete="off" >
                                   </div>
                                   
                                   <div class="mb-3">
@@ -247,10 +248,89 @@
                 </div>
             </div>    
             <!-- Form End -->
-
-            <!-- Footer Start -->
-
-            <!-- Footer End -->
+            <script>
+              document.querySelector('form').addEventListener('submit', function(event) {
+                  var image = document.querySelector('input[name="image"]').files[0];
+                  var description = document.querySelector('input[name="description"]').value;
+                  var linkType = document.querySelector('select[name="linkType"]').value;
+                  var discountAmt = document.querySelector('input[name="discountAmt"]').value;
+                  var startDate = document.querySelector('input[name="startDate"]').value;
+                  var endDate = document.querySelector('input[name="endDate"]').value;
+          
+                  // Check if image is .jpg or .png
+                  if (image && !['image/jpeg', 'image/png'].includes(image.type)) {
+                      Swal.fire({
+                          icon: 'error',
+                          title: 'Oops...',
+                          text: 'Image must be .jpg or .png format',
+                          timer: 3000,
+                          showConfirmButton: false
+                      });
+                      event.preventDefault();
+                  }
+          
+                  // Check for blank spaces in description
+                  if (!description.trim()) {
+                      Swal.fire({
+                          icon: 'error',
+                          title: 'Oops...',
+                          text: 'Description cannot be blank',
+                          timer: 3000,
+                          showConfirmButton: false
+                      });
+                      event.preventDefault();
+                  }
+          
+                  // Check if linkType is selected
+                  if (!linkType) {
+                      Swal.fire({
+                          icon: 'error',
+                          title: 'Oops...',
+                          text: 'Link Type must be selected',
+                          timer: 3000,
+                          showConfirmButton: false
+                      });
+                      event.preventDefault();
+                  }
+          
+                  // Check if discountAmt is a number
+                  if (isNaN(discountAmt) || !discountAmt || discountAmt==='') {
+                      Swal.fire({
+                          icon: 'error',
+                          title: 'Oops...',
+                          text: 'Amount to decrease must be a number',
+                          timer: 3000,
+                          showConfirmButton: false
+                      });
+                      event.preventDefault();
+                  }
+          
+                  // Check if startDate is selected
+                  if (!startDate) {
+                      Swal.fire({
+                          icon: 'error',
+                          title: 'Oops...',
+                          text: 'Start Date must be selected',
+                          timer: 3000,
+                          showConfirmButton: false
+                      });
+                      event.preventDefault();
+                  }
+          
+                  // Check if endDate is selected
+                  if (!endDate) {
+                      Swal.fire({
+                          icon: 'error',
+                          title: 'Oops...',
+                          text: 'End Date must be selected',
+                          timer: 3000,
+                          showConfirmButton: false
+                      });
+                      event.preventDefault();
+                  }
+              });
+          </script>
+          
           
         <!-- Content End -->
 
