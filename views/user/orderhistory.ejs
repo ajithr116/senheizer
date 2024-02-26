@@ -128,18 +128,20 @@
                         <table id="yourTableId" class="table">
                           <thead>
                             <tr>
-                              <th scope="col">ID</th>
+                              <th scope="col">Date</th>
                               <th scope="col">Total items</th>
                               <th scope="col">Total</th>
+                              <th scope="col">Payment</th>
                               <th scope="col">Status</th>
                             </tr>
                           </thead>
                           <tbody>
                             <% orders.forEach(order => { %>
                               <tr>
-                                <td scope="col"><%= order.orderID %></td>
+                                <td scope="col"><%= order.date.toLocaleString() %></td>
                                 <td scope="col"><%= order.items.length %></td>
-                                <td scope="col">$<%= order.totalPrice %></td>
+                                <td scope="col">₹ <%= order.totalPrice %></td>
+                                <td scope="col"><%= order.paymentMethod %></td>
                                 <% if(order.orderStatus=="pending"){%>
                                     <td scope="col" class="bg-warning" style="color:rgb(78, 109, 136)"><%= order.orderStatus %></td>
                                 <%}else if(order.orderStatus=="canceled"){%>
