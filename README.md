@@ -5,7 +5,6 @@ Welcome to my first MERN (MongoDB, Express, React, Node.js) project, an e-commer
 #### Technologies Used:
 - **MongoDB**: Used as the database for storing product information, user data, and order details.
 - **Express.js**: Utilized for building the server-side application, handling routes, and interacting with the database.
-- **React**: Employed for building the front-end user interface, providing a seamless and responsive experience.
 - **Node.js**: Used as the server-side JavaScript runtime environment.
 - **HTML/CSS**: Used for structuring and styling the web pages.
 - **Bootstrap**: Utilized for creating a visually appealing and responsive design.
@@ -16,6 +15,7 @@ Welcome to my first MERN (MongoDB, Express, React, Node.js) project, an e-commer
 - **Shopping Cart**: Users can add products to their cart, update quantities, and proceed to checkout.
 - **Order Management**: Users can view their order history and track the status of their orders.
 - **Responsive Design**: The application is designed to provide a seamless experience across various devices.
+- ** and moreeeeee
 
 #### Getting Started:
 1. Clone this repository: `git clone <repository-url>`
