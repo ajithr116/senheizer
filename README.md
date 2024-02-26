@@ -24,13 +24,13 @@ Welcome to my first MERN (MongoDB, Express, React, Node.js) project, an e-commer
    - Create a `.env` file in the root directory.
    - Add the following variables:
      ```
-      MONGODB_ADDRESS='mongodb://127.0.0.1:27017/senheizer'
+      MONGODB_ADDRESS='' mongodb localhost link
       PORT=4000
-      EMAIL_ADDRESS='ajith8593935904@gmail.com'
-      PASS='fnvjzjziqibmyzwp'
-      KEY_ID='rzp_test_ITfaRgB1ep4WpQ'
-      SECRET_KEY='rBmaWGSg3dbFtHMfOA5m27KA'
-      SESSION_SECRET='1hhh2vsdj2342bSDf523'
+      EMAIL_ADDRESS='' //email password
+      PASS='' //email password
+      KEY_ID='' //razorpay id
+      SECRET_KEY='' //razorpay secret key
+      SESSION_SECRET='' //session secret
 
      ```
 4. Run the development server: `npm run dev`
