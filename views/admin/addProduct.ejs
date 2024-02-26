@@ -126,7 +126,34 @@
             <!-- Navbar Start -->
             <%- include('navbar') %>
             <!-- Navbar End -->
-
+            <% if (typeof error !== 'undefined' && error === 1) { %>
+                <div id="alert" class="alert alert-danger" role="alert">
+                    Image cannot be empty 
+                </div>
+                <script>
+                    setTimeout(function() {
+                        document.getElementById('alert').style.display = 'none';
+                    }, 3000);
+                </script>
+            <% } else if(typeof error !== 'undefined' && error === 1){%>
+                <div id="alert" class="alert alert-danger" role="alert">
+                    .png and .jpg format is possible
+                </div>
+                <script>
+                    setTimeout(function() {
+                        document.getElementById('alert').style.display = 'none';
+                    }, 3000);
+                </script>
+            <%}else if(typeof error !== 'undefined' && error === 3){%>
+                <div id="alert" class="alert alert-danger" role="alert">
+                    Product name cannot be empty
+                </div>
+                <script>
+                    setTimeout(function() {
+                        document.getElementById('alert').style.display = 'none';
+                    }, 3000);
+                </script>
+            <%}%>
 
             <!-- Form Start -->
             <div class="container-fluid pt-4 px-4">
@@ -135,6 +162,7 @@
                         <div class="bg-light rounded h-100 p-4">
                             <h6 class="mb-4">Product Form</h6>
                             <form action="./productSubmit" method="POST" enctype="multipart/form-data">
+
                                 <div class="mb-3">
                                     <label for="productName" class="form-label">Product Name</label>
                                     <input type="text" name="pName" class="form-control" id="productName" aria-describedby="productNameHelp" required>
@@ -173,17 +201,17 @@
                                 <div class="mb-3">
                                     <label for="category" class="form-label">Category</label>
                                     <select name="pCategory" class="form-select" id="category" aria-describedby="categoryHelp" style="width: 50%;" required>
-                                        <option>category</option>
+                                        <option value="" disabled selected>Select a category</option>
                                         <% for(let res of categories){ %>
                                             <% if(!res.isDeleted){%>
                                                 <option value="<%= res._id %>">
                                                     <%= res.name %>
                                                 </option>
                                             <%}%>
-
                                         <% } %>
                                     </select>
                                 </div>
+
                                   
                                 
                                 <div class="mb-3">
@@ -195,13 +223,13 @@
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="price" class="form-label">Price</label>
-                                            <input type="number" name="pPrice" class="form-control" id="price" aria-describedby="priceHelp" step="0.01" style="width: 50%;" required>
+                                            <input type="number" min="1" name="pPrice" class="form-control" id="price" aria-describedby="priceHelp" step="0.01" style="width: 50%;" required>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="quantity" class="form-label">Quantity</label>
-                                            <input type="number" name="pQuantity" class="form-control" id="quantity" aria-describedby="quantityHelp" min="1" style="width: 50%;">
+                                            <input type="number" name="pQuantity" class="form-control" id="quantity" aria-describedby="quantityHelp" min="0" style="width: 50%;">
                                         </div>
                                     </div>
                                 </div>
