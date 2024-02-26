@@ -152,16 +152,33 @@ const adminUsermanage = async (req, res, next) => {
 const adminSubmitProduct = async (req, res) => {
 
     try{
+        let categories = await Category.find();
         upload.array('pImages')
         (req,res,(err)=>{
             if(err){
                 return res.status(400).send("error uploading images" + err);
             }
 
-            console.log(req.body);
+            if (!req.files || req.files.length === 0) {
+                return res.render('admin/addProduct', {categories,error: 1});
+            }
+
+            for (let file of req.files) {
+                const extension = file.originalname.split('.').pop().toLowerCase();
+                if (extension !== 'jpg' && extension !== 'png') {
+                    return res.render('admin/addProduct', {categories,error: 2});
+                }
+            }
+
+            
             const {pName: productName,pCategory: productCategory,pBrand: productBrand,pPrice: productPrice,pQuantity: productQuantity,pColors: productTags,pDesc: productDesc} = req.body;
             const images = req.files.map((file) => file.filename);
-              
+            
+            if (productName.trim() === '') {
+                return res.render('admin/addProduct', {categories, error: 3});
+            }
+            
+
             // const fileNames = [];
             // for (const image of images) {
             //     fileNames.push(image.filename);
@@ -318,6 +335,10 @@ const adminLogout  = async (req,res)=>{
 
 const adminUpdateProduct = async (req,res)=>{
     try {
+        let productID = req.query.product;
+        let product = await Product.findById({_id:productID})
+        let product2 = await Product.findById({_id:productID}).populate('category');
+        let categories = await Category.find(); // Fetch all categories
         upload.array('pImages')
         (req,res,(err)=>{
             if(err){
@@ -331,6 +352,34 @@ const adminUpdateProduct = async (req,res)=>{
             // for (const image of req.files) {
             //   uploadedImages.push(image.filename);
             // }
+            
+            if(productName=='' || productName.trim()===''){
+                return res.render('admin/productDetails', { product ,proID:productID,product2,categories,error:1});
+            }
+
+            for (let file of req.files) {
+                const extension = file.originalname.split('.').pop().toLowerCase();
+                if (extension !== 'jpg' && extension !== 'png') {
+                    return res.render('admin/productDetails', { product ,proID:productID,product2,categories,error:2});
+                }
+            }
+
+            if(productBrand=='' || productBrand.trim()===''){
+                return res.render('admin/productDetails', { product ,proID:productID,product2,categories,error:3});
+            }
+
+            if(productPrice=='' || productPrice.trim()===''){
+                return res.render('admin/productDetails', { product ,proID:productID,product2,categories,error:4});
+            }
+
+            if(productQuantity=='' || productQuantity.trim()===''){
+                return res.render('admin/productDetails', { product ,proID:productID,product2,categories,error:5});
+            }
+            
+            if(productDesc=='' || productDesc.trim()===''){
+                return res.render('admin/productDetails', { product ,proID:productID,product2,categories,error:6});
+            }
+
             const uploadedImages = req.files.map((file) => file.filename); 
 
             const selectedImages = req.body.pppimages || []; 
@@ -366,23 +415,34 @@ const adminUserDetails = async (req, res) => {
         const searchInput = req.query.searchInput;
         if (searchInput) {
             const user2 = await User.find({
-            $or: [
-                { firstName: { $regex: searchInput, $options: 'i' } },
-                { lastName: { $regex: searchInput, $options: 'i' } },
-                { email: { $regex: searchInput, $options: 'i' } },
-            ],
-        })
-        const user = await User.findById(user2[0]._id).populate('address');
-        res.render('admin/userdetails', { user });
+                $or: [
+                    { firstName: { $regex: searchInput, $options: 'i' } },
+                    { lastName: { $regex: searchInput, $options: 'i' } },
+                    { email: { $regex: searchInput, $options: 'i' } },
+                ],
+            });
+            if (user2.length === 0) {
+                // Render 404 Page with header number
+                res.status(404).render('admin/404Page', { status: 404 });
+            } else {
+                const user = await User.findById(user2[0]._id).populate('address');
+                res.render('admin/userdetails', { user });
+            }
         } else {
             const userId = req.query.userid;
             const user = await User.findById(userId).populate('address');
-            res.render('admin/userdetails', { user });
+            if (!user) {
+                // Render 404 Page with header number
+                res.status(404).render('404Page', { headerNumber: 404 });
+            } else {
+                res.render('admin/userdetails', { user });
+            }
         }
     } else {
-      res.redirect('/admin/login');
+        res.redirect('/admin/login');
     }
 };
+
 
 const adminDefault = async (req,res)=>{
     res.redirect('/admin/login');
