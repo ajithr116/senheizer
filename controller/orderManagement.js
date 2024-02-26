@@ -7,7 +7,37 @@ const razorpay = require('razorpay');
 const adminOrders = async (req, res) => {
   if(req.session.aid){
     try {
-      const orders = await Order.find().populate('userID').populate('items.productID').populate('shippingAddressID');
+      if(req.query.show=='old'){
+        const orders = await Order.find().populate('userID').populate('items.productID').populate('shippingAddressID').sort({date:1});
+        res.render('admin/ordermanagement',{orders});
+      }
+
+      if(req.query.show=='pending'){
+        const orders = await Order.find({orderStatus:'pending'}).populate('userID').populate('items.productID').populate('shippingAddressID').sort({date:1});
+        res.render('admin/ordermanagement',{orders});
+      }
+
+      if(req.query.show=='canceled'){
+        const orders = await Order.find({orderStatus:'canceled'}).populate('userID').populate('items.productID').populate('shippingAddressID').sort({date:1});
+        res.render('admin/ordermanagement',{orders});
+      }
+
+      if(req.query.show=='delivered'){
+        const orders = await Order.find({orderStatus:'delivered'}).populate('userID').populate('items.productID').populate('shippingAddressID').sort({date:1});
+        res.render('admin/ordermanagement',{orders});
+      }
+
+      if(req.query.show=='razorpay'){
+        const orders = await Order.find({paymentMethod:'RAZORPAY'}).populate('userID').populate('items.productID').populate('shippingAddressID').sort({date:1});
+        res.render('admin/ordermanagement',{orders});
+      }
+
+      if(req.query.show=='cashondelivery'){
+        const orders = await Order.find({paymentMethod:'cashOnDelivery'}).populate('userID').populate('items.productID').populate('shippingAddressID').sort({date:1});
+        res.render('admin/ordermanagement',{orders});
+      }
+
+      const orders = await Order.find().populate('userID').populate('items.productID').populate('shippingAddressID').sort({date:-1});
       res.render('admin/ordermanagement',{orders});
     } catch (err) {
       console.error(err);
@@ -84,8 +114,11 @@ const adminUpdateStatus = async(req,res)=>{
     const status = req.body.status;
     const orderId = req.query.orderId;
     const paymentId = req.query.paymentId;
-    
-    if(paymentId){    
+    const cancellationReason = req.body.cancellationReason;
+    const additionalInfo = req.body.additionalInfo;
+
+    // If the order is being canceled and the payment method is 'RAZORPAY', handle the refund
+    if (status === 'canceled' && paymentId) {
       const refundableAmount = req.body.refundableAmount;
       const userId = req.body.userID;
 
@@ -94,44 +127,47 @@ const adminUpdateStatus = async(req,res)=>{
         key_secret: process.env.SECRET_KEY
       });
 
-      instance.payments.refund(paymentId)
-      .then(async function(refund) {
-        console.log("Refund successful: ", refund);
+      await instance.payments.refund(paymentId)
+        .then(async function(refund) {
+          console.log("Refund successful: ", refund);
 
-        const user = await User.findById(userId);
+          const user = await User.findById(userId);
 
-        const transaction = {
-          amount: refundableAmount,
-          type: 'refund'
-        };
+          const transaction = {
+            amount: refundableAmount,
+            type: 'refund'
+          };
 
-         const parsedAmount = parseFloat(refundableAmount);
-         if (!isNaN(parsedAmount)) {
-           user.wallet += parsedAmount;
-         } else {
-           console.error("Invalid refundable amount format:", refundableAmount);
-         }
+          const parsedAmount = parseFloat(refundableAmount);
+          if (!isNaN(parsedAmount)) {
+            user.wallet += parsedAmount;
+          } else {
+            console.error("Invalid refundable amount format:", refundableAmount);
+          }
 
-        user.walletHistory.push(transaction);
-        await user.save();
-        const updatedOrder = await Order.findByIdAndUpdate(orderId, {orderStatus: status}, { new: true });
-        res.redirect('/admin/ordermanagement');
-      })
-      .catch(function(err) {
-        console.error("Refund failed: ", err);
-      });
+          user.walletHistory.push(transaction);
+          await user.save();
+        })
+        .catch(function(err) {
+          console.error("Refund failed: ", err);
+        });
     }
-    else{
-      const updatedOrder = await Order.findByIdAndUpdate(orderId, {orderStatus: status}, { new: true });
-      res.redirect('/admin/ordermanagement')
-    }
+
+    // Update the order with the new status, cancellation reason, and additional info
+    const updatedOrder = await Order.findByIdAndUpdate(orderId, {
+      orderStatus: status,
+      cancellationReason: cancellationReason,
+      additionalInfo: additionalInfo
+    }, { new: true });
+
+    res.redirect('/admin/ordermanagement');
   } 
   catch (err) {
     console.error('Error updating order status:', err);
     res.status(404).render('admin/404page');
-
   }
-}
+};
+
 
 module.exports = {
   adminOrders,
