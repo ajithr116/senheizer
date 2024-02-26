@@ -163,9 +163,32 @@
                             <h5>Grand Total</h5>
                             <p >Total : <b><%= order.totalPrice %></b><% if(order.paymentMethod=="RAZORPAY"){%> <span class="badge badge-info">RAZORPAY</span><%}else{%>  <span class="badge badge-info">COD</span><%}%></p>
                             <%if(order.orderStatus=="pending"){%>
-                                <a class="btn btn-danger" href="/deleteorder?orderId=<%= order._id %>" onclick="alert('Are you sure you want to delete ?')">Cancel Order</a> <!-- Display the status of the order -->
-                            <%}else if(order.orderStatus=="delivered"){%>
-                                <a class="btn btn-primary "> Share your experience</a>
+                                <!-- <a class="btn btn-danger" href="/deleteorder?orderId=<%= order._id %>" onclick="alert('Are you sure you want to delete ?')">Cancel Order</a> Display the status of the order -->
+                                <a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#cancelOrderModal">Cancel Order</a>
+
+                                <!-- Cancel Order Modal -->
+                                <div class="modal fade" id="cancelOrderModal" tabindex="-1" aria-labelledby="cancelOrderModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="cancelOrderModalLabel">Cancel Order</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Please select a reason for cancellation:</p>
+                                        <select class="form-select mb-3" id="cancelReason">
+                                        <option name="cancellationReason" selected>Choose...</option>
+                                        <option value="noLongerNeeded">No longer needed</option>
+                                        <option value="foundCheaper">Found a cheaper alternative</option>
+                                        <option value="other">Other</option>
+                                        </select>
+                                        <p>Additional information:</p>
+                                        <textarea name="additionalInfo" class="form-control mb-3" id="additionalInfo" rows="3"></textarea>
+                                        <a class="btn btn-danger" href="/deleteorder?orderId=<%= order._id %>" >Confirm Cancellation</a>
+                                    </div>
+                                    </div>
+                                </div>
+                                </div>
                             <%}%>
                         </div>
                     </div> <!-- Close the row -->
