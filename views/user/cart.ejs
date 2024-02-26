@@ -209,10 +209,10 @@
               function updateQuantity(elem, change) {
                 const input = $(elem).siblings('input[type="text"]');
                 let newValue = parseInt(input.val()) + change;
-                
+            
                 // Define your quantity limit here
                 const quantityLimit = 5;
-                
+            
                 // Check if newValue exceeds the limit, if so, set it to the limit
                 if (newValue > quantityLimit) {
                   newValue = quantityLimit;
@@ -235,18 +235,18 @@
                 .then(response => response.json())
                 .then(data => {
                   if (data.success) {
-                    // Update the subtotal, tax, and total values in the HTML
                     document.getElementById('subTotal').textContent = data.subtotal.toFixed(2);
                     document.getElementById('tax').textContent = data.tax.toFixed(2);
-                    document.getElementById('total').textContent = data.total.toFixed(2);
+            
+                    // Calculate the new total
+                    let newTotal = parseFloat(data.subtotal) + parseFloat(data.tax);
+                    document.getElementById('fulltotal').textContent = newTotal.toFixed(2);
                   } else {
                     console.log("Error updating cart");
                   }
                 });
               }
             </script>
-            
-            
             
             
             <!-- <script>
@@ -279,11 +279,8 @@
               <p>Subtotal: ₹ <b id="subTotal"><%= subtotal.toFixed(2) %></b></p>
               <p>Tax: ₹ <b id="tax"><%= tax.toFixed(2) %></b></p>
               <p>Shipping: ₹ <b style="background-color: rgb(105, 255, 105);"> FREE SHIPPING</b></p>
-              <!-- <input type="text" style='border-radius: 10px; border:none;' placeholder=" COUPON CODE"> -->
               <hr style="background-color: black;">
-
-              <p>Total: ₹ <b><%= total.toFixed(2) %></b></p>
-              
+              <p>Total: ₹ <b id="fulltotal"><%= total.toFixed(2) %></b></p>
               <% if(total.toFixed(2)!=0) {%>
                 <a href="/checkout"><button class="btn btn-dark" >Checkout</button></a>
               <%} else {%>
@@ -291,6 +288,7 @@
               <%}%>
             </div>
           </div>
+          
         </div>
       </div>
     <!-- PRODUCTS -->
