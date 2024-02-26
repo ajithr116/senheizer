@@ -123,7 +123,7 @@
                                             <th scope="col">Category</th>
                                             <th scope="col">status</th>
                                             <th scope="col">Action</th>
-
+                                            <th scope="col">Edit</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -132,9 +132,9 @@
                                               <th scope="row"><%= index + 1 %></th>
                                               <td><%= category.name %></td>
                                               <td>
-                                                <% if (category.isDeleted) { %> <span class="bg-danger px-3" style="color:white">-deleted-</span>
+                                                <% if (category.isDeleted) { %> <span class="bg-danger px-3" style="color:white">-Blocked-</span>
                                                 <% } else { %>
-                                                    <span class="bg-success px-3" style="color:white">-not-deleted-</span>
+                                                    <span class="bg-success px-3" style="color:white">-not-blocked-</span>
                                                 <% } %>
                                             </td>
                                               <!-- <td>
@@ -187,6 +187,7 @@
                                                        </script>
                                                       <% } %>
                                                 </td>
+                                                <td><a href="./addCategory?categoryId=<%= category._id  %>"><i class="fas fa-edit"></i></a></td>
                                             </tr>
                                           <% }) %>
                                     </tbody>
