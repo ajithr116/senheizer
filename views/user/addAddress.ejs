@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <link rel="stylesheet" href="cssu/products.css">
     <style>
@@ -102,6 +103,7 @@
                 <input type="text" name="newAddressName" autocomplete="off" class="form-control" style="height:50px;border-radius: 10px;border:1px solid black;" placeholder="Name" required>
                 <p>
             </div>
+            
             <!-- <div class="col-md-5">
                 <label>Phone number</label>
                 <input type="text" name="newAddressPhoneNo" class="form-control" style="height:50px;border-radius: 10px;border:1px solid black;" placeholder="Phone number"  min="10" max="10" maxlength="10">
@@ -118,6 +120,51 @@
                     <p id="pin2" style="visibility:hidden">format does not match</p>
                 </div>  
             </div>
+            <script>
+                document.querySelector('form').addEventListener('submit', function(event) {
+                    var fullName = document.querySelector('input[name="newAddressName"]').value;
+                    var phoneNo = document.querySelector('input[name="newPhoneNo"]').value;
+                    var pinCode = document.querySelector('input[name="newZip"]').value;
+            
+                    // Check for blank spaces in full name
+                    if (!fullName.trim()) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Full name cannot be blank',
+                            timer: 3000,
+                            showConfirmButton: false
+                        });
+                        event.preventDefault();
+                    }
+            
+                    // Check for length and characters in phone number
+                    if (phoneNo.length != 10 || !/^\d*$/.test(phoneNo)) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Invalid phone number',
+                            timer: 3000,
+                            showConfirmButton: false
+                        });
+                        event.preventDefault();
+                    }
+            
+                    // Check for length and characters in pin code
+                    if (pinCode.length != 6 || !/^\d*$/.test(pinCode)) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Invalid pin code',
+                            timer: 3000,
+                            showConfirmButton: false
+                        });
+                        event.preventDefault();
+                    }
+                });
+            </script>
+            
+            
             <div class="form-row">
                 <div class="col">
                     <label>State</label>
@@ -163,17 +210,48 @@
                 
                 <div class="col">
                 <label>District</label>
-                <input type="text" autocomplete="off" name="newDistrict" class="form-control" style="height:50px;border-radius: 10px;border:1px solid black;" placeholder="District" required>
-                </div><br>
+                <input type="text" required autocomplete="off" name="newDistrict" class="form-control" style="height:50px;border-radius: 10px;border:1px solid black;" placeholder="District" required>
+                </div>
+                <br>
         
             </div>
             <br>
             <div class="col">
                 <div class="form-group">
                     <label for="exampleFormControlTextarea1">Full address</label>
-                    <textarea autocomplete="off" name="newFullAddress" class="form-control" id="exampleFormControlTextarea1" style="border-radius: 10px; border: 1px solid black;resize:none" cols="15" rows="5" required></textarea>
+                    <textarea autocomplete="off" required name="newFullAddress" class="form-control" id="exampleFormControlTextarea1" style="border-radius: 10px; border: 1px solid black;resize:none" cols="15" rows="5" required></textarea>
                 </div>
             </div>
+            <script>
+                document.querySelector('form').addEventListener('submit', function(event) {
+                    var district = document.querySelector('input[name="newDistrict"]').value;
+                    var fullAddress = document.querySelector('textarea[name="newFullAddress"]').value;
+            
+                    // Check for blank spaces in district
+                    if (!district.trim()) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'District cannot be blank',
+                            timer: 3000,
+                            showConfirmButton: false
+                        });
+                        event.preventDefault();
+                    }
+            
+                    // Check for blank spaces in full address
+                    if (!fullAddress.trim()) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Full address cannot be blank',
+                            timer: 3000,
+                            showConfirmButton: false
+                        });
+                        event.preventDefault();
+                    }
+                });
+            </script>
             
 
             <script>
