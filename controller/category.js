@@ -50,11 +50,17 @@ const adminUnBlockCategory = async (req,res)=>{
     }
 }
 
-
 const adminCategory = async (req,res)=>{
     try{
         if(req.session.aid){
-            await res.render('admin/addCategory');
+            let category;
+            if (req.query.categoryId) {
+                category = await Category.findById(req.query.categoryId);
+                res.render('admin/addCategory',{category});
+            }
+            else {
+                res.render('admin/addCategory');
+            }
         }
         else {
             res.redirect('/admin/login');
@@ -69,14 +75,40 @@ const adminCategory = async (req,res)=>{
 const adminSubmitCategory = async (req,res)=>{
     try{
         if(req.session.aid){
-            const{aCategory:newCategory,aCategoryDesc:newCategoryDesc}=req.body;
-            const newUploadCategory = new Category({
-                name: newCategory,
-                description: newCategoryDesc
-            });
-    
-            const savedCategory = await newUploadCategory.save();
-            await res.redirect('/admin/categoryManage'); 
+            const { aCategory: newCategory, aCategoryDesc: newCategoryDesc, categoryId } = req.body;
+
+
+            if (categoryId) {
+                let category = await Category.findById(categoryId);
+                if (category) {
+                    category.name = newCategory;
+                    category.description = newCategoryDesc;
+                    await category.save();
+                    await res.redirect('/admin/categoryManage'); 
+                } 
+            }
+ 
+            if (newCategory=="" || newCategory.trim()=="") {
+                await res.render('admin/addCategory',{error:2});
+            }
+ 
+            if(!isNaN(newCategory)){
+                await res.render('admin/addCategory',{error:3});
+            }
+
+            const upperCaseCategory = newCategory.toUpperCase();
+            const categoryExists = await Category.findOne({ name: { $regex: new RegExp('^' + upperCaseCategory + '$', 'i') } });
+            if (categoryExists) {
+                await res.render('admin/addCategory',{error:1});
+            } else {
+                const newUploadCategory = new Category({
+                    name: newCategory,
+                    description: newCategoryDesc
+                });
+        
+                const savedCategory = await newUploadCategory.save();
+                await res.redirect('/admin/categoryManage'); 
+            }
         }
         else {
             res.redirect('/admin/login');
@@ -87,6 +119,7 @@ const adminSubmitCategory = async (req,res)=>{
         res.status(404).render('admin/404page');
     }
 }
+
 
 module.exports = {
     adminCategoryManage,
