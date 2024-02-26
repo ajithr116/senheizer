@@ -127,6 +127,16 @@
             <%- include('navbar') %>
             <!-- Navbar End -->
 
+            <% if (typeof error !== 'undefined' && error === 1) { %>
+                <div id="alert" class="alert alert-danger" role="alert">
+                    Coupon cannot be black 
+                </div>
+                <script>
+                    setTimeout(function() {
+                        document.getElementById('alert').style.display = 'none';
+                    }, 3000);
+                </script>
+            <% }%>
 
             <!-- Form Start -->
             <div class="container-fluid pt-4 px-4">
@@ -157,7 +167,7 @@
                         
                                 <div class="mb-3">
                                     <label for="couponCode" class="form-label">Amount to reduce </label>
-                                    <input style="width:50%" type="number" name="couponReduceAmt" class="form-control" id="reduceAmt" aria-describedby="productNameHelp" required autocomplete="off">
+                                    <input style="width:50%" min="1" max="50"  type="number" name="couponReduceAmt" class="form-control" id="reduceAmt" aria-describedby="productNameHelp" required autocomplete="off">
                                 </div>
 
                                 <div class="mb-3">
