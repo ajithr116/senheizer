@@ -17,11 +17,13 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
 
 
-<!-- Bootstrap JS (required for the Bootstrap components to work) -->
-<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Bootstrap JS (required for the Bootstrap components to work) -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
   <style>
     @media screen and (max-width: 576px) {
@@ -150,16 +152,49 @@
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label>First name</label>
-                    <input type="text" name="updateFirstName" value="<%= userDetails.firstName%>" class="form-control" placeholder="First name" readonly>
+                    <input type="text" required name="updateFirstName" value="<%= userDetails.firstName%>" class="form-control" placeholder="First name" readonly>
                     <a href="#" class="edit-link">Edit</a>
                 </div>
                 <div class="col-md-6 mb-3">
                     <label>Last name</label>
-                    <input type="text" name="updateLastName" value="<%= userDetails.lastName %>" class="form-control" placeholder="Last name" readonly>
+                    <input type="text" required name="updateLastName" value="<%= userDetails.lastName %>" class="form-control" placeholder="Last name" readonly>
                     <a href="#" class="edit-link">Edit</a>
                 </div>
             </div>
-    
+            <script>
+                document.querySelector('form').addEventListener('submit', function(event) {
+                    var firstName = document.querySelector('input[name="updateFirstName"]').value;
+                    var lastName = document.querySelector('input[name="updateLastName"]').value;
+            
+                    // Check for blank spaces
+                    if (!firstName.trim() || !lastName.trim()) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Name fields cannot be blank',
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                        event.preventDefault();
+                    }
+            
+                    // Check for numbers
+                    var regex = /\d/;
+                    if (regex.test(firstName) || regex.test(lastName)) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Name fields cannot contain numbers',
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                        event.preventDefault();
+                    }
+                });
+            </script>
+            
+            
+            
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label>Email</label>
@@ -167,17 +202,35 @@
                 </div>
                 <div class="col-md-6 mb-3">
                     <label>Phone number</label>
-                    <input type="text" name="updatePhoneNo" value="<%= userDetails.phoneNumber %>" class="form-control" placeholder="Phone number" readonly>
+                    <input type="text" required name="updatePhoneNo" maxlength="10" value="<%= userDetails.phoneNumber %>" class="form-control" placeholder="Phone number" readonly>
                     <a href="#" class="edit-link">Edit</a>
                 </div>
             </div>
-    
+            <script>
+                document.querySelector('form').addEventListener('submit', function(event) {
+                    var phoneNo = document.querySelector('input[name="updatePhoneNo"]').value;
+            
+                    // Check for length and characters
+                    if (phoneNo.length > 10 || !/^\d*$/.test(phoneNo)) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Invalid phone number',
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                        event.preventDefault();
+                    }
+                });
+            </script>
+            
             <div class="row">
                 <div class="col-md-6">
                     <input type="submit" class="btn btn-success" value="Update Profile">
                 </div>
             </div>
         </form>
+        
         <% if (typeof error !== 'undefined') { %>   
             <% if(error==1){%>
                 <script>
