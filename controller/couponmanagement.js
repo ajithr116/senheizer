@@ -26,14 +26,19 @@ const adminAddCoupon = async(req,res)=>{
 
 const adminSubmitCoupon = async (req, res) => {
     const { couponCode, couponExpireDate, couponReduceAmt, couponMinimumAmt } = req.body;
+    
+    if(couponCode.trim()===""){
+        return res.render('admin/addCoupon',{error:1})
+    }
+    
     const coupon = new Coupon({
         couponCode,
         reducingAmount: couponReduceAmt,
         minimumPrice: couponMinimumAmt,
         expireDate: couponExpireDate || new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), 
-    });
+    }); 
     await coupon.save();
-    res.redirect('/admin/couponManage');
+    res.redirect('/admin/couponManage'); 
 };
 
 
