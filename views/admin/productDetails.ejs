@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>ProductDetails</title>
+    <title>Product Details</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -110,9 +110,62 @@
             <!-- Navbar Start -->
             <%- include('navbar') %>
             <!-- Navbar End -->
-
-
-            <!-- Form Start -->
+            <% if (typeof error !== 'undefined' && error === 1) { %>
+                <div id="alert" class="alert alert-danger" role="alert">
+                    Product name cannot be empty 
+                </div>
+                <script>
+                    setTimeout(function() {
+                        document.getElementById('alert').style.display = 'none';
+                    }, 3000);
+                </script>
+            <% } else if(typeof error !== 'undefined' && error === 2){%>
+                <div id="alert" class="alert alert-danger" role="alert">
+                    Image format is not suitable
+                </div>
+                <script>
+                    setTimeout(function() {
+                        document.getElementById('alert').style.display = 'none';
+                    }, 3000);
+                </script>
+            <% } else if(typeof error !== 'undefined' && error === 3){%>
+                <div id="alert" class="alert alert-danger" role="alert">
+                    Brand name is blank. So please write
+                </div>
+                <script>
+                    setTimeout(function() {
+                        document.getElementById('alert').style.display = 'none';
+                    }, 3000);
+                </script>
+            <% } else if(typeof error !== 'undefined' && error === 4){%>
+                <div id="alert" class="alert alert-danger" role="alert">
+                    price is empty
+                </div>
+                <script>
+                    setTimeout(function() {
+                        document.getElementById('alert').style.display = 'none';
+                    }, 3000);
+                </script>
+            <% } else if(typeof error !== 'undefined' && error === 4){%>
+                <div id="alert" class="alert alert-danger" role="alert">
+                    price is empty
+                </div>
+                <script>
+                    setTimeout(function() {
+                        document.getElementById('alert').style.display = 'none';
+                    }, 3000);
+                </script>
+            <% } else if(typeof error !== 'undefined' && error === 5){%>
+                <div id="alert" class="alert alert-danger" role="alert">
+                    descritption is empty
+                </div>
+                <script>
+                    setTimeout(function() {
+                        document.getElementById('alert').style.display = 'none';
+                    }, 3000);
+                </script>
+            <%}%>   
+           <!-- Form Start -->
             <div class="container-fluid pt-4 px-4">
                 <div class="row g-4">
                     <div class="col-sm-12 col-xl-12">
@@ -189,7 +242,7 @@
                                 
                                 <div class="mb-3">
                                     <label for="category" class="form-label">Brand</label>
-                                    <input type="text" class="form-control" id="category" value="<%= product.brand %>" name="uProductBrand" aria-describedby="categoryHelp"  style="width: 50%;">
+                                    <input type="text" class="form-control" required id="category" value="<%= product.brand %>" name="uProductBrand" aria-describedby="categoryHelp"  style="width: 50%;">
                                 </div>
 
                                 <div class="mb-3">
@@ -225,13 +278,13 @@
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="price" class="form-label">Price</label>
-                                            <input type="number" class="form-control" id="price" value="<%= product.price %>" name="uProductPrice" aria-describedby="priceHelp" step="0.01" style="width: 50%;">
+                                            <input required type="number" class="form-control" id="price" value="<%= product.price %>" name="uProductPrice" aria-describedby="priceHelp" step="0.01" style="width: 50%;">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="quantity" class="form-label">Quantity</label>
-                                            <input type="number" class="form-control" id="quantity" value="<%= product.quantity %>" name="uProductQuantity" aria-describedby="quantityHelp" min="1" style="width: 50%;">
+                                            <input required type="number" class="form-control" id="quantity" value="<%= product.quantity %>" name="uProductQuantity" aria-describedby="quantityHelp" min="1" style="width: 50%;">
                                         </div>
                                     </div>
                                 </div>

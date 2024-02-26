@@ -138,7 +138,18 @@
                                     <input type="text" class="form-control" id="searchInput" placeholder="Type to search">
                                 </div>
                             </div> -->
-            
+                            <div class="row mb-3">
+                                <div class="col-md-8">
+                                    <a href="./ordermanagement?show=old" class="btn btn-primary">Old</a>
+                                    <a href="./ordermanagement" class="btn btn-primary">New</a>
+                                    <a href="./ordermanagement?show=pending" class="btn btn-warning">Pending</a>
+                                    <a href="./ordermanagement?show=delivered" class="btn btn-success">Delieverd</a>
+                                    <a href="./ordermanagement?show=canceled" class="btn btn-danger">Canceled</a>
+                                    <a href="./ordermanagement?show=razorpay" class="btn btn-outline-dark">RAZORPAY</a>
+                                    <a href="./ordermanagement?show=cashondelivery" class="btn btn-outline-dark">COD</a>
+
+                                </div>
+                            </div>
                             <div class="table-responsive">
                                 <table id="yourTableId" class="table">
                                   <thead>
@@ -159,7 +170,7 @@
                                         <td scope="col"><%= order.userID.firstName %> <%= order.userID.lastName %></td>
                                         <td scope="col"><%= order.date.toLocaleString() %></td>
                                         <td scope="col"><%= order.items.length %></td>
-                                        <td scope="col">$<%= order.totalPrice %></td>
+                                        <td scope="col">₹ <%= order.totalPrice %></td>
                                         <% if(order.orderStatus=="pending"){%>
                                             <td scope="col" class="bg-warning" style="color:rgb(78, 109, 136)"><%= order.orderStatus %></td>
                                         <%}else if(order.orderStatus=="canceled"){%>
@@ -167,11 +178,7 @@
                                         <%}else if(order.orderStatus=="delivered"){%>
                                             <td scope="col" class="bg-success" style="color:aliceblue"><%= order.orderStatus %></td>
                                         <%}%>
-                                        <% if(order.orderStatus=="canceled"){%>
-                                            <td scope="col"><a><span class="fas fa-tick"></span>Refunded</a></td>
-                                        <%}else{%>
-                                            <td scope="col"><a href="./orderdetails?orderId=<%= order._id %>">Details</a></td>
-                                        <%}%>
+                                        <td scope="col"><a href="./orderdetails?orderId=<%= order._id %>">Details</a></td>
                                       </tr>
                                     <% }) %>
                                   </tbody>
