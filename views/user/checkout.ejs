@@ -222,49 +222,37 @@
               <hr style="background-color: black;">
               <p>Total: $ <b id="total"><%= total.toFixed(2) %></b></p>
               <script>
-                const total = parseFloat(document.getElementById('total').textContent);
+                const total = parseFloat(document.getElementById('total').value);
                 let totalValue = document.getElementById('total');
                 
                   $(document).ready(function() {
                       $('#couponCode').on('keyup', function() {
                           var couponCode = $(this).val();
-              
+                          var total = parseFloat(document.getElementById('total').textContent);
+
                           $.ajax({
                               url: '/verifyCoupon', 
                               type: 'POST', 
-                              data: { couponCode: couponCode },
+
+                              data: { couponCode: couponCode, total: total },
               
                               success: function(response) {
-                                  if(response.discount) {
-                                    const couponCode = document.getElementById('couponCode');
-                                    // alert("id "+ response.couponId);
-                                    alert("Coupon working ");
-                                    let newTotal = total - response.discount;
-                                    totalValue.textContent = total + " - " + response.discount+" = "+newTotal;
-                                    couponCode.style.border ="2px solid green";
-
-                                    // Get all the anchor tags by their class name
-                                    const anchorTags = document.querySelectorAll('.btn.btn-warning');
-
-                                    // Loop over the anchor tags
-                                    anchorTags.forEach(anchorTag => {
-                                      // Get the current href attribute
-                                      let currentHref = anchorTag.getAttribute('href');
-
-                                      // Check if the href already has a couponId query parameter
-                                      if (currentHref.includes('couponId')) {
-                                        // If it does, remove it
-                                        currentHref = currentHref.split('&couponId')[0];
-                                      }
-
-                                      // Add the new couponId to the href
-                                      const newHref = currentHref + '&couponId=' + response.couponId;
-
-                                      // Set the new href attribute
-                                      anchorTag.setAttribute('href', newHref);
-                                    });
-
-                                  } 
+                                if(response.discount) {
+                                  const couponCode = document.getElementById('couponCode');
+                                  alert("Coupon working ");
+                                  let newTotal = total - response.discount;
+                                  totalValue.textContent = total.toFixed(2) + " - " + response.discount.toFixed(2) + " = " + newTotal.toFixed(2);
+                                  couponCode.style.border ="2px solid green";
+                                  const anchorTags = document.querySelectorAll('.btn.btn-warning');
+                                  anchorTags.forEach(anchorTag => {
+                                    let currentHref = anchorTag.getAttribute('href');
+                                    if (currentHref.includes('couponId')) {
+                                      currentHref = currentHref.split('&couponId')[0];
+                                    }
+                                    const newHref = currentHref + '&couponId=' + response.couponId;
+                                    anchorTag.setAttribute('href', newHref);
+                                  });
+                                } 
                               },
                               error: function(err) {
                                 const couponCode = document.getElementById('couponCode');
@@ -278,12 +266,11 @@
                                   alert("Error: " + err.responseJSON.message);
                                   const couponCode = document.getElementById('couponCode');
                                   couponCode.style.border="2px solid red";
+                                }else if(err.responseJSON.message=="deleted"){
+                                      alert("Error: " + err.responseJSON.message);
+                                  const couponCode = document.getElementById('couponCode');
+                                  couponCode.style.border="2px solid red";
                                 }
-                                // else if(err.responseJSON.message=="less"){
-                                //   alert("Error: " + err.responseJSON.message);
-                                //   const couponCode = document.getElementById('couponCode');
-                                //   couponCode.style.border="2px solid red";
-                                // }
                               }
                           });
                       });
