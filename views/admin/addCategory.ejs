@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>DASHMIN - Bootstrap Admin Template</title>
+    <title>Add category</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -107,8 +107,36 @@
             <!-- Navbar Start -->
             <%- include('navbar') %>
             <!-- Navbar End -->
-
-
+            <br>
+            <% if (typeof error !== 'undefined' && error === 1) { %>
+                <div id="alert" class="alert alert-danger" role="alert">
+                    The category already exists.
+                </div>
+                <script>
+                    setTimeout(function() {
+                        document.getElementById('alert').style.display = 'none';
+                    }, 3000);
+                </script>
+            <% } else if(typeof error !== 'undefined' && error === 2){ %>
+                <div id="alert" class="alert alert-danger" role="alert">
+                    The category cannot be space.
+                </div>
+                <script>
+                    setTimeout(function() {
+                        document.getElementById('alert').style.display = 'none';
+                    }, 3000);
+                </script>
+            <%}else if(typeof error !== 'undefined' && error === 3){%>
+                <div id="alert" class="alert alert-danger" role="alert">
+                    The category cannot be number.
+                </div>
+                <script>
+                    setTimeout(function() {
+                        document.getElementById('alert').style.display = 'none';
+                    }, 3000);
+                </script>
+            <%}%>
+            
             <!-- Form Start -->
             <div class="container-fluid pt-4 px-4">
                 <div class="row g-4">
@@ -118,25 +146,22 @@
                             <form action="./submitcategory" method="POST">
                                 <div class="mb-3">
                                     <label for="productName" class="form-label">Category</label>
-                                    <input type="text" name="aCategory" class="form-control" id="productName" aria-describedby="productNameHelp" style="width: 50%;" required>
+                                    <input type="text" name="aCategory" class="form-control" id="productName" aria-describedby="productNameHelp" style="width: 50%;" value="<%= typeof category !== 'undefined' ? category.name : '' %>" required>
                                 </div>
-                                <div class="mb-3">
+                                <% if (typeof category !== 'undefined') { %>
+                                    <input type="hidden" name="categoryId" value="<%= category._id %>">
+                                <% } %>                                <div class="mb-3">
                                     <label for="productName" class="form-label">Description</label><br>
-                                    <!-- <input type="text" name="aCategoryDesc" class="form-control" id="productName" aria-describedby="productNameHelp" > -->
-                                    <textarea name="aCategoryDesc" rows="7" cols="100"placeholder="optional"></textarea>
+                                    <textarea name="aCategoryDesc" rows="7" cols="100"><%= typeof category !== 'undefined' ? category.description : 'optional' %></textarea>
                                 </div>
                                 <button type="submit" class="btn btn-success">ADD</button>
                             </form>
                         </div>
-
+                    </div>
                 </div>
             </div>
-            <!-- Form End -->
 
-
-            <!-- Footer Start -->
-
-            <!-- Footer End -->
+            <!-- Form End -->   
         </div>
         <!-- Content End -->
 
