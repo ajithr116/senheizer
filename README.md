@@ -24,7 +24,15 @@ Welcome to my first MERN (MongoDB, Express, React, Node.js) project, an e-commer
    - Create a `.env` file in the root directory.
    - Add the following variables:
      ```
+      MONGODB_ADDRESS='mongodb://127.0.0.1:27017/senheizer'
+      PORT=4000
+      EMAIL_ADDRESS='ajith8593935904@gmail.com'
+      PASS='fnvjzjziqibmyzwp'
+      KEY_ID='rzp_test_ITfaRgB1ep4WpQ'
+      SECRET_KEY='rBmaWGSg3dbFtHMfOA5m27KA'
+      SESSION_SECRET='1hhh2vsdj2342bSDf523'
 
+     ```
 4. Run the development server: `npm run dev`
 5. Open your browser and visit `http://localhost:3000` to view the application.
 
