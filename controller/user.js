@@ -334,15 +334,15 @@ const loadPageProducts = async(req,res)=>{
     let product = await userController.getAllProductPage();
     let product2 = await userController.getAllProductPage();
     const category = await Category.find({ isDeleted: false });
-    const { brand, maxPrice, color, category2 } = req.query;
+    const { brand, max, color, category2 } = req.query;
     const searchQuery = req.query.search; 
     
     if (brand) {
       product = product.filter(product => brand.includes(product.brand));
     }
-    
-    if (maxPrice) {
-      product = product.filter(product => product.price <= maxPrice);
+    console.log("reached "+ max);
+    if (max) {
+      product = product.filter(product => product.price <= max);
     }
     
     if (color) {
@@ -391,15 +391,15 @@ const userProducts = async (req, res) => {
     let product = await userController.getAllProductPage();
     let product2 = await userController.getAllProductPage();
     const category = await Category.find({ isDeleted: false });
-    const { brand, maxPrice, color, category2 } = req.query;
+    const { brand, max, color, category2 } = req.query;
     const searchQuery = req.query.search; 
     
     if (brand) {
       product = product.filter(product => brand.includes(product.brand));
     }
     
-    if (maxPrice) {
-      product = product.filter(product => product.price <= maxPrice);
+    if (max) {
+      product = product.filter(product => product.price <= max);
     }
     
     if (color) {
