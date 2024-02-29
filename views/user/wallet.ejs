@@ -187,22 +187,28 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <% users.walletHistory.forEach(historyItem => { %>
-                            <tr>
-                                <td><%= new Date(historyItem.date).toLocaleDateString('en-US', {
-                                    year: 'numeric',
-                                    month: 'long',
-                                    day: 'numeric'
-                                }) %> -  <%= new Date(historyItem.date).toLocaleTimeString() %></td>
-                                <td><%= historyItem.type %></td>
-                                <td><%= historyItem.amount %></td>
-                            </tr>
-                            <% }) %>
+                            <% if (users.walletHistory.length > 0) { %>
+                                <% users.walletHistory.forEach(historyItem => { %>
+                                    <tr>
+                                        <td><%= new Date(historyItem.date).toLocaleDateString('en-US', {
+                                            year: 'numeric',
+                                            month: 'long',
+                                            day: 'numeric'
+                                        }) %> -  <%= new Date(historyItem.date).toLocaleTimeString() %></td>
+                                        <td><%= historyItem.type %></td>
+                                        <td><%= historyItem.amount %></td>
+                                    </tr>
+                                <% }) %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="3">No data</td>
+                                </tr>
+                            <% } %>
                         </tbody>
                     </table>
-                    
                 </div>
             </div>
+            
         </div>
         <script>
             $(document).rady(function(){
