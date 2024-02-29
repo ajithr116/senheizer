@@ -340,7 +340,6 @@ const loadPageProducts = async(req,res)=>{
     if (brand) {
       product = product.filter(product => brand.includes(product.brand));
     }
-    console.log("reached "+ max);
     if (max) {
       product = product.filter(product => product.price <= max);
     }
