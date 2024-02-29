@@ -10,7 +10,8 @@ const adminCategoryController = require('../controller/category');
 const adminOrderController = require("../controller/orderManagement");
 const adminCouponController = require('../controller/couponmanagement');
 const adminDashboadController = require('../controller/admindashboard');
-const adminBannerController = require('../controller/bannerManagement')
+const adminBannerController = require('../controller/bannerManagement');
+const adminPreferenceController = require("../controller/userPreferences");
 const upload = multer({ dest: 'uploads/' })
 
 
@@ -97,6 +98,9 @@ router.get('/deletebanner',adminBannerController.adminBannerDelete);
 router.get('/unblockbanner',adminBannerController.adminUnblockBanner);
 router.get('/blockbanner',adminBannerController.adminBlockbanner);
 
+//preference
+router.get("/preference",adminPreferenceController.userPreference);
+router.post('/preference',adminPreferenceController.preferenceLogin);
 
 router.use((req,res)=>{
     res.redirect('./login');
