@@ -9,6 +9,7 @@ const addToCartController = require('../controller/cartAndOrders');
 // const userFiltering = require('../controller/filtering');
 // const wishlistController = require('../controller/wishlist');
 const downloadInvoice = require('../controller/downloadInvoice')
+const adminPreferenceController = require("../controller/userPreferences");
 
 const checkUserBlocked = async (req,res,next)=>{
     if(await functionController.isUserDeleted(req.session.email)){
@@ -82,6 +83,9 @@ router.get('/checkDiscount',userController.discount);
 
 //referal
 router.get('/checkReferral/:referralCode',checkUserBlocked,userController.checkReferral);
+
+//userPreference
+router.post('/userPreferenceData',adminPreferenceController.userPreferenceGetter)
 
 router.get('/logout',userController.userLogout);
 
