@@ -67,7 +67,7 @@
         <div id="timer">1:00</div>
 
         <!-- Resend OTP button -->
-        <button type="button" id="resendBtn"  onclick="resendOtp()">Resend OTP</button>
+        <button type="button" id="resendBtn" style="visibility:hidden;" onclick="resendOtp()">Resend OTP</button>
 
         <!-- Display OTP wrong message -->
         <% if (typeof otpWrong !== 'undefined') { %>   
@@ -93,7 +93,7 @@
                 </script>
             <%}%>
         <%}%>
-        <button type="submit">Submit</button>
+        <button id="submitButton"  type="submit">Submit</button>
     </form>
 
     <script>
@@ -108,13 +108,20 @@
 
             if (timer <= 0) {
                 clearInterval(timerInterval);
+                // Show the "Resend OTP" button
+                document.getElementById('resendBtn').style.visibility = 'visible';
+                document.getElementById('submitButton').style.display = 'none';
+                document.getElementById('box').disabled = true;
                 alert("Time's up");
-                window.location.href = '/signup'; // Redirect when the timer reaches 0
             } else {
                 timer--;
+                // Hide the "Resend OTP" button
+                document.getElementById('resendBtn').style.display = 'hidden';
+                document.getElementById('box').disabled = false;
+                // document.getElementById('submitBtn').style.display = 'block';
             }
         }
-
+        
         function resendOtp() {
             timer = 60;
             window.location.href = '/submitForm'; 
