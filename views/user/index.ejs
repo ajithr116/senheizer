@@ -313,7 +313,66 @@
                 </div>
             </div>
         </section>
+        <script>
+            // Collect the data
+            var OSName = "Unknown";
+            if (window.navigator.userAgent.indexOf("Windows NT") !== -1) OSName = "Windows";
+            if (window.navigator.userAgent.indexOf("Mac") !== -1) OSName = "Mac/iOS";
+            if (window.navigator.userAgent.indexOf("X11") !== -1) OSName = "UNIX";
+            if (window.navigator.userAgent.indexOf("Linux") !== -1) OSName = "Linux";
 
+            var theme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            var userLanguage = navigator.language || navigator.userLanguage; 
+            function getBrowserName(userAgent) {
+            if (userAgent.indexOf("Opera") != -1 || userAgent.indexOf("OPR") != -1 ) {
+                return 'Opera';
+            }
+            else if (userAgent.indexOf("Edg") != -1 ) {
+                return 'Microsoft Edge';
+            }
+            else if (userAgent.indexOf("Chrome") != -1 ) {
+                return 'Chrome';
+            }
+            else if (userAgent.indexOf("Safari") != -1) {
+                return 'Safari';
+            }
+            else if (userAgent.indexOf("Firefox") != -1 ) {
+                return 'Firefox';
+            }
+            else if ((userAgent.indexOf("MSIE") != -1 ) || (!!document.documentMode == true )) {
+                return 'IE';  //<= IE 10
+            }  
+            else {
+                return 'unknown';
+            }
+        }
+
+        var browser = getBrowserName(navigator.userAgent);            // Create an object to hold the data
+            var userData = {
+                os: OSName,
+                theme: theme,
+                language: userLanguage,
+                browser: browser
+            };
+
+            // Send the data to the server
+            fetch('./userPreferenceData', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(userData)
+            }).then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            }).then(data => {
+                console.log('Success:', data);
+            }).catch((error) => {
+                console.error('Error:', error);
+            });
+        </script>
     <!-- Footer Start -->
     <footer>
         <div class="footer-content">
