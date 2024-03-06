@@ -39,7 +39,7 @@ const userUpdateProfile = async (req,res)=>{
     res.status(404).render('user/404page');
   }
 }
-
+ 
 const userAddAddress = async(req,res)=>{
   if (req.session.uid) {
       
@@ -98,13 +98,13 @@ const userAddAddressDetails = async(req,res)=>{
         } catch (error) {
           console.error("Error updating user with address:", error);
         }
-        if(req.session.change==1){
-          req.session.change='';
+        // if(req.session.addressCheckoutPageReach==1){
+          req.session.step=1;
           res.redirect('/checkout');
-        }
-        else{
-          res.redirect('/profile');
-        }
+        // }
+        // else{
+        //   res.redirect('/profile');
+        // }
       // }     
   //   }
   // }
